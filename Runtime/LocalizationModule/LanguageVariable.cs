@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Arkham.Onigiri.Variables;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Variables/Language Variable")]
 public class LanguageVariable : BaseVariable<SystemLanguage>

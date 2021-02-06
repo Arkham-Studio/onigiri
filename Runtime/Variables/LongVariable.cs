@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Long")]
-public class LongVariable : BaseVariable<long>
+namespace Arkham.Onigiri.Variables
 {
+    [CreateAssetMenu(menuName = "Variables/Long")]
+    public class LongVariable : BaseVariable<long>
+    {
 
 
+    }
 }

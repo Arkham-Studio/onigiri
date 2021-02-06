@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Component")]
-public class ComponentVariable : BaseVariable<Component> {
+namespace Arkham.Onigiri.Variables
+{
+    [CreateAssetMenu(menuName = "Variables/Component")]
+    public class ComponentVariable : BaseVariable<Component> {
 
 	
+    }
 }

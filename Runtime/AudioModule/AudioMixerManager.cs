@@ -1,5 +1,6 @@
 ﻿using Sirenix.OdinInspector;
 using System;
+using Arkham.Onigiri.Variables;
 using UnityEngine;
 using UnityEngine.Audio;
 

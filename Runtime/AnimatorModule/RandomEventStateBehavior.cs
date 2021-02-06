@@ -1,20 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-
-public class RandomEventStateBehavior : StateMachineBehaviour
+namespace Arkham.Onigiri.AnimatorModule
 {
-
-    public UnityEvent response;
-
-
-    public void CheckRandom(float _chance)
+    public class RandomEventStateBehavior : StateMachineBehaviour
     {
-        if (_chance > Random.Range(0f, 1f))
+
+        public UnityEvent response;
+
+
+        public void CheckRandom(float _chance)
         {
-            Debug.Log(response.GetPersistentTarget(0).GetInstanceID());
-            response.Invoke();
+            if (_chance > Random.Range(0f, 1f))
+            {
+                Debug.Log(response.GetPersistentTarget(0).GetInstanceID());
+                response.Invoke();
            
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Arkham.Onigiri.Variables;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Managers/DebugManager")]

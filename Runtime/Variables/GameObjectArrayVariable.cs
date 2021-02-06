@@ -1,9 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[CreateAssetMenu(menuName ="Variables/GameObject Array")]
-public class GameObjectArrayVariable : BaseVariable<GameObject[]>
+namespace Arkham.Onigiri.Variables
 {
+    [CreateAssetMenu(menuName ="Variables/GameObject Array")]
+    public class GameObjectArrayVariable : BaseVariable<GameObject[]>
+    {
    
+    }
 }

@@ -1,20 +1,23 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Int")]
-public class IntVariable : BaseVariable<int>
+namespace Arkham.Onigiri.Variables
 {
-
-    public void ApplyChange(int amount)
+    [CreateAssetMenu(menuName = "Variables/Int")]
+    public class IntVariable : BaseVariable<int>
     {
-        Value += amount;
-        if (amount != 0)
-            OnChange();
-    }
 
-    public void ApplyChange(IntVariable amount)
-    {
-        Value += amount.Value;
-        if (amount.Value != 0)
-            OnChange();
+        public void ApplyChange(int amount)
+        {
+            Value += amount;
+            if (amount != 0)
+                OnChange();
+        }
+
+        public void ApplyChange(IntVariable amount)
+        {
+            Value += amount.Value;
+            if (amount.Value != 0)
+                OnChange();
+        }
     }
 }

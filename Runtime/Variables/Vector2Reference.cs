@@ -1,44 +1,47 @@
 ﻿using System;
-using UnityEngine;
-using Sirenix.OdinInspector;
 using System.Collections;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
-[Serializable]
-[InlineProperty(LabelWidth = 12)]
-public class Vector2Reference
+namespace Arkham.Onigiri.Variables
 {
-    [HorizontalGroup(25), HideLabel()]
-    public bool UseConstant = true;
-
-    [HorizontalGroup(), HideLabel()]
-    [ShowIf("UseConstant")]
-    public Vector2 ConstantValue;
-
-    [HorizontalGroup(), HideLabel()]
-    [HideIf("UseConstant")]
-    public Vector2Variable Variable;
-
-    public Vector2Reference()
-    { }
-
-    public Vector2Reference(Vector2 value)
+    [Serializable]
+    [InlineProperty(LabelWidth = 12)]
+    public class Vector2Reference
     {
-        UseConstant = true;
-        ConstantValue = value;
-    }
+        [HorizontalGroup(25), HideLabel()]
+        public bool UseConstant = true;
 
-    public Vector2 Value
-    {
-        get { return UseConstant ? ConstantValue : Variable.Value; }
-    }
+        [HorizontalGroup(), HideLabel()]
+        [ShowIf("UseConstant")]
+        public Vector2 ConstantValue;
 
-    public static implicit operator Vector2(Vector2Reference reference)
-    {
-        return reference.Value;
-    }
+        [HorizontalGroup(), HideLabel()]
+        [HideIf("UseConstant")]
+        public Vector2Variable Variable;
 
-    private static IEnumerable UseConstantValues = new ValueDropdownList<bool>() {
-        {"Constant", true },
-        {"Variable", false },
-    };
+        public Vector2Reference()
+        { }
+
+        public Vector2Reference(Vector2 value)
+        {
+            UseConstant = true;
+            ConstantValue = value;
+        }
+
+        public Vector2 Value
+        {
+            get { return UseConstant ? ConstantValue : Variable.Value; }
+        }
+
+        public static implicit operator Vector2(Vector2Reference reference)
+        {
+            return reference.Value;
+        }
+
+        private static IEnumerable UseConstantValues = new ValueDropdownList<bool>() {
+            {"Constant", true },
+            {"Variable", false },
+        };
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using System;
 using System.Collections;
+using Arkham.Onigiri.Variables;
 using UnityEngine;
 using UnityEngine.UI;
 

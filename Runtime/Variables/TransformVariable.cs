@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Transform")]
-public class TransformVariable : BaseVariable<Transform>
+namespace Arkham.Onigiri.Variables
 {
+    [CreateAssetMenu(menuName = "Variables/Transform")]
+    public class TransformVariable : BaseVariable<Transform>
+    {
 
 
+    }
 }

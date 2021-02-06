@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Arkham.Onigiri.Variables;
+using Arkham.Onigiri.Events;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Managers/App State Manager")]
 public class AppStateManager : ScriptableObject

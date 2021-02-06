@@ -1,25 +1,29 @@
-﻿using UnityEngine;
+﻿using Arkham.Onigiri.Variables;
+using UnityEngine;
 using UnityEngine.Events;
 
-public class TriggerListenerStateBehavior : StateMachineBehaviour
+namespace Arkham.Onigiri.AnimatorModule
 {
-    [SerializeField] private StringVariable actualTrigger;
-
-    private UnityAction handler;
-
-    public override void OnStateEnter(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
+    public class TriggerListenerStateBehavior : StateMachineBehaviour
     {
-        handler = () => { OnChange(animator, layerIndex); };
-        actualTrigger.onChange.AddListener(handler);
-    }
+        [SerializeField] private StringVariable actualTrigger;
 
-    public override void OnStateExit(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
-    {
-        actualTrigger.onChange.RemoveListener(handler);
-    }
+        private UnityAction handler;
 
-    private void OnChange(Animator _animator, int _layer)
-    {
-        _animator.SetTrigger(actualTrigger.Value);
+        public override void OnStateEnter(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
+        {
+            handler = () => { OnChange(animator, layerIndex); };
+            actualTrigger.onChange.AddListener(handler);
+        }
+
+        public override void OnStateExit(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
+        {
+            actualTrigger.onChange.RemoveListener(handler);
+        }
+
+        private void OnChange(Animator _animator, int _layer)
+        {
+            _animator.SetTrigger(actualTrigger.Value);
+        }
     }
 }

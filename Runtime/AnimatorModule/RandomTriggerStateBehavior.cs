@@ -1,28 +1,31 @@
 ﻿using UnityEngine;
 
-public class RandomTriggerStateBehavior : StateMachineBehaviour
+namespace Arkham.Onigiri.AnimatorModule
 {
-
-    private bool haveLooped = false;
-    public float chance;
-    public string triggerName;
-
-    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public class RandomTriggerStateBehavior : StateMachineBehaviour
     {
 
-        float _time = stateInfo.normalizedTime % 1;
+        private bool haveLooped = false;
+        public float chance;
+        public string triggerName;
 
-        if (haveLooped && _time < 0.99f)
+        public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            haveLooped = false;
-        }
 
-        if (!haveLooped && _time > 0.98f)
-        {
-            haveLooped = true;
-            if (chance > Random.Range(0f, 1f))
+            float _time = stateInfo.normalizedTime % 1;
+
+            if (haveLooped && _time < 0.99f)
             {
-                animator.SetTrigger(triggerName);
+                haveLooped = false;
+            }
+
+            if (!haveLooped && _time > 0.98f)
+            {
+                haveLooped = true;
+                if (chance > Random.Range(0f, 1f))
+                {
+                    animator.SetTrigger(triggerName);
+                }
             }
         }
     }

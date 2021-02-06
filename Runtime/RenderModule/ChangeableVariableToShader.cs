@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Arkham.Onigiri.Variables;
+using UnityEngine;
 
 [ExecuteInEditMode]
 public class ChangeableVariableToShader : MonoBehaviour

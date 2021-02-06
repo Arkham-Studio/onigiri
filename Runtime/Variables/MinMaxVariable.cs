@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Min Max")]
-public class MinMaxVariable : ScriptableObject
+namespace Arkham.Onigiri.Variables
 {
-
-    public float minValue;
-    public float maxValue;
-
-    public float Value(float t)
+    [CreateAssetMenu(menuName = "Variables/Min Max")]
+    public class MinMaxVariable : ScriptableObject
     {
-        return Mathf.Lerp(minValue, maxValue, t);
-    }
 
+        public float minValue;
+        public float maxValue;
+
+        public float Value(float t)
+        {
+            return Mathf.Lerp(minValue, maxValue, t);
+        }
+
+    }
 }

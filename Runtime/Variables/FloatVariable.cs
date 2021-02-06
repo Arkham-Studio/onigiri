@@ -1,26 +1,29 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Float")]
-public class FloatVariable : BaseVariable<float>
+namespace Arkham.Onigiri.Variables
 {
-    public void ApplyChange(float amount)
+    [CreateAssetMenu(menuName = "Variables/Float")]
+    public class FloatVariable : BaseVariable<float>
     {
-        Value += amount;
-        if (amount != 0)
-            OnChange();
-    }
+        public void ApplyChange(float amount)
+        {
+            Value += amount;
+            if (amount != 0)
+                OnChange();
+        }
 
-    public void ApplyChange(FloatVariable amount)
-    {
-        Value += amount.Value;
-        if (amount.Value != 0)
-            OnChange();
-    }
+        public void ApplyChange(FloatVariable amount)
+        {
+            Value += amount.Value;
+            if (amount.Value != 0)
+                OnChange();
+        }
 
-    public void MultiplyBy(float amount)
-    {
-        Value *= amount;
-        if (amount != 1)
-            OnChange();
+        public void MultiplyBy(float amount)
+        {
+            Value *= amount;
+            if (amount != 1)
+                OnChange();
+        }
     }
 }

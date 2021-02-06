@@ -1,6 +1,8 @@
 ﻿using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using Arkham.Onigiri.Variables;
+using Arkham.Onigiri.Events;
 using UnityEngine;
 
 public class SpawnEventListener : MonoBehaviour

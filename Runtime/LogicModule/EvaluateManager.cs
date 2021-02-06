@@ -1,4 +1,5 @@
 ﻿using System;
+using Arkham.Onigiri.Variables;
 using UnityEngine;
 using UnityEngine.Events;
 using Sirenix.OdinInspector;

@@ -1,33 +1,37 @@
-﻿using Sirenix.OdinInspector;
+﻿using Arkham.Onigiri.Variables;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ChangeableVariableListener : MonoBehaviour
+namespace Arkham.Onigiri.Events
 {
-    [SerializeField] private ChangeableVariablePack[] pack;
-
-    //  MONOS
-    private void OnEnable()
+    public class ChangeableVariableListener : MonoBehaviour
     {
-        foreach (var item in pack)
-            item.variable.onChange.AddListener(item.OnChange);
-    }
+        [SerializeField] private ChangeableVariablePack[] pack;
 
-    private void OnDisable()
-    {
-        foreach (var item in pack)
-            item.variable.onChange.RemoveListener(item.OnChange);
-    }
+        //  MONOS
+        private void OnEnable()
+        {
+            foreach (var item in pack)
+                item.variable.onChange.AddListener(item.OnChange);
+        }
 
-    //  UTILS
-    [System.Serializable]
-    public class ChangeableVariablePack
-    {
-        [Title("##############")]
-        public ChangeableVariable variable;
-        public UnityEvent response;
+        private void OnDisable()
+        {
+            foreach (var item in pack)
+                item.variable.onChange.RemoveListener(item.OnChange);
+        }
 
-        [Button(ButtonSizes.Large)]
-        public void OnChange() => response.Invoke();
+        //  UTILS
+        [System.Serializable]
+        public class ChangeableVariablePack
+        {
+            [Title("##############")]
+            public ChangeableVariable variable;
+            public UnityEvent response;
+
+            [Button(ButtonSizes.Large)]
+            public void OnChange() => response.Invoke();
+        }
     }
 }

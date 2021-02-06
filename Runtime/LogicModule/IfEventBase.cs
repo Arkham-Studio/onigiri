@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using Arkham.Onigiri.Variables;
 
 public abstract class IfEventBase<T, U> : MonoBehaviour where U : BaseVariable<T>
 {

@@ -1,14 +1,17 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Bool")]
-public class BoolVariable : BaseVariable<bool>
+namespace Arkham.Onigiri.Variables
 {
-    [Button]
-    public void ToggleValue()
+    [CreateAssetMenu(menuName = "Variables/Bool")]
+    public class BoolVariable : BaseVariable<bool>
     {
-        Value = !Value;
-        OnChange();
+        [Button]
+        public void ToggleValue()
+        {
+            Value = !Value;
+            OnChange();
+        }
     }
 }
 

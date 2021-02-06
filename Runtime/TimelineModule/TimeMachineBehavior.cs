@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Arkham.Onigiri.Variables;
+using Arkham.Onigiri.Events;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;

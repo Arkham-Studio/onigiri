@@ -2,73 +2,76 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public interface ITrackGameEvent
+namespace Arkham.Onigiri.Variables
 {
-    UnityEvent GetEvent();
-}
-
-[InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false)]
-public class ChangeableVariable : ScriptableObject
-{
-    [Space(50)]
-    [PropertyOrder(1)]
-    public UnityEvent onChange;
-    public UnityEvent GetEvent() => onChange;
-    [Button]
-    [PropertyOrder(2)]
-    public void OnChange() => onChange?.Invoke();
-
-}
-
-public class BaseVariable<T> : ChangeableVariable, ITrackGameEvent
-{
-
-
-
-    [SerializeField]
-    protected T DefaultValue;
-
-    public T currentValue;
-    public T Value
+    public interface ITrackGameEvent
     {
-        get { return currentValue; }
-        set { currentValue = value; }
+        UnityEvent GetEvent();
     }
 
-    private void OnEnable() => currentValue = DefaultValue;
-
-    public void SetValue(T value)
+    [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false)]
+    public class ChangeableVariable : ScriptableObject
     {
-        Value = value;
-        OnChange();
+        [Space(50)]
+        [PropertyOrder(1)]
+        public UnityEvent onChange;
+        public UnityEvent GetEvent() => onChange;
+        [Button]
+        [PropertyOrder(2)]
+        public void OnChange() => onChange?.Invoke();
+
     }
 
-    public void SetValue(BaseVariable<T> value)
+    public class BaseVariable<T> : ChangeableVariable, ITrackGameEvent
     {
-        Value = value.Value;
-        OnChange();
+
+
+
+        [SerializeField]
+        protected T DefaultValue;
+
+        public T currentValue;
+        public T Value
+        {
+            get { return currentValue; }
+            set { currentValue = value; }
+        }
+
+        private void OnEnable() => currentValue = DefaultValue;
+
+        public void SetValue(T value)
+        {
+            Value = value;
+            OnChange();
+        }
+
+        public void SetValue(BaseVariable<T> value)
+        {
+            Value = value.Value;
+            OnChange();
+        }
+
+        public void SetToNull()
+        {
+            Value = default;
+            OnChange();
+        }
+
+        public void Reset()
+        {
+            currentValue = DefaultValue;
+            OnChange();
+        }
+
+        public void SetValueQuiet(T value) => Value = value;
+        public void SetValueQuiet(BaseVariable<T> value) => Value = value.Value;
+        public void ResetQuiet() => currentValue = DefaultValue;
+
+        public static implicit operator T(BaseVariable<T> reference) => reference.Value;
+
+        public T GetDefaultValue() => DefaultValue;
+
+
+
     }
-
-    public void SetToNull()
-    {
-        Value = default;
-        OnChange();
-    }
-
-    public void Reset()
-    {
-        currentValue = DefaultValue;
-        OnChange();
-    }
-
-    public void SetValueQuiet(T value) => Value = value;
-    public void SetValueQuiet(BaseVariable<T> value) => Value = value.Value;
-    public void ResetQuiet() => currentValue = DefaultValue;
-
-    public static implicit operator T(BaseVariable<T> reference) => reference.Value;
-
-    public T GetDefaultValue() => DefaultValue;
-
-
-
 }

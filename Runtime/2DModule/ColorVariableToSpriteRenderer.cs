@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Arkham.Onigiri.Variables;
 
 public class ColorVariableToSpriteRenderer : MonoBehaviour
 {

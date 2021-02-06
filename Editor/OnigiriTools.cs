@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Arkham.Onigiri.Variables;
+using Arkham.Onigiri.Events;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;

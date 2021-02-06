@@ -1,6 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using Arkham.Onigiri.Events;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;

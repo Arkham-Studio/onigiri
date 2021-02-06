@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Texture")]
-public class TextureVariable : BaseVariable<Texture>
+namespace Arkham.Onigiri.Variables
 {
+    [CreateAssetMenu(menuName = "Variables/Texture")]
+    public class TextureVariable : BaseVariable<Texture>
+    {
 
+    }
 }

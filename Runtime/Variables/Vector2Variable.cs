@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Vector2")]
-public class Vector2Variable : BaseVariable<Vector2>
+namespace Arkham.Onigiri.Variables
 {
-    public static implicit operator Vector2(Vector2Variable reference)
+    [CreateAssetMenu(menuName = "Variables/Vector2")]
+    public class Vector2Variable : BaseVariable<Vector2>
     {
-        return reference.Value;
+        public static implicit operator Vector2(Vector2Variable reference)
+        {
+            return reference.Value;
+        }
     }
 }

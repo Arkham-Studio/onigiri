@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Array/Vector2")]
-public class Vector2ArrayVariable : BaseVariable<Vector2[]>
+namespace Arkham.Onigiri.Variables
 {
-
-    public Vector2 this[int i]
+    [CreateAssetMenu(menuName = "Variables/Array/Vector2")]
+    public class Vector2ArrayVariable : BaseVariable<Vector2[]>
     {
-        get { return Value[i]; }
-        set { Value[i] = value; }
-    }
 
-    public int Lenght
-    {
-        get { return Value.Length; }
+        public Vector2 this[int i]
+        {
+            get { return Value[i]; }
+            set { Value[i] = value; }
+        }
+
+        public int Lenght
+        {
+            get { return Value.Length; }
+        }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Rect Variable")]
-public class RectVariable : BaseVariable<Rect>
+namespace Arkham.Onigiri.Variables
 {
+    [CreateAssetMenu(menuName = "Variables/Rect Variable")]
+    public class RectVariable : BaseVariable<Rect>
+    {
 
+    }
 }

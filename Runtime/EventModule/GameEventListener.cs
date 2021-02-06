@@ -1,31 +1,32 @@
-﻿using Sirenix.OdinInspector;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class GameEventListener : MonoBehaviour
+namespace Arkham.Onigiri.Events
 {
-
-    [SerializeField] private GameEventPack[] eventPacks;
-
-    private void OnEnable()
+    public class GameEventListener : MonoBehaviour
     {
-        foreach (GameEventPack item in eventPacks)
-            item.Event?.RegisterDelegate(item.OnEventRaised);
-    }
 
-    private void OnDisable()
-    {
-        foreach (GameEventPack item in eventPacks)
-            item.Event?.UnRegisterDelegate(item.OnEventRaised);
-    }
+        [SerializeField] private GameEventPack[] eventPacks;
 
-    [System.Serializable]
-    public class GameEventPack
-    {
-        public GameEvent Event;
-        public UnityEvent Response;
+        private void OnEnable()
+        {
+            foreach (GameEventPack item in eventPacks)
+                item.Event?.RegisterDelegate(item.OnEventRaised);
+        }
 
-        public void OnEventRaised() => Response.Invoke();
+        private void OnDisable()
+        {
+            foreach (GameEventPack item in eventPacks)
+                item.Event?.UnRegisterDelegate(item.OnEventRaised);
+        }
+
+        [System.Serializable]
+        public class GameEventPack
+        {
+            public GameEvent Event;
+            public UnityEvent Response;
+
+            public void OnEventRaised() => Response.Invoke();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Arkham.Onigiri.Variables;
+using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(IntReference))]

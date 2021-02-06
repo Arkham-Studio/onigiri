@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-
-[CreateAssetMenu(menuName = "Variables/Audio Clip")]
-public class AudioClipVariable : BaseVariable<AudioClip>
+namespace Arkham.Onigiri.Variables
 {
+    [CreateAssetMenu(menuName = "Variables/Audio Clip")]
+    public class AudioClipVariable : BaseVariable<AudioClip>
+    {
    
+    }
 }

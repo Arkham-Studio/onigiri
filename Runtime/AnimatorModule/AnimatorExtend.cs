@@ -1,5 +1,7 @@
-﻿using Sirenix.OdinInspector;
-using System;
+﻿using System;
+using Arkham.Onigiri.Variables;
+using Arkham.Onigiri.Events;
+using Sirenix.OdinInspector;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Events;

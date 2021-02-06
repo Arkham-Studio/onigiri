@@ -1,18 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Arkham.Onigiri.Variables;
 using UnityEngine;
 
-public class FloatVariableAnimation : MonoBehaviour
+namespace Arkham.Onigiri.AnimatorModule
 {
-    public float floatValue;
-    private float lastFloatValue;
-
-    [SerializeField] private FloatVariable floatVariable;
-
-    private void Update()
+    public class FloatVariableAnimation : MonoBehaviour
     {
-        if (floatValue == lastFloatValue) return;
-        floatVariable.SetValue(floatValue);
-        lastFloatValue = floatValue;
+        public float floatValue;
+        private float lastFloatValue;
+
+        [SerializeField] private FloatVariable floatVariable;
+
+        private void Update()
+        {
+            if (floatValue == lastFloatValue) return;
+            floatVariable.SetValue(floatValue);
+            lastFloatValue = floatValue;
+        }
     }
 }

@@ -1,18 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Array/Vector3")]
-public class Vector3ArrayVariable : BaseVariable<Vector3[]>
+namespace Arkham.Onigiri.Variables
 {
-
-    public Vector3 this[int i]
+    [CreateAssetMenu(menuName = "Variables/Array/Vector3")]
+    public class Vector3ArrayVariable : BaseVariable<Vector3[]>
     {
-        get { return Value[i]; }
-    }
 
-    public int Lenght
-    {
-        get { return Value.Length; }
+        public Vector3 this[int i]
+        {
+            get { return Value[i]; }
+        }
+
+        public int Lenght
+        {
+            get { return Value.Length; }
+        }
     }
 }

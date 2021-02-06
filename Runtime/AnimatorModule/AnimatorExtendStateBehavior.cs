@@ -1,83 +1,86 @@
-﻿using UnityEngine;
-using UnityEngine.Animations;
+﻿using Arkham.Onigiri.Variables;
+using UnityEngine;
 
-public class AnimatorExtendStateBehavior : StateMachineBehaviour
+namespace Arkham.Onigiri.AnimatorModule
 {
-    protected AnimatorStateInfo myAnimatorStateInfos;
-    protected int myLayerIndex;
-
-    public Animator myAnimator;
-    //public Animator Value
-    //{
-    //    get { return myAnimator; }
-    //    set { myAnimator = value; }
-    //}
-
-    //public void SetValue(Animator value)
-    //{
-    //    Value = value;
-    //}
-
-    public AnimatorVariable variable;
-
-    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public class AnimatorExtendStateBehavior : StateMachineBehaviour
     {
-        //base.OnStateEnter(animator, stateInfo, layerIndex);
-        //SetValue(animator);
+        protected AnimatorStateInfo myAnimatorStateInfos;
+        protected int myLayerIndex;
 
-        variable = new AnimatorVariable();
-        variable.SetValue(animator);
+        public Animator myAnimator;
+        //public Animator Value
+        //{
+        //    get { return myAnimator; }
+        //    set { myAnimator = value; }
+        //}
 
-        //myAnimatorStateInfos = stateInfo;
-        //myLayerIndex = layerIndex;
+        //public void SetValue(Animator value)
+        //{
+        //    Value = value;
+        //}
 
-        Debug.Log(GetInstanceID());
+        public AnimatorVariable variable;
 
-    }
+        public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            //base.OnStateEnter(animator, stateInfo, layerIndex);
+            //SetValue(animator);
 
-    public override void OnStateUpdate(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
-    {
+            variable = new AnimatorVariable();
+            variable.SetValue(animator);
+
+            //myAnimatorStateInfos = stateInfo;
+            //myLayerIndex = layerIndex;
+
+            Debug.Log(GetInstanceID());
+
+        }
+
+        public override void OnStateUpdate(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
+        {
         
 
-        //if (Time.frameCount % 60 == 0)
-        //{
-        //    Debug.Log(myAnimator);
-        //    Debug.Log(animator);
-        //    SetTrigger("lol");
-        //}
+            //if (Time.frameCount % 60 == 0)
+            //{
+            //    Debug.Log(myAnimator);
+            //    Debug.Log(animator);
+            //    SetTrigger("lol");
+            //}
 
-        //if (needToSetTrigger)
-        //{
-        //    if (triggerName != "") animator.SetTrigger(triggerName);
-        //    needToSetTrigger = false;
-        //    triggerName = "";
-        //}
+            //if (needToSetTrigger)
+            //{
+            //    if (triggerName != "") animator.SetTrigger(triggerName);
+            //    needToSetTrigger = false;
+            //    triggerName = "";
+            //}
+
+        }
+
+        public void SetTrigger(string _name)
+        {
+            //Debug.Log("set trigger = > " + myAnimator);
+            //myAnimator.SetTrigger(_name);
+            variable.Value.SetTrigger(_name);
+
+            //needToSetTrigger = true;
+            //triggerName = _name;
+        }
+
+        public void SetBoolTrue(string _name)
+        {
+
+        }
+
+        public void SetBoolFalse(string _name)
+        {
+
+        }
+
+        public void SetStateNormalizedTime(float _value)
+        {
+
+        }
 
     }
-
-    public void SetTrigger(string _name)
-    {
-        //Debug.Log("set trigger = > " + myAnimator);
-        //myAnimator.SetTrigger(_name);
-        variable.Value.SetTrigger(_name);
-
-        //needToSetTrigger = true;
-        //triggerName = _name;
-    }
-
-    public void SetBoolTrue(string _name)
-    {
-
-    }
-
-    public void SetBoolFalse(string _name)
-    {
-
-    }
-
-    public void SetStateNormalizedTime(float _value)
-    {
-
-    }
-
 }

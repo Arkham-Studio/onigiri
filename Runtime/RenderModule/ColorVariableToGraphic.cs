@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Arkham.Onigiri.Variables;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ColorVariableToGraphic : MonoBehaviour

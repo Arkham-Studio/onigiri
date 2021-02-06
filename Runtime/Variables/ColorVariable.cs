@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Color")]
-public class ColorVariable : BaseVariable<Color>
+namespace Arkham.Onigiri.Variables
 {
-
-    public void ChangeColor(ColorVariable color)
+    [CreateAssetMenu(menuName = "Variables/Color")]
+    public class ColorVariable : BaseVariable<Color>
     {
-        Value = color.Value;
-        OnChange();
-    }
 
+        public void ChangeColor(ColorVariable color)
+        {
+            Value = color.Value;
+            OnChange();
+        }
+
+    }
 }

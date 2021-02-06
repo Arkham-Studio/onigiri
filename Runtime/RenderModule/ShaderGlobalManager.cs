@@ -1,3 +1,4 @@
+using Arkham.Onigiri.Variables;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Managers/ShaderGlobalManager", fileName = "ShaderGlobalManager")]
