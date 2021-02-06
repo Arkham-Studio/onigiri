@@ -1,0 +1,19 @@
+﻿/* Collapsed Marker State -> Corresponds to GUIStyle.normal */
+GameEventMarker
+{
+    width: 18px;
+    height: 18px;
+    background-image: resource("Assets/Plugins/Onigiri/Editor/Stylesheets/imgs/jumpTo_collapsed.png");
+}
+
+/* Active Marker State -> Corresponds to GUIStyle.onNormal */
+GameEventMarker:checked
+{
+    background-image: resource("Assets/Plugins/Onigiri/Editor/Stylesheets/imgs/jumpTo_normal.png");
+}
+
+/* Selected Marker State -> Corresponds to GUIStyle.onFocused */
+GameEventMarker:hover:focus:checked
+{
+    background-image: resource("Assets/Plugins/Onigiri/Editor/Stylesheets/imgs/jumpTo_selected.png");
+}

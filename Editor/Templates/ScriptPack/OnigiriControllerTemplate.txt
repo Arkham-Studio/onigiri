@@ -1,0 +1,39 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class #CONTROLLERNAME# : MonoBehaviour
+{
+
+    [Header("REFERENCES")]
+    [SerializeField] private #MANAGERNAME# m_#MANAGERNAME#;
+    [SerializeField] private Transform myTransform;
+    [SerializeField] private Animator myAnimator;
+    [SerializeField] private Rigidbody myRigidbody;
+
+    //  MONOS
+    void Start()
+    {
+
+    }
+
+    void Update()
+    {
+
+    }
+
+    void OnEnable()
+    {
+    
+    }
+
+    void OnDisable()
+    {
+    
+    }
+
+
+    //  METHODS
+
+
+}

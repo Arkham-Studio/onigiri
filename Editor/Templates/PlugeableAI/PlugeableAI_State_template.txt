@@ -1,0 +1,27 @@
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "Onigiri/PlugeableAI/#NAME#/State")]
+public class #NAME#State : ScriptableObject
+{
+    public #NAME#Action[] actions;
+    public #NAME#Transition[] transitions;
+    public Color sceneGizmoColor = Color.grey;
+
+    public void UpdateState(#CONTROLLERTYPE# controller)
+    {
+        DoActions(controller);
+        CheckTransitions(controller);
+    }
+
+    private void DoActions(#CONTROLLERTYPE# controller)
+    {
+        for (int i = 0; i < actions.Length; i++)
+            actions[i].Act(controller);
+    }
+
+    private void CheckTransitions(#CONTROLLERTYPE# controller)
+    {
+        for (int i = 0; i < transitions.Length; i++)
+            controller.TransitionToState(transitions[i].decision.Decide(controller) ? transitions[i].trueState : transitions[i].falseState);
+    }
+}

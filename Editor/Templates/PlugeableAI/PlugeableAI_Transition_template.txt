@@ -1,0 +1,9 @@
+using UnityEngine;
+
+[System.Serializable]
+public class #NAME#Transition
+{
+    public #NAME#Decision decision;
+    public #NAME#State trueState;
+    public #NAME#State falseState;
+}

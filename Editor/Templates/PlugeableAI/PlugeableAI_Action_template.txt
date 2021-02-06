@@ -1,0 +1,6 @@
+using UnityEngine;
+
+public abstract class #NAME#Action : ScriptableObject
+{
+    public abstract void Act(#CONTROLLERTYPE# controller);
+}

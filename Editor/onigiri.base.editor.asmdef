@@ -1,0 +1,15 @@
+{
+    "name": "onigiri.editor",
+    "references": [
+        "GUID:276426f11f53a5647ac15cb286bb8c7f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
