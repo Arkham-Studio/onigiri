@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#pragma warning disable CS0649
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace Arkham.Onigiri.Events

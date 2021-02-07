@@ -1,42 +1,43 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿#pragma warning disable CS0649
 using UnityEngine;
 
-public class OnigiriParticleModuleTest : MonoBehaviour
+namespace Arkham.Onigiri.ParticleModule
 {
-    [SerializeField] private ParticleCollisionEventVariable actualCollisionEvent;
-    [SerializeField] private ParticleVariable enterParticle;
-    [SerializeField] private ParticleVariable exitParticle;
-
-    private void OnEnable()
+    public class OnigiriParticleModuleTest : MonoBehaviour
     {
-        actualCollisionEvent.onChange.AddListener(OnParticleCollide);
+        [SerializeField] private ParticleCollisionEventVariable actualCollisionEvent;
+        [SerializeField] private ParticleVariable enterParticle;
+        [SerializeField] private ParticleVariable exitParticle;
 
-        enterParticle.onChange.AddListener(OnParticleTriggerEnter);
-        exitParticle.onChange.AddListener(OnParticleTriggerExit);
-    }
+        private void OnEnable()
+        {
+            actualCollisionEvent.onChange.AddListener(OnParticleCollide);
 
-    private void OnDisable()
-    {
-        actualCollisionEvent.onChange.RemoveListener(OnParticleCollide);
+            enterParticle.onChange.AddListener(OnParticleTriggerEnter);
+            exitParticle.onChange.AddListener(OnParticleTriggerExit);
+        }
 
-        enterParticle.onChange.RemoveListener(OnParticleTriggerEnter);
-        exitParticle.onChange.RemoveListener(OnParticleTriggerExit);
-    }
+        private void OnDisable()
+        {
+            actualCollisionEvent.onChange.RemoveListener(OnParticleCollide);
 
-    private void OnParticleTriggerExit()
-    {
-        Debug.Log("exit trigger =>" + exitParticle.Value.velocity);
-    }
+            enterParticle.onChange.RemoveListener(OnParticleTriggerEnter);
+            exitParticle.onChange.RemoveListener(OnParticleTriggerExit);
+        }
 
-    private void OnParticleTriggerEnter()
-    {
-        Debug.Log("enter trigger =>" + enterParticle.Value.velocity);
-    }
+        private void OnParticleTriggerExit()
+        {
+            Debug.Log("exit trigger =>" + exitParticle.Value.velocity);
+        }
 
-    private void OnParticleCollide()
-    {
-        Debug.Log("collide particle with =>" + actualCollisionEvent.Value.colliderComponent.transform.root.name);
+        private void OnParticleTriggerEnter()
+        {
+            Debug.Log("enter trigger =>" + enterParticle.Value.velocity);
+        }
+
+        private void OnParticleCollide()
+        {
+            Debug.Log("collide particle with =>" + actualCollisionEvent.Value.colliderComponent.transform.root.name);
+        }
     }
 }

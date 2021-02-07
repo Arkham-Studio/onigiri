@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Playables;
 
-public class UnityEventReceiver : MonoBehaviour, INotificationReceiver
+namespace Arkham.Onigiri.TimelineModule
 {
-    public void OnNotify(Playable origin, INotification notification, object context)
+    public class UnityEventReceiver : MonoBehaviour, INotificationReceiver
     {
-        if (notification is UnityEventMarker _marker) _marker.response.Invoke();
+        public void OnNotify(Playable origin, INotification notification, object context)
+        {
+            if (notification is UnityEventMarker _marker) _marker.response.Invoke();
+        }
     }
 }

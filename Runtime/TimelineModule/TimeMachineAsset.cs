@@ -1,16 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Playables;
 
-public class TimeMachineAsset : PlayableAsset
+namespace Arkham.Onigiri.TimelineModule
 {
-
-    public TimeMachineBehavior template;
-
-    public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
+    public class TimeMachineAsset : PlayableAsset
     {
-        var _playable = ScriptPlayable<TimeMachineBehavior>.Create(graph, template);
-        return _playable;
+
+        public TimeMachineBehavior template;
+
+        public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
+        {
+            var _playable = ScriptPlayable<TimeMachineBehavior>.Create(graph, template);
+            return _playable;
+        }
     }
 }

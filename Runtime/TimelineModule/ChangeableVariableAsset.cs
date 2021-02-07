@@ -1,16 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Playables;
-
-public class ChangeableVariableAsset : PlayableAsset
+#pragma warning disable CS0649
+namespace Arkham.Onigiri.TimelineModule
 {
-    [SerializeField] private ChangeableVariableBehavior template;
-
-    public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
+    public class ChangeableVariableAsset : PlayableAsset
     {
-        var _playable = ScriptPlayable<ChangeableVariableBehavior>.Create(graph, template);
-        return _playable;
-    }
+        [SerializeField] private ChangeableVariableBehavior template;
 
+        public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
+        {
+            var _playable = ScriptPlayable<ChangeableVariableBehavior>.Create(graph, template);
+            return _playable;
+        }
+
+    }
 }

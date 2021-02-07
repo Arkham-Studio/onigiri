@@ -2,7 +2,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
-
+#pragma warning disable CS0649
 namespace Arkham.Onigiri.Events
 {
     public class ChangeableVariableListener : MonoBehaviour

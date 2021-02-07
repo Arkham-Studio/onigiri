@@ -1,51 +1,55 @@
-﻿using Sirenix.OdinInspector;
+﻿#pragma warning disable CS0649
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class TimeController : MonoBehaviour
+namespace Arkham.Onigiri.TimeModule
 {
-    [SerializeField] private TimeManager m_TimeManager;
-    [SerializeField] private bool isAutoUpdate = true;
-    [SerializeField] private TimePack[] packs;
-
-    private void Start()
+    public class TimeController : MonoBehaviour
     {
-        if (!isAutoUpdate)
-            RefreshTime();
-    }
+        [SerializeField] private TimeManager m_TimeManager;
+        [SerializeField] private bool isAutoUpdate = true;
+        [SerializeField] private TimePack[] packs;
 
-    private void OnEnable()
-    {
-        if (m_TimeManager.enabledTime != null) m_TimeManager.enabledTime.SetValue(Time.time);
-    }
+        private void Start()
+        {
+            if (!isAutoUpdate)
+                RefreshTime();
+        }
 
-    private void Update()
-    {
-        if (isAutoUpdate)
-            RefreshTime();
+        private void OnEnable()
+        {
+            if (m_TimeManager.enabledTime != null) m_TimeManager.enabledTime.SetValue(Time.time);
+        }
 
-        foreach (TimePack item in packs)
-            if (Time.frameCount % item.frameStep == 0) item.response.Invoke();
-    }
+        private void Update()
+        {
+            if (isAutoUpdate)
+                RefreshTime();
 
-    public void RefreshTime()
-    {
-        if (m_TimeManager.date != null) m_TimeManager.date.SetValue(System.DateTime.Now.ToString("s"));
-        if (m_TimeManager.longDate != null) m_TimeManager.longDate.SetValue(System.DateTime.Now.Ticks);
+            foreach (TimePack item in packs)
+                if (Time.frameCount % item.frameStep == 0) item.response.Invoke();
+        }
 
-        if (m_TimeManager.frameCount != null) m_TimeManager.frameCount.SetValue(Time.frameCount);
-        if (m_TimeManager.time != null) m_TimeManager.time.SetValue(Time.time);
-    }
+        public void RefreshTime()
+        {
+            if (m_TimeManager.date != null) m_TimeManager.date.SetValue(System.DateTime.Now.ToString("s"));
+            if (m_TimeManager.longDate != null) m_TimeManager.longDate.SetValue(System.DateTime.Now.Ticks);
 
-    [System.Serializable]
-    public class TimePack
-    {
+            if (m_TimeManager.frameCount != null) m_TimeManager.frameCount.SetValue(Time.frameCount);
+            if (m_TimeManager.time != null) m_TimeManager.time.SetValue(Time.time);
+        }
+
+        [System.Serializable]
+        public class TimePack
+        {
 #if UNITY_EDITOR
-        [TextArea(2, 4), HideLabel()]
-        public string infos;
+            [TextArea(2, 4), HideLabel()]
+            public string infos;
 #endif
-        public float frameStep;
-        public UnityEvent response;
-    }
+            public float frameStep;
+            public UnityEvent response;
+        }
 
+    }
 }

@@ -1,24 +1,28 @@
-﻿using Arkham.Onigiri.Variables;
+﻿#pragma warning disable CS0649
+using Arkham.Onigiri.Variables;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Variables/Language Variable")]
-public class LanguageVariable : BaseVariable<SystemLanguage>
+namespace Arkham.Onigiri.LocalizationModule
 {
-
-    public bool isDebug = false;
-
-    public void ChangeLanguage(string v)
+    [CreateAssetMenu(menuName = "Variables/Language Variable")]
+    public class LanguageVariable : BaseVariable<SystemLanguage>
     {
-        if (v == "") return;
-        Value = (SystemLanguage)System.Enum.Parse(typeof(SystemLanguage), v, true);
-        OnChange();
-    }
 
-    public void CheckSystemLanguage()
-    {
-        if (isDebug) return;
-        Value = Application.systemLanguage == SystemLanguage.French ? SystemLanguage.French : SystemLanguage.English;
-        OnChange();
-    }
+        public bool isDebug = false;
 
+        public void ChangeLanguage(string v)
+        {
+            if (v == "") return;
+            Value = (SystemLanguage)System.Enum.Parse(typeof(SystemLanguage), v, true);
+            OnChange();
+        }
+
+        public void CheckSystemLanguage()
+        {
+            if (isDebug) return;
+            Value = Application.systemLanguage == SystemLanguage.French ? SystemLanguage.French : SystemLanguage.English;
+            OnChange();
+        }
+
+    }
 }

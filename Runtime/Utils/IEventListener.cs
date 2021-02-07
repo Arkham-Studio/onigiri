@@ -1,8 +1,11 @@
-﻿public interface IEventListener
+﻿namespace Arkham.Onigiri.Utils
 {
-    void OnEventRaised();
-}
-public interface IEventListener<T>
-{
-    void OnEventRaised(T o);
+    public interface IEventListener
+    {
+        void OnEventRaised();
+    }
+    public interface IEventListener<T>
+    {
+        void OnEventRaised(T o);
+    }
 }

@@ -1,97 +1,74 @@
-﻿using Arkham.Onigiri.Variables;
+﻿#pragma warning disable CS0649
+using Arkham.Onigiri.Variables;
+using Arkham.Onigiri.Utils;
 using UnityEngine;
 using UnityEngine.Events;
-using Sirenix.OdinInspector;
 
-public class AppStateController : MonoBehaviour
+namespace Arkham.Onigiri.AppStates
 {
-    [SerializeField]
-    private AppStateManager stateManager;
-
-    [SerializeField]
-    private DenumVariable state;
-
-    [SerializeField]
-    private DenumVariable nextState;
-
-#if UNITY_EDITOR
-    [TextArea(2, 10), HideLabel(), FoldoutGroup("Infos")]
-    public string infos = "";
-#endif
-    [SerializeField]
-    [Tooltip("Trigger for all app state controller at start, active or not")]
-    private UnityEvent onInitState;
-
-#if UNITY_EDITOR
-    [TextArea(2, 10), HideLabel(), FoldoutGroup("Infos2")]
-    public string infos2 = "";
-#endif
-    [SerializeField]
-    private UnityEvent onEnterState;
-
-#if UNITY_EDITOR
-    [TextArea(2, 10), HideLabel(), FoldoutGroup("Infos3")]
-    public string infos3 = "";
-#endif
-    [SerializeField]
-    private UnityEvent onLeaveState;
-
-    public bool forceInit = false;
-
-
-    private void Start()
+    public class AppStateController : MonoBehaviour
     {
-        if (stateManager.actualState != state && !forceInit) onInitState?.Invoke();
-        else onEnterState?.Invoke();
 
-        stateManager.onStateChange.RegisterDelegate(OnStateChange);
+        [SerializeField]
+        private DenumVariable actualState;
+        [SerializeField]
+        private Denum[] state;
+        [SerializeField]
+        private Denum nextState;
+        [SerializeField]
+        private bool forceInit = false;
 
-    }
+        [SerializeField]
+        [Tooltip("Trigger for all app state controller at start, active or not")]
+        private UnityEvent onInitState;
 
-    public void OnStateChange()
-    {
-        if (stateManager.actualState == state) onEnterState?.Invoke();
-        else if (stateManager.lastState == state) onLeaveState?.Invoke();
-    }
+        [SerializeField]
+        private UnityEvent onEnterState;
 
-    public void ChangeAppState(DenumVariable n)
-    {
-        stateManager.ChangeAppState(n);
-    }
+        [SerializeField]
+        private UnityEvent onLeaveState;
 
-    public void GoNextState()
-    {
-        stateManager.ChangeAppState(nextState);
-    }
+        private bool isActive = false;
 
-#if UNITY_EDITOR
-    [Button]
-    public void SaveInfos()
-    {
-        string _infos = "";
-        for (int i = 0; i < onEnterState.GetPersistentEventCount(); i++)
+        private void Start()
         {
-            _infos += onEnterState.GetPersistentTarget(i).name + " => " + onEnterState.GetPersistentMethodName(i);
-            _infos += "\n";
-        }
-        infos2 = _infos;
+            actualState.onChange.AddListener(OnStateChange);
 
-        _infos = "";
-        for (int i = 0; i < onInitState.GetPersistentEventCount(); i++)
-        {
-            _infos += onInitState.GetPersistentTarget(i).name + " => " + onInitState.GetPersistentMethodName(i);
-            _infos += "\n";
+            if (!IsState(actualState.Value) && !forceInit)
+            {
+                isActive = false;
+                onInitState?.Invoke();
+            }
+            else
+            {
+                isActive = true;
+                onEnterState?.Invoke();
+            }
         }
-        infos = _infos;
 
-        _infos = "";
-        for (int i = 0; i < onLeaveState.GetPersistentEventCount(); i++)
+        public void OnStateChange()
         {
-            _infos += onLeaveState.GetPersistentTarget(i).name + " => " + onLeaveState.GetPersistentMethodName(i);
-            _infos += "\n";
+            if (IsState(actualState.Value))
+            {
+                isActive = true;
+                onEnterState?.Invoke();
+            }
+            else if (isActive)
+            {
+                isActive = false;
+                onLeaveState?.Invoke();
+            }
         }
-        infos3 = _infos;
+
+        public void ChangeAppState(Denum n) => actualState.SetValue(n);
+
+        public void GoNextState() => actualState.SetValue(nextState);
+
+        private bool IsState(Denum _state)
+        {
+            foreach (Denum item in state)
+                if (item == _state) return true;
+            return false;
+        }
     }
-#endif
-
 }

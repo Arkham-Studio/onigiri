@@ -1,73 +1,77 @@
-﻿using Arkham.Onigiri.Variables;
+﻿#pragma warning disable CS0649
+using Arkham.Onigiri.Variables;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class AudioSourceExtend : MonoBehaviour
+namespace Arkham.Onigiri.AudioModule
 {
-    [Title("REFERENCES")]
-    [SerializeField] private AudioSource myAudioSource;
-    [SerializeField] private AudioClipVariable audioClipToPlay;
-    [SerializeField] private FloatVariable timeDelay;
-
-    [Title("SETTINGS")]
-    [SerializeField] private bool checkEndedEvent = true;
-    private bool isEnded = true;
-
-    [Title("EVENTS")]
-    [ShowIf("checkEndedEvent")]
-    public UnityEvent onAudioSourceEnd;
-
-    //  MONOS
-    void Start()
+    public class AudioSourceExtend : MonoBehaviour
     {
-        if (myAudioSource == null) myAudioSource = GetComponent<AudioSource>();
-    }
+        [Title("REFERENCES")]
+        [SerializeField] private AudioSource myAudioSource;
+        [SerializeField] private AudioClipVariable audioClipToPlay;
+        [SerializeField] private FloatVariable timeDelay;
 
-    private void OnEnable()
-    {
-        if (audioClipToPlay != null) audioClipToPlay.onChange.AddListener(OnAudioClipChange);
-    }
+        [Title("SETTINGS")]
+        [SerializeField] private bool checkEndedEvent = true;
+        private bool isEnded = true;
 
-    private void OnDisable()
-    {
-        if (audioClipToPlay != null) audioClipToPlay.onChange.RemoveListener(OnAudioClipChange);
-    }
-    private void FixedUpdate()
-    {
-        if (!checkEndedEvent) return;
-        if (myAudioSource.clip == null) return;
-        if (isEnded) return;
+        [Title("EVENTS")]
+        [ShowIf("checkEndedEvent")]
+        public UnityEvent onAudioSourceEnd;
 
-        float progress = Mathf.Clamp01(myAudioSource.time / myAudioSource.clip.length);
-
-        if (progress >= 0.98f)
+        //  MONOS
+        void Start()
         {
-            isEnded = true;
-            onAudioSourceEnd.Invoke();
+            if (myAudioSource == null) myAudioSource = GetComponent<AudioSource>();
         }
 
-    }
-
-
-    //  EVENTS
-    private void OnAudioClipChange()
-    {
-        if (myAudioSource == null) return;
-        if (audioClipToPlay.Value == null)
+        private void OnEnable()
         {
-            myAudioSource.Stop();
-            return;
+            if (audioClipToPlay != null) audioClipToPlay.onChange.AddListener(OnAudioClipChange);
         }
 
-        isEnded = false;
+        private void OnDisable()
+        {
+            if (audioClipToPlay != null) audioClipToPlay.onChange.RemoveListener(OnAudioClipChange);
+        }
+        private void FixedUpdate()
+        {
+            if (!checkEndedEvent) return;
+            if (myAudioSource.clip == null) return;
+            if (isEnded) return;
 
-        myAudioSource.clip = audioClipToPlay.Value;
-        if (timeDelay != null) myAudioSource.time = timeDelay.Value;
-        myAudioSource.Play();
+            float progress = Mathf.Clamp01(myAudioSource.time / myAudioSource.clip.length);
+
+            if (progress >= 0.98f)
+            {
+                isEnded = true;
+                onAudioSourceEnd.Invoke();
+            }
+
+        }
+
+
+        //  EVENTS
+        private void OnAudioClipChange()
+        {
+            if (myAudioSource == null) return;
+            if (audioClipToPlay.Value == null)
+            {
+                myAudioSource.Stop();
+                return;
+            }
+
+            isEnded = false;
+
+            myAudioSource.clip = audioClipToPlay.Value;
+            if (timeDelay != null) myAudioSource.time = timeDelay.Value;
+            myAudioSource.Play();
+
+
+        }
 
 
     }
-
-
 }

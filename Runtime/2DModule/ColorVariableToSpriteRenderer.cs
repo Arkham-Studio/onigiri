@@ -1,24 +1,27 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#pragma warning disable CS0649
 using Arkham.Onigiri.Variables;
+using UnityEngine;
 
-public class ColorVariableToSpriteRenderer : MonoBehaviour
+namespace Arkham.Onigiri.Module2D
 {
-
-    [SerializeField] private SpriteRenderer mySpriteRenderer;
-    [SerializeField] private ColorVariable value;
-    [SerializeField] private bool initOnStart = true;
-
-    private void OnEnable() => value.onChange.AddListener(UpdateValue);
-
-    private void OnDisable() => value.onChange.RemoveListener(UpdateValue);
-
-    void Start()
+    public class ColorVariableToSpriteRenderer : MonoBehaviour
     {
-        if (mySpriteRenderer == null) mySpriteRenderer = GetComponent<SpriteRenderer>();
-        if (initOnStart) UpdateValue();
+
+        [SerializeField] private SpriteRenderer mySpriteRenderer;
+        [SerializeField] private ColorVariable value;
+        [SerializeField] private bool initOnStart = true;
+
+        private void OnEnable() => value.onChange.AddListener(UpdateValue);
+
+        private void OnDisable() => value.onChange.RemoveListener(UpdateValue);
+
+        void Start()
+        {
+            if (mySpriteRenderer == null) mySpriteRenderer = GetComponent<SpriteRenderer>();
+            if (initOnStart) UpdateValue();
+        }
+
+        public void UpdateValue() => mySpriteRenderer.color = value.Value;
+
     }
-
-    public void UpdateValue() => mySpriteRenderer.color = value.Value;
-
 }

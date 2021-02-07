@@ -1,50 +1,51 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Arkham.Onigiri.Variables;
+﻿using Arkham.Onigiri.Variables;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ChangeableVariableToSlider : MonoBehaviour
+namespace Arkham.Onigiri.UI
 {
-    [SerializeField] private Slider mySlider;
-    [SerializeField] private ChangeableVariable variable;
-    public ChangeableVariable Variable
+    public class ChangeableVariableToSlider : MonoBehaviour
     {
-        set { variable = value; }
-    }
-    [SerializeField] private bool initOnStart = true;
-    [SerializeField] private bool listenToChange = true;
-
-    private void OnEnable()
-    {
-        if (listenToChange)
-            variable.onChange.AddListener(UpdateValue);
-    }
-
-    private void OnDisable()
-    {
-        if (listenToChange)
-            variable.onChange.RemoveListener(UpdateValue);
-    }
-
-    void Start()
-    {
-        mySlider = mySlider ?? GetComponent<Slider>();
-        if (initOnStart) UpdateValue();
-    }
-
-    public void UpdateValue()
-    {
-        switch (variable)
+        [SerializeField] private Slider mySlider;
+        [SerializeField] private ChangeableVariable variable;
+        public ChangeableVariable Variable
         {
-            case FloatVariable f:
-                mySlider.value = f.Value;
-                break;
-            case IntVariable i:
-                mySlider.value = i.Value;
-                break;
-            default:
-                break;
+            set { variable = value; }
+        }
+        [SerializeField] private bool initOnStart = true;
+        [SerializeField] private bool listenToChange = true;
+
+        private void OnEnable()
+        {
+            if (listenToChange)
+                variable.onChange.AddListener(UpdateValue);
+        }
+
+        private void OnDisable()
+        {
+            if (listenToChange)
+                variable.onChange.RemoveListener(UpdateValue);
+        }
+
+        void Start()
+        {
+            mySlider = mySlider ?? GetComponent<Slider>();
+            if (initOnStart) UpdateValue();
+        }
+
+        public void UpdateValue()
+        {
+            switch (variable)
+            {
+                case FloatVariable f:
+                    mySlider.value = f.Value;
+                    break;
+                case IntVariable i:
+                    mySlider.value = i.Value;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

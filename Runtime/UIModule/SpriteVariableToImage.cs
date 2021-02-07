@@ -1,31 +1,32 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿#pragma warning disable CS0649
 using Arkham.Onigiri.Variables;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SpriteVariableToImage : MonoBehaviour
+namespace Arkham.Onigiri.UI
 {
-    [SerializeField] private SpriteVariable spriteVariable;
-    [SerializeField] private Image myImage;
-    [SerializeField] private bool onStart = true;
-    [SerializeField] private bool onChange = true;
-
-    private void OnEnable()
+    public class SpriteVariableToImage : MonoBehaviour
     {
-        myImage = myImage ?? GetComponent<Image>();
-        if (onChange) spriteVariable?.onChange.AddListener(OnSpriteChange);
-        if (onStart) OnSpriteChange();
-    }
+        [SerializeField] private SpriteVariable spriteVariable;
+        [SerializeField] private Image myImage;
+        [SerializeField] private bool onStart = true;
+        [SerializeField] private bool onChange = true;
 
-    private void OnDisable()
-    {
-        if (onChange) spriteVariable?.onChange.RemoveListener(OnSpriteChange);
-    }
+        private void OnEnable()
+        {
+            myImage = myImage ?? GetComponent<Image>();
+            if (onChange) spriteVariable?.onChange.AddListener(OnSpriteChange);
+            if (onStart) OnSpriteChange();
+        }
 
-    private void OnSpriteChange()
-    {
-        myImage.sprite = spriteVariable.Value;
+        private void OnDisable()
+        {
+            if (onChange) spriteVariable?.onChange.RemoveListener(OnSpriteChange);
+        }
+
+        private void OnSpriteChange()
+        {
+            myImage.sprite = spriteVariable.Value;
+        }
     }
 }

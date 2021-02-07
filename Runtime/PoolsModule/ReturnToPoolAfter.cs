@@ -1,30 +1,32 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public class ReturnToPoolAfter : MonoBehaviour
+#pragma warning disable CS0649
+namespace Arkham.Onigiri.PoolsModule
 {
-    [SerializeField] private PoolManager manager;
-    [SerializeField] private float delay;
-
-    private void OnEnable()
+    public class ReturnToPoolAfter : MonoBehaviour
     {
-        StartCoroutine(Delay());
-    }
+        [SerializeField] private PoolManager manager;
+        [SerializeField] private float delay;
 
-    private void OnDisable()
-    {
-        StopAllCoroutines();
-    }
+        private void OnEnable()
+        {
+            StartCoroutine(Delay());
+        }
 
-    IEnumerator Delay()
-    {
-        yield return new WaitForSeconds(delay);
-        ReturnToPool();
-    }
+        private void OnDisable()
+        {
+            StopAllCoroutines();
+        }
 
-    public void ReturnToPool()
-    {
-        manager.ReturnObject(gameObject);
+        IEnumerator Delay()
+        {
+            yield return new WaitForSeconds(delay);
+            ReturnToPool();
+        }
+
+        public void ReturnToPool()
+        {
+            manager.ReturnObject(gameObject);
+        }
     }
 }

@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Timeline;
+﻿using UnityEngine.Timeline;
 
-namespace Arkham.Onigiri.Base
+namespace Arkham.Onigiri.TimelineModule
 {
 	[TrackClipType(typeof(ChangeableVariableAsset))]
 	public class ChangeableVariableTrack : TrackAsset

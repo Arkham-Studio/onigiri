@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
-namespace Arkham.Onigiri.Timeline
+namespace Arkham.Onigiri.TimelineModule
 {
     [TrackClipType(typeof(TimeMachineAsset))]
     public class TimeMachineTrack : TrackAsset

@@ -1,44 +1,50 @@
-﻿using Sirenix.OdinInspector;
+﻿#pragma warning disable CS0649
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GenericInputsController : MonoBehaviour
+namespace Arkham.Onigiri.Inputs
 {
 
-    [SerializeField] GenericInputsPack[] packs;
-
-    void Update()
+    public class GenericInputsController : MonoBehaviour
     {
-        foreach (GenericInputsPack item in packs)
+
+        [SerializeField] GenericInputsPack[] packs;
+
+        void Update()
         {
-            switch (item.mode)
+            foreach (GenericInputsPack item in packs)
             {
-                case GenericInputMode.keep:
-                    if (Input.GetKey(item.key)) item.response.Invoke();
-                    break;
-                case GenericInputMode.up:
-                    if (Input.GetKeyUp(item.key)) item.response.Invoke();
-                    break;
-                case GenericInputMode.down:
-                    if (Input.GetKeyDown(item.key)) item.response.Invoke();
-                    break;
-                default:
-                    break;
+                switch (item.mode)
+                {
+                    case GenericInputMode.keep:
+                        if (Input.GetKey(item.key)) item.response.Invoke();
+                        break;
+                    case GenericInputMode.up:
+                        if (Input.GetKeyUp(item.key)) item.response.Invoke();
+                        break;
+                    case GenericInputMode.down:
+                        if (Input.GetKeyDown(item.key)) item.response.Invoke();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
-    }
 
-    [System.Serializable]
-    public class GenericInputsPack
-    {
+        [System.Serializable]
+        public class GenericInputsPack
+        {
 #if UNITY_EDITOR
-        [TextArea(2, 4), HideLabel()]
-        public string infos;
+            [TextArea(2, 4), HideLabel()]
+            public string infos;
 #endif
-        public KeyCode key;
-        public GenericInputMode mode;
-        public UnityEvent response;
+            public KeyCode key;
+            public GenericInputMode mode;
+            public UnityEvent response;
+        }
+
+        public enum GenericInputMode { keep, up, down }
     }
 
-    public enum GenericInputMode { keep, up, down }
 }

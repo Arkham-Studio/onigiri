@@ -1,22 +1,25 @@
 ﻿using Arkham.Onigiri.Variables;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class FloatVariableToImageFill : MonoBehaviour
+#pragma warning disable CS0649
+namespace Arkham.Onigiri.UI
 {
-    [SerializeField] private Image myImage;
-    [SerializeField] private FloatVariable value;
-    [SerializeField] private bool initOnStart = true;
-
-    private void OnEnable() => value.onChange.AddListener(UpdateValue);
-
-    private void OnDisable() => value.onChange.RemoveListener(UpdateValue);
-
-    void Start()
+    public class FloatVariableToImageFill : MonoBehaviour
     {
-        if (myImage == null) myImage = GetComponent<Image>();
-        if (initOnStart) UpdateValue();
-    }
+        [SerializeField] private Image myImage;
+        [SerializeField] private FloatVariable value;
+        [SerializeField] private bool initOnStart = true;
 
-    public void UpdateValue() => myImage.fillAmount = value.Value;
+        private void OnEnable() => value.onChange.AddListener(UpdateValue);
+
+        private void OnDisable() => value.onChange.RemoveListener(UpdateValue);
+
+        void Start()
+        {
+            if (myImage == null) myImage = GetComponent<Image>();
+            if (initOnStart) UpdateValue();
+        }
+
+        public void UpdateValue() => myImage.fillAmount = value.Value;
+    }
 }

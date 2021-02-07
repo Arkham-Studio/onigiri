@@ -1,16 +1,17 @@
 ﻿using Arkham.Onigiri.Variables;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Arkham.Onigiri.AnimatorModule
 {
     public class AudioControllerStateBehavior : StateMachineBehaviour
     {
+        [Tooltip("")]
         public AudioClipVariable audioClipVariable;
         public AudioClip clip;
         public string stateSpeedMultiplierName;
-
         public bool isChangingStateLength = true;
-        [Tooltip("if true and no audioclipvariable, find first audiosource in hierarchie")]
+        [Tooltip("if true and no audioclipvariable, find first audiosource in hierarchie"), HideIf("audioClipVariable")]
         public bool isAutoGetAudioSource = false;
 
         // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state

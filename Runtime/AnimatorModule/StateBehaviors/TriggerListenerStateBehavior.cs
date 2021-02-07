@@ -1,4 +1,5 @@
-﻿using Arkham.Onigiri.Variables;
+﻿#pragma warning disable CS0649
+using Arkham.Onigiri.Variables;
 using UnityEngine;
 using UnityEngine.Events;
 

@@ -1,18 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Arkham.Onigiri.Variables;
+﻿using Arkham.Onigiri.Variables;
 using UnityEngine;
 
-public class ExposeComponent : MonoBehaviour
+namespace Arkham.Onigiri.Utils
 {
-
-    public Component component;
-    public ComponentVariable componentVariable;
-
-    private void Start()
+    public class ExposeComponent : MonoBehaviour
     {
 
-        if (component == null) Destroy(this);
-        componentVariable.Value = component;
+        public Component component;
+        public ComponentVariable componentVariable;
+
+        private void Start()
+        {
+
+            if (component == null) Destroy(this);
+            componentVariable.Value = component;
+        }
     }
 }

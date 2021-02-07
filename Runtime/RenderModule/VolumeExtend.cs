@@ -1,18 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Rendering;
+﻿using UnityEngine;
 
-public class VolumeExtend : MonoBehaviour
+namespace Arkham.Onigiri.RenderModule
 {
+    public class VolumeExtend : MonoBehaviour
+    {
 
-    //[SerializeField] private Volume myVolume;
-
-
-    //public void SetPostProcess(VolumeProfile _pp)
-    //{
-    //    myVolume.profile = _pp;
-    //}
+        //[SerializeField] private Volume myVolume;
 
 
+        //public void SetPostProcess(VolumeProfile _pp)
+        //{
+        //    myVolume.profile = _pp;
+        //}
+
+
+    }
 }

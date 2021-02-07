@@ -1,47 +1,49 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#pragma warning disable CS0649
 using Arkham.Onigiri.Variables;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
-using Sirenix.OdinInspector;
 
 //TODO NOT WORKING
-public class GlobalIfEvent<T> : ScriptableObject where T : BaseVariable<T> 
+namespace Arkham.Onigiri.LogicModule
 {
-
-    [SerializeField] private IfEventPack[] packs;
-
-    [System.Serializable]
-    public class IfEventPack
+    public class GlobalIfEvent<T> : ScriptableObject where T : BaseVariable<T> 
     {
-#if UNITY_EDITOR
-        [TextArea(2, 4), HideLabel()]
-        public string infos;
-#endif
-        [SerializeField] private T a;
-        [SerializeField] private T b;
-        [SerializeField] private TestType test;
-        public UnityEvent response;
 
-        public void Test()
+        [SerializeField] private IfEventPack[] packs;
+
+        [System.Serializable]
+        public class IfEventPack
         {
-            switch (test)
+#if UNITY_EDITOR
+            [TextArea(2, 4), HideLabel()]
+            public string infos;
+#endif
+            [SerializeField] private T a;
+            [SerializeField] private T b;
+            [SerializeField] private TestType test;
+            public UnityEvent response;
+
+            public void Test()
             {
-                case TestType.more:
-                    break;
-                case TestType.less:
-                    break;
-                case TestType.moreEqual:
-                    break;
-                case TestType.lessEqual:
-                    break;
-                case TestType.equal:
-                    break;
-                default:
-                    break;
+                switch (test)
+                {
+                    case TestType.more:
+                        break;
+                    case TestType.less:
+                        break;
+                    case TestType.moreEqual:
+                        break;
+                    case TestType.lessEqual:
+                        break;
+                    case TestType.equal:
+                        break;
+                    default:
+                        break;
+                }
             }
         }
-    }
 
-    public enum TestType { more, less, moreEqual, lessEqual, equal }
+        public enum TestType { more, less, moreEqual, lessEqual, equal }
+    }
 }

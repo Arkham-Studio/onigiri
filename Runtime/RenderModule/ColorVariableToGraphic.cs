@@ -1,23 +1,26 @@
 ﻿using Arkham.Onigiri.Variables;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class ColorVariableToGraphic : MonoBehaviour
+#pragma warning disable CS0649
+namespace Arkham.Onigiri.RenderModule
 {
-    [SerializeField] private Graphic MyGraphic;
-    [SerializeField] private ColorVariable variable;
-    [SerializeField] private bool initOnStart = true;
-
-    private void Start()
+    public class ColorVariableToGraphic : MonoBehaviour
     {
-        if (initOnStart) UpdateRenderer();
+        [SerializeField] private Graphic MyGraphic;
+        [SerializeField] private ColorVariable variable;
+        [SerializeField] private bool initOnStart = true;
+
+        private void Start()
+        {
+            if (initOnStart) UpdateRenderer();
+        }
+
+        private void OnValidate() => MyGraphic = MyGraphic ?? GetComponent<Graphic>();
+
+        private void OnEnable() => variable.onChange.AddListener(UpdateRenderer);
+
+        private void OnDisable() => variable.onChange.RemoveListener(UpdateRenderer);
+
+        public void UpdateRenderer() => MyGraphic.color = variable.Value;
     }
-
-    private void OnValidate() => MyGraphic = MyGraphic ?? GetComponent<Graphic>();
-
-    private void OnEnable() => variable.onChange.AddListener(UpdateRenderer);
-
-    private void OnDisable() => variable.onChange.RemoveListener(UpdateRenderer);
-
-    public void UpdateRenderer() => MyGraphic.color = variable.Value;
 }

@@ -1,8 +1,9 @@
 ﻿using Arkham.Onigiri.Variables;
-using UnityEngine;
-using UnityEngine.Events;
 
-public class IfBoolEvent : IfEventBase<bool, BoolVariable>
+namespace Arkham.Onigiri.LogicModule
 {
-    public override bool Test(bool _v) => _v == test;
+    public class IfBoolEvent : IfEventBase<bool, BoolVariable>
+    {
+        public override bool Test(bool _v) => _v == test;
+    }
 }

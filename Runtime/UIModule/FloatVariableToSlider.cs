@@ -2,35 +2,38 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FloatVariableToSlider : MonoBehaviour
+namespace Arkham.Onigiri.UI
 {
-
-    [SerializeField] private Slider mySlider;
-    [SerializeField] private FloatVariable value;
-    public FloatVariable Value
+    public class FloatVariableToSlider : MonoBehaviour
     {
-        set { this.value = value; }
-    }
-    [SerializeField] private bool initOnStart = true;
-    [SerializeField] private bool listenToChange = true;
 
-    private void OnEnable()
-    {
-        if (listenToChange)
-            value.onChange.AddListener(UpdateValue);
-    }
+        [SerializeField] private Slider mySlider;
+        [SerializeField] private FloatVariable value;
+        public FloatVariable Value
+        {
+            set { this.value = value; }
+        }
+        [SerializeField] private bool initOnStart = true;
+        [SerializeField] private bool listenToChange = true;
 
-    private void OnDisable()
-    {
-        if (listenToChange)
-            value.onChange.RemoveListener(UpdateValue);
-    }
+        private void OnEnable()
+        {
+            if (listenToChange)
+                value.onChange.AddListener(UpdateValue);
+        }
 
-    void Start()
-    {
-        if (mySlider == null) mySlider = GetComponent<Slider>();
-        if (initOnStart) UpdateValue();
-    }
+        private void OnDisable()
+        {
+            if (listenToChange)
+                value.onChange.RemoveListener(UpdateValue);
+        }
 
-    public void UpdateValue() => mySlider.value = value.Value;
+        void Start()
+        {
+            if (mySlider == null) mySlider = GetComponent<Slider>();
+            if (initOnStart) UpdateValue();
+        }
+
+        public void UpdateValue() => mySlider.value = value.Value;
+    }
 }

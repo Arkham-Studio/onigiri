@@ -1,75 +1,77 @@
-﻿using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-[InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false)]
-public class BasePoolManager<T> : ScriptableObject where T : Component
+namespace Arkham.Onigiri.PoolsModule
 {
-    public int nbrToInit;
-    public T obj;
-
-    private Transform mainPoolTransform;
-    private List<T> pool;
-
-    public void Init()
+    [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false)]
+    public class BasePoolManager<T> : ScriptableObject where T : Component
     {
-        pool = new List<T>();
+        public int nbrToInit;
+        public T obj;
 
-        if (!mainPoolTransform) mainPoolTransform = new GameObject(name + "_MainPool").transform;
+        private Transform mainPoolTransform;
+        private List<T> pool;
 
-        for (int i = 0; i < nbrToInit; i++)
+        public void Init()
         {
-            T o = Instantiate(obj, mainPoolTransform);
+            pool = new List<T>();
+
+            if (!mainPoolTransform) mainPoolTransform = new GameObject(name + "_MainPool").transform;
+
+            for (int i = 0; i < nbrToInit; i++)
+            {
+                T o = Instantiate(obj, mainPoolTransform);
+                AddToPool(o);
+            }
+        }
+
+        public T RequireObject()
+        {
+            if (pool == null || mainPoolTransform == null) Init();
+
+            if (pool.Count > 0)
+            {
+                T o = pool[pool.Count - 1];
+                pool.RemoveAt(pool.Count - 1);
+                o.gameObject.SetActive(true);
+                return o;
+            }
+            return CreateNew();
+        }
+
+
+        public void ReturnObject(T o)
+        {
+            if (pool == null) Init();
+
             AddToPool(o);
+            return;
+
         }
-    }
 
-    public T RequireObject()
-    {
-        if (pool == null || mainPoolTransform == null) Init();
-
-        if (pool.Count > 0)
+        public bool ReturnObject(GameObject o)
         {
-            T o = pool[pool.Count - 1];
-            pool.RemoveAt(pool.Count - 1);
-            o.gameObject.SetActive(true);
-            return o;
+            T t = o.GetComponent<T>();
+            if (t == null) return false;
+            else ReturnObject(t);
+            return true;
         }
-        return CreateNew();
-    }
 
+        private T CreateNew()
+        {
 
-    public void ReturnObject(T o)
-    {
-        if (pool == null) Init();
+            T o = Instantiate(obj, mainPoolTransform);
+            return o;
 
-        AddToPool(o);
-        return;
+        }
 
-    }
-
-    public bool ReturnObject(GameObject o)
-    {
-        T t = o.GetComponent<T>();
-        if (t == null) return false;
-        else ReturnObject(t);
-        return true;
-    }
-
-    private T CreateNew()
-    {
-
-        T o = Instantiate(obj, mainPoolTransform);
-        return o;
+        private void AddToPool(T o)
+        {
+            o.transform.SetParent(mainPoolTransform);
+            pool.Add(o);
+            o.gameObject.SetActive(false);
+        }
 
     }
-
-    private void AddToPool(T o)
-    {
-        o.transform.SetParent(mainPoolTransform);
-        pool.Add(o);
-        o.gameObject.SetActive(false);
-    }
-
 }

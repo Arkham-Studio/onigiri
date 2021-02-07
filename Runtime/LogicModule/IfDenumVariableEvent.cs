@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class IfDenumVariableEvent
+﻿namespace Arkham.Onigiri.LogicModule
 {
+    public class IfDenumVariableEvent
+    {
     
+    }
 }

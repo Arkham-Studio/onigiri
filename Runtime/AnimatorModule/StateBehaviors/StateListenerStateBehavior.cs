@@ -1,7 +1,7 @@
 ﻿using Arkham.Onigiri.Variables;
 using UnityEngine;
 using UnityEngine.Events;
-
+#pragma warning disable CS0649
 namespace Arkham.Onigiri.AnimatorModule
 {
     public class StateListenerStateBehavior : StateMachineBehaviour
