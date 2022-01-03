@@ -1,7 +1,8 @@
 {
-    "name": "onigiri.editor",
+    "name": "com.arkham.onigiri.Inc.hightlight.editor",
+    "rootNamespace": "",
     "references": [
-        "GUID:276426f11f53a5647ac15cb286bb8c7f"
+        "GUID:9abac5be45ac8cc488328c67a1711da0"
     ],
     "includePlatforms": [
         "Editor"

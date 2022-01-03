@@ -1,11 +1,8 @@
 {
-    "name": "onigiri.editor",
-    "references": [
-        "GUID:276426f11f53a5647ac15cb286bb8c7f"
-    ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "name": "com.arkham.onigiri.Inc.hightlight.scripts",
+    "rootNamespace": "",
+    "references": [],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
