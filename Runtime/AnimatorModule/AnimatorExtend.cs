@@ -3,7 +3,7 @@ using System;
 using Arkham.Onigiri.Variables;
 using Arkham.Onigiri.Events;
 using Sirenix.OdinInspector;
-using UnityEditor.Animations;
+using UnityEngine.Animations;
 using UnityEngine;
 using UnityEngine.Events;
 
