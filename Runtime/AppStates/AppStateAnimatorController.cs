@@ -62,7 +62,7 @@ namespace Arkham.Onigiri.AnimatorModule
         public class AppStateAnimatorParametersPack
         {
             public enum AppStateAnimatorParametersType { ChangeableVariable, GameEvent }
-            [EnumToggleButtons]
+            [EnumToggleButtons, HideLabel]
             public AppStateAnimatorParametersType type;
 
             [HideLabel, ShowIf("type", AppStateAnimatorParametersType.ChangeableVariable)]
@@ -91,6 +91,9 @@ namespace Arkham.Onigiri.AnimatorModule
                             break;
                         case FloatVariable f:
                             animatorExtend.myAnimator.SetFloat(parametersNameHash, f.Value);
+                            break;
+                        case StringVariable s:
+                            animatorExtend.myAnimator.SetTrigger(s.Value);
                             break;
                         default:
                             animatorExtend.myAnimator.SetTrigger(variable.name);

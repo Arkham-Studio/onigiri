@@ -6,21 +6,29 @@ namespace Arkham.Onigiri.AnimatorModule
 {
     public class AudioControllerStateBehavior : StateMachineBehaviour
     {
-        [Tooltip("")]
+        [EnumToggleButtons, HideLabel]
+        public BehaviorType behaviorType;
+
         public AudioClipVariable audioClipVariable;
-        public AudioClip clip;
-        public string stateSpeedMultiplierName;
-        public bool isChangingStateLength = true;
         [Tooltip("if true and no audioclipvariable, find first audiosource in hierarchie"), HideIf("audioClipVariable")]
-        public bool isAutoGetAudioSource = false;
+        public bool autoGetAudioSource = false;
+        [ShowIf("behaviorType", BehaviorType.SetClip)]
+        public AudioClip clip;
+
+        public bool changeStateLength = true;
+        [ShowIf("changeStateLength")]
+        public string stateSpeedMultiplierName;
+
 
         // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (isChangingStateLength)
+            if (changeStateLength && clip != null && behaviorType == BehaviorType.SetClip)
                 animator.SetFloat(stateSpeedMultiplierName, 1f / clip.length);
+            else if (changeStateLength && audioClipVariable != null && behaviorType == BehaviorType.PlayVariableClip)
+                animator.SetFloat(stateSpeedMultiplierName, 1f / audioClipVariable.Value.length);
 
-            if (isAutoGetAudioSource/* && audioClipVariable == null*/)
+            if (autoGetAudioSource/* && audioClipVariable == null*/)
             {
                 var source = animator.GetComponentInChildren<AudioSource>();
                 if (source == null) return;
@@ -31,32 +39,14 @@ namespace Arkham.Onigiri.AnimatorModule
             else
             {
                 if (audioClipVariable == null) return;
-                audioClipVariable.SetValue(clip);
+                if (behaviorType == BehaviorType.SetClip)
+                    audioClipVariable.SetValue(clip);
+                else if (behaviorType == BehaviorType.PlayVariableClip)
+                    audioClipVariable.OnChange();
             }
         }
 
-        // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-        //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-        //{
-        //    
-        //}
-
-        // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-        //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-        //{
-        //    
-        //}
-
-        // OnStateMove is called right after Animator.OnAnimatorMove()
-        //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-        //{
-        //    // Implement code that processes and affects root motion
-        //}
-
-        // OnStateIK is called right after Animator.OnAnimatorIK()
-        //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-        //{
-        //    // Implement code that sets up animation IK (inverse kinematics)
-        //}
+        // ODIN
+        public enum BehaviorType { SetClip, PlayVariableClip }
     }
 }

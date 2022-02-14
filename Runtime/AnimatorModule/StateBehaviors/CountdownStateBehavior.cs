@@ -1,43 +1,31 @@
 ﻿using Arkham.Onigiri.Variables;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Arkham.Onigiri.AnimatorModule
 {
     public class CountdownStateBehavior : StateMachineBehaviour
     {
-
+        [Title("Set Variable to State NormalizedTime")]
         public FloatVariable countdown;
+        public bool isRounded = true;
+        public bool isReverse = false;
+        [ShowIf("isReverse")]
+        public float startAt = 10;
+
+        private float value;
 
 
-        // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-        //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-        //{
-        //    countdown.SetValue(stateInfo.length);
-        //}
-
-        // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
         override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
+            value = stateInfo.normalizedTime * stateInfo.length;
+            value = isReverse ? startAt - value : value;
+            value = isRounded ? Mathf.Round(value) : value;
 
-            countdown.SetValue(stateInfo.normalizedTime * stateInfo.length);
+            countdown.SetValue(value);
+
         }
 
-        // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-        //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-        //{
-        //    
-        //}
-
-        // OnStateMove is called right after Animator.OnAnimatorMove()
-        //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-        //{
-        //    // Implement code that processes and affects root motion
-        //}
-
-        // OnStateIK is called right after Animator.OnAnimatorIK()
-        //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-        //{
-        //    // Implement code that sets up animation IK (inverse kinematics)
-        //}
     }
 }

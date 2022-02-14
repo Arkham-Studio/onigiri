@@ -1,14 +1,21 @@
 ﻿using Arkham.Onigiri.Variables;
 using UnityEngine;
 using UnityEngine.Events;
+using Sirenix.OdinInspector;
 
 namespace Arkham.Onigiri.AnimatorModule
 {
     public class VariablesToParametersStateBehavior : StateMachineBehaviour
     {
+        [SerializeField, EnumToggleButtons, HideLabel] private ParametersType showEvents = ParametersType.All;
+
+        [ShowIf("IsBoolParams")]
         public BoolVariable[] boolVariables;
+        [ShowIf("IsIntParams")]
         public IntVariable[] intVariables;
+        [ShowIf("IsFloatParams")]
         public FloatVariable[] floatVariables;
+        [ShowIf("IsTriggerParams")]
         public StringVariable[] triggerVariables;
 
         private UnityAction[] boolEvents;
@@ -40,11 +47,11 @@ namespace Arkham.Onigiri.AnimatorModule
             }
 
             triggerEvents = new UnityAction[triggerVariables.Length];
-            Debug.Log(triggerVariables.Length);
-            Debug.Log(triggerEvents.Length);
+            //Debug.Log(triggerVariables.Length);
+            //Debug.Log(triggerEvents.Length);
             for (int i = 0; i < triggerVariables.Length; i++)
             {
-                Debug.Log(i); 
+                //Debug.Log(i); 
                 triggerEvents[i] = () => { SetParameter(animator, triggerVariables[i]); };
                 triggerVariables[i].onChange.AddListener(triggerEvents[i]);
             }
@@ -83,5 +90,13 @@ namespace Arkham.Onigiri.AnimatorModule
                     break;
             }
         }
+
+        //  ODIN
+        bool IsBoolParams => ((int)showEvents & (int)ParametersType.Bool) != 0;
+        bool IsIntParams => ((int)showEvents & (int)ParametersType.Int) != 0;
+        bool IsFloatParams => ((int)showEvents & (int)ParametersType.Float) != 0;
+        bool IsTriggerParams => ((int)showEvents & (int)ParametersType.Trigger) != 0;
+        [System.Flags]
+        public enum ParametersType { Bool = 1 << 1, Int = 1 << 2, Float = 1 << 3, Trigger = 1 << 4, All = Bool | Int | Float | Trigger }
     }
 }

@@ -1,64 +1,74 @@
-using Arkham.Onigiri.Variables;
-using Arkham.Onigiri.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
-#pragma warning disable CS0649
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
-/*
- * ----------------- TOFINISH ---------------------
- * 
- * Instantie automatiquement une UI basée sur les type des Variables
- * 
- * 
- */
 
 namespace Arkham.Onigiri.DebugModule
 {
+    [ExecuteInEditMode]
     public class DebugController : MonoBehaviour
     {
 
-        [Title("REFERENCES")]
         [SerializeField] private DebugManager m_DebugManager;
-        [SerializeField] private Transform content;
 
-        [Title("PREFABS")]
-        [SerializeField] private Transform sliderPrefab;
-        [SerializeField] private Transform togglePrefab;
 
-        [Title("VARIABLES")]
-        [SerializeField] private ChangeableVariable[] allVariables;
+        private Vector2 _scrollViewVector = Vector2.zero;
 
-        void Start()
+
+
+        private void OnGUI()
         {
-            foreach (var item in allVariables)
+            if (m_DebugManager == null)
             {
-                switch (item)
-                {
-                    case IntVariable i:
-                        var _o = Instantiate(sliderPrefab, content);
-                        foreach (var _item in _o.GetComponentsInChildren<ChangeableVariableToText>())
-                            _item.Variable = i;
-                        _o.GetComponentInChildren<ChangeableVariableToSlider>().Variable = i;
-                        _o.GetComponentInChildren<Slider>().wholeNumbers = true;
-                        _o.GetComponentInChildren<Slider>().onValueChanged.AddListener((b) => i.SetValue((int)b));
-                        break;
-                    case FloatVariable f:
-                        _o = Instantiate(sliderPrefab, content);
-                        foreach (var _item in _o.GetComponentsInChildren<ChangeableVariableToText>())
-                            _item.Variable = f;
-                        _o.GetComponentInChildren<ChangeableVariableToSlider>().Variable = f;
-                        _o.GetComponentInChildren<Slider>().wholeNumbers = false;
-                        _o.GetComponentInChildren<Slider>().onValueChanged.AddListener((b) => f.SetValue(b));
-                        break;
-                    case StringVariable s:
-                        break;
-                    case BoolVariable b:
-                        break;
-                    default:
-                        break;
-                }
+                GUI.Label(new Rect(0, 0, 100, 24), "No Manager");
+                return;
             }
+
+            if (GUI.Button(new Rect(m_DebugManager.margeLeft, m_DebugManager.margeTop, m_DebugManager.width, m_DebugManager.itemHeight), m_DebugManager.show ? "Hide" : "Show")) ToggleView();
+
+            if (!m_DebugManager.show) return;
+
+            float _y = m_DebugManager.margeTop + m_DebugManager.itemHeight;
+
+            if (m_DebugManager.allVariables == null || m_DebugManager.allVariables.Length <= 0) return;
+
+            float h = m_DebugManager.allEvents.Length * (m_DebugManager.itemHeight + m_DebugManager.itemSpacing);
+            foreach (var item in m_DebugManager.allVariables) h += item.GetHeigh(m_DebugManager.itemHeight, m_DebugManager.itemSpacing);
+
+            GUI.Box(new Rect(m_DebugManager.margeLeft - 20, _y, m_DebugManager.width + 40, h), "");
+
+            _scrollViewVector = GUI.BeginScrollView(new Rect(m_DebugManager.margeLeft, _y, m_DebugManager.width + 40, Screen.height - m_DebugManager.margeTop), _scrollViewVector, new Rect(0, 0, m_DebugManager.width, h + m_DebugManager.itemHeight));
+
+            _y = 0;
+            foreach (var item in m_DebugManager.allVariables)
+                _y = item.DrawGUI(m_DebugManager.width, m_DebugManager.itemHeight, m_DebugManager.itemSpacing, _y);
+
+            foreach (var item in m_DebugManager.allEvents)
+            {
+                if (GUI.Button(new Rect(0, _y, m_DebugManager.width, m_DebugManager.itemHeight), item?.name)) item?.Raise();
+                _y += m_DebugManager.itemHeight + m_DebugManager.itemSpacing;
+            }
+
+            GUI.EndScrollView();
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying && m_DebugManager.updateInEditor)
+            {
+                EditorApplication.QueuePlayerLoopUpdate();
+                SceneView.RepaintAll();
+            }
+#endif
         }
+
+        [Button]
+        public void ToggleView()
+        {
+            m_DebugManager.show = !m_DebugManager.show;
+        }
+
+
     }
 }
