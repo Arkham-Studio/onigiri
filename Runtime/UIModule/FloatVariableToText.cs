@@ -9,6 +9,7 @@ namespace Arkham.Onigiri.UI
 {
     public class FloatVariableToText : MonoBehaviour
     {
+        [InfoBox("DEPRECATED - use ChangeableVariableToText", InfoMessageType.Warning)]
         [SerializeField] private Text text;
         [SerializeField] private FloatVariable value;
         [SerializeField] private bool initOnStart = true;

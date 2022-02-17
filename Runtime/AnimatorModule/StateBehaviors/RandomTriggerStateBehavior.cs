@@ -1,13 +1,15 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Arkham.Onigiri.AnimatorModule
 {
     public class RandomTriggerStateBehavior : StateMachineBehaviour
     {
+        [InfoBox("Chance (0.0 - 1.0) to set Trigger at current state loop", InfoMessageType.None)]
+        public string triggerName;
+        public float chance;
 
         private bool haveLooped = false;
-        public float chance;
-        public string triggerName;
 
         public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {

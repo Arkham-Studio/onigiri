@@ -25,9 +25,6 @@ namespace Arkham.Onigiri.Variables
 
     public class BaseVariable<T> : ChangeableVariable, ITrackGameEvent
     {
-
-
-
         [SerializeField]
         protected T DefaultValue;
 
@@ -71,8 +68,5 @@ namespace Arkham.Onigiri.Variables
         public static implicit operator T(BaseVariable<T> reference) => reference.Value;
 
         public T GetDefaultValue() => DefaultValue;
-
-
-
     }
 }

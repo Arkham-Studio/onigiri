@@ -1,6 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
+using Arkham.Onigiri.Variables;
 
 namespace Arkham.Onigiri.Events
 {
@@ -8,8 +9,8 @@ namespace Arkham.Onigiri.Events
     {
 
         [Title("SETTINGS")]
-        [SerializeField] private float delay = 0f;
-        [SerializeField] private float interval = 1f;
+        [SerializeField] private FloatReference delay = new FloatReference(0f);
+        [SerializeField] private FloatReference interval = new FloatReference(1f);
         private float nextTime;
 
         [Title("EVENT")]

@@ -1,4 +1,5 @@
 ﻿using Arkham.Onigiri.Variables;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ namespace Arkham.Onigiri.UI
 {
     public class StringVariableToText : MonoBehaviour
     {
+        [InfoBox("DEPRECATED - use ChangeableVariableToText", InfoMessageType.Warning)]
         public Text myText;
         //public DOTweenAnimation myDOTweenAnimation;
         public StringVariable stringVariable;

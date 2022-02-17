@@ -1,12 +1,13 @@
 ﻿using Arkham.Onigiri.Variables;
 using UnityEngine;
 using UnityEngine.UI;
+using Sirenix.OdinInspector;
 
 namespace Arkham.Onigiri.UI
 {
     public class FloatVariableToSlider : MonoBehaviour
     {
-
+        [InfoBox("DEPRECATED - use ChangeableVariableToSlider", InfoMessageType.Warning)]
         [SerializeField] private Slider mySlider;
         [SerializeField] private FloatVariable value;
         public FloatVariable Value

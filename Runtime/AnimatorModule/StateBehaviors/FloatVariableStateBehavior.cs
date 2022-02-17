@@ -1,12 +1,13 @@
 ﻿#pragma warning disable CS0649
 using Arkham.Onigiri.Variables;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Arkham.Onigiri.AnimatorModule
 {
     public class FloatVariableStateBehavior : StateMachineBehaviour
     {
-
+        [InfoBox("DEPRECATED - use LerpChangeableVariableStateBehavior",InfoMessageType.Warning)]
         [SerializeField] private FloatVariable input;
 
         [SerializeField] private bool isRounded;

@@ -15,6 +15,11 @@ namespace Arkham.Onigiri.UI
         [SerializeField] private bool initOnStart = true;
         [SerializeField] private bool listenToChange = true;
 
+        [SerializeField] private bool isAutoAnimated = false;
+        [SerializeField] private float smooth = 1f;
+
+        private float targetValue = 0;
+
         private void OnEnable()
         {
             if (listenToChange)
@@ -33,19 +38,27 @@ namespace Arkham.Onigiri.UI
             if (initOnStart) UpdateValue();
         }
 
+        void FixedUpdate()
+        {
+            if (!isAutoAnimated) return;
+            mySlider.value = Mathf.Lerp(mySlider.value, targetValue, Time.fixedDeltaTime/ smooth);
+        }
+
         public void UpdateValue()
         {
             switch (variable)
             {
                 case FloatVariable f:
-                    mySlider.value = f.Value;
+                    targetValue = f.Value;
                     break;
                 case IntVariable i:
-                    mySlider.value = i.Value;
+                    targetValue = i.Value;
                     break;
                 default:
                     break;
             }
+
+            if (!isAutoAnimated) mySlider.value = targetValue;
         }
     }
 }
