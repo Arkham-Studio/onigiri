@@ -18,6 +18,7 @@ namespace Arkham.Onigiri.AnimatorModule
         [Title("ANIMATIONS EVENTS")]
         public AnimEventPack[] animEvents;
 
+        private string parameterName = "";
 
         private void OnEnable() => myAnimator = myAnimator != null ? myAnimator : GetComponent<Animator>();
 
@@ -31,12 +32,15 @@ namespace Arkham.Onigiri.AnimatorModule
         public void SetUpdateMode(int _mode) => myAnimator.updateMode = (AnimatorUpdateMode)_mode;
 
         //  parameters
+        public void SetParameterName(string v) => parameterName = v;
         public void SetBool(BoolVariable v) => myAnimator.SetBool(v.name, v.Value);
-
+        public void SetBool(bool v) => myAnimator.SetBool(parameterName, v);
         public void SetInt(IntVariable v) => myAnimator.SetInteger(v.name, v.Value);
-
+        public void SetInt(int v) => myAnimator.SetInteger(parameterName, v);
         public void SetFloat(FloatVariable v) => myAnimator.SetFloat(v.name, v.Value);
+        public void SetFloat(float v) => myAnimator.SetFloat(parameterName, v);
 
+        //  animation events
         public void TriggerAnimEventByIndex(int i)
         {
             if (i < 0 || i >= animEvents.Length) return;

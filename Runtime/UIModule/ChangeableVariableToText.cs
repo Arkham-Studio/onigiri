@@ -1,14 +1,18 @@
 ﻿using Arkham.Onigiri.Variables;
 using Sirenix.OdinInspector;
+//using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 namespace Arkham.Onigiri.UI
 {
     public class ChangeableVariableToText : MonoBehaviour
     {
         [SerializeField] private Text myText;
+        //[SerializeField] private TextMeshProUGUI myTextMesh;
         [SerializeField] private ChangeableVariable variable;
+
         public ChangeableVariable Variable
         {
             set { variable = value; }
@@ -17,7 +21,6 @@ namespace Arkham.Onigiri.UI
         [SerializeField] private string prefixe = "";
         [SerializeField] private string sufixe = "";
         [SerializeField] private string format = "0.00";
-        //public float decimalRound = 100;
         [SerializeField] private float multiply = 1;
         [SerializeField] private bool isValue = true;
 

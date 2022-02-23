@@ -37,7 +37,9 @@ namespace Arkham.Onigiri.Editor
             _tree.Add("Buttons Debug", new OnigiriPlayButtonDebug());
             _tree.AddAllAssetsAtPath("Game Events", "Assets/Scriptables/", typeof(GameEvent), true, true).SortMenuItemsByName();
             _tree.AddAllAssetsAtPath("Changeables Variables", "Assets/Scriptables/", typeof(ChangeableVariable), true, true).SortMenuItemsByName();
-
+            
+            //if(Selection.activeObject.GetType() == typeof(GameEvent))
+            //_tree.Add("Manage Event", new ManageGameEvent<GameEvent>(Selection.activeObject as GameEvent));
 
             return _tree;
         }
@@ -97,7 +99,7 @@ namespace Arkham.Onigiri.Editor
 
                 if (controller)
                 {
-                    string _controller = System.IO.File.ReadAllText("Assets/Plugins/Onigiri/Editor/Templates/ScriptPack/OnigiriControllerTemplate.txt");
+                    string _controller = System.IO.File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriControllerTemplate.txt");
                     _controller = _controller.Replace("#CONTROLLERNAME#", packName + "Controller");
                     _controller = _controller.Replace("#MANAGERNAME#", manager ? packName + "Manager" : "");
                     System.IO.File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Controller.cs", _controller);
@@ -105,14 +107,14 @@ namespace Arkham.Onigiri.Editor
 
                 if (manager)
                 {
-                    string _mananger = System.IO.File.ReadAllText("Assets/Plugins/Onigiri/Editor/Templates/ScriptPack/OnigiriManagerTemplate.txt");
+                    string _mananger = System.IO.File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriManagerTemplate.txt");
                     _mananger = _mananger.Replace("#MANAGERNAME#", packName + "Manager");
                     System.IO.File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Manager.cs", _mananger);
                 }
 
                 if (data)
                 {
-                    string _mananger = System.IO.File.ReadAllText("Assets/Plugins/Onigiri/Editor/Templates/ScriptPack/OnigiriDataTemplate.txt");
+                    string _mananger = System.IO.File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriDataTemplate.txt");
                     _mananger = _mananger.Replace("#DATANAME#", packName + "Data");
                     System.IO.File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Data.cs", _mananger);
                 }
@@ -135,15 +137,15 @@ namespace Arkham.Onigiri.Editor
             public void Create()
             {
                 string _action = System.IO.File.ReadAllText(
-                    "Assets/Plugins/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_Action_template.txt");
+                    "Packages/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_Action_template.txt");
                 string _decision = System.IO.File.ReadAllText(
-                    "Assets/Plugins/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_Decision_template.txt");
+                    "Packages/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_Decision_template.txt");
                 string _transition = System.IO.File.ReadAllText(
-                    "Assets/Plugins/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_Transition_template.txt");
+                    "Packages/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_Transition_template.txt");
                 string _state = System.IO.File.ReadAllText(
-                    "Assets/Plugins/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_State_template.txt");
+                    "Packages/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_State_template.txt");
                 string _controller = System.IO.File.ReadAllText(
-                    "Assets/Plugins/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_StateController_template.txt");
+                    "Packages/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_StateController_template.txt");
 
                 string _controllerType = packName + "StateControllerAI";
 
@@ -445,49 +447,3 @@ namespace Arkham.Onigiri.Editor
         }
     }
 }
-
-
-////  MENU ITEM ADD ON
-//[MenuItem("GameObject/Empty Onigiri Controller 2D", priority = 49)]
-//private static void CreateEmptyOnigiriController2D()
-//{
-//    GameObject _parent = new GameObject("EmptyController");
-//    GameObject _events = new GameObject("Events");
-//    GameObject _inputs = new GameObject("Inputs");
-//    GameObject _sprites = new GameObject("Sprites");
-//    GameObject _colliders = new GameObject("Colliders");
-//    GameObject _logic = new GameObject("Logic");
-
-//    _sprites.transform.SetParent(_parent.transform);
-//    _colliders.transform.SetParent(_parent.transform);
-//    _events.transform.SetParent(_parent.transform);
-//    _inputs.transform.SetParent(_parent.transform);
-//    _logic.transform.SetParent(_parent.transform);
-
-//    _sprites.AddComponent<SpriteRenderer>();
-//    _events.AddComponent<GameEventListener>();
-
-//    Selection.activeGameObject = _parent;
-//}
-
-//[MenuItem("GameObject/Empty Onigiri Controller", priority = 49)]
-//private static void CreateEmptyOnigiriController()
-//{
-//    GameObject _parent = new GameObject("EmptyController");
-//    GameObject _events = new GameObject("Events");
-//    GameObject _inputs = new GameObject("Inputs");
-//    GameObject _meshes = new GameObject("Meshes");
-//    GameObject _colliders = new GameObject("Colliders");
-//    GameObject _logic = new GameObject("Logic");
-
-//    _meshes.transform.SetParent(_parent.transform);
-//    _colliders.transform.SetParent(_parent.transform);
-//    _events.transform.SetParent(_parent.transform);
-//    _inputs.transform.SetParent(_parent.transform);
-//    _logic.transform.SetParent(_parent.transform);
-
-//    _events.AddComponent<GameEventListener>();
-
-//    Selection.activeGameObject = _parent;
-//}
-
