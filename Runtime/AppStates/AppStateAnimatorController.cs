@@ -1,7 +1,9 @@
 ﻿#pragma warning disable CS0649
 using Arkham.Onigiri.Variables;
+using Arkham.Onigiri.Utils;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Arkham.Onigiri.AppStates
 {
@@ -12,26 +14,51 @@ namespace Arkham.Onigiri.AppStates
         [SerializeField] private Animator myAnimator;
 
         [Title("STATES", "DenumVariable onChange play Animator State with same Denum name")]
-        [SerializeField] private DenumVariable denumState;
+        [SerializeField] private DenumVariable actualState;
+        [SerializeField] private DenumVariable setState;
+
+        [SerializeField] private Denum[] allDenumStates = new Denum[0];
+        private Dictionary<int, Denum> cachedDenumStatesList = new Dictionary<int, Denum>();
+
+
+        private void OnValidate()
+        {
+            myAnimator = myAnimator != null ? myAnimator : GetComponent<Animator>();
+        }
 
         private void OnEnable()
         {
             myAnimator = myAnimator != null ? myAnimator : GetComponent<Animator>();
 
-            if (denumState != null)
+            if (setState != null)
             {
-                denumState.onChange.AddListener(PlayDenumState);
+                setState.onChange.AddListener(PlayDenumState);
                 PlayDenumState();
             }
+
+
+            for (int i = 0; i < allDenumStates.Length; i++)
+                cachedDenumStatesList.Add(Animator.StringToHash(allDenumStates[i].name), allDenumStates[i]);
         }
 
         private void OnDisable()
         {
-            denumState?.onChange.RemoveListener(PlayDenumState);
+            setState?.onChange.RemoveListener(PlayDenumState);
 
         }
 
-        public void PlayDenumState() => myAnimator.Play(denumState.Value.name, 0, 0f);
+        public void PlayDenumState()
+        {
+            if (setState.Value == null) return;
+            myAnimator.Play(setState.Value.name, 0, 0f);
+        }
+
+        public void NotifyStateChange(int _stateHash)
+        {
+            if (actualState == null) return;
+            if (!cachedDenumStatesList.ContainsKey(_stateHash)) return;
+            actualState.SetValue(cachedDenumStatesList[_stateHash]);
+        }
 
     }
 }
