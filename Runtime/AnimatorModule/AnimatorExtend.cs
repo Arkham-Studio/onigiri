@@ -19,16 +19,14 @@ namespace Arkham.Onigiri.AnimatorModule
         public AnimEventPack[] animEvents;
 
         private string parameterName = "";
+        private int layerIndex = 0;
 
         private void OnEnable() => myAnimator = myAnimator != null ? myAnimator : GetComponent<Animator>();
 
-        //  METHODS
-        public void SkipActualState() => myAnimator.Play(myAnimator.GetCurrentAnimatorStateInfo(0).fullPathHash, 0, 0.99f);
-
-        public void PlayDenumState(DenumVariable _denum) => myAnimator.Play(_denum.Value.name, 0, 0f);
-
-        public void SetDenumTriger(DenumVariable _denum) => myAnimator.SetTrigger(_denum.Value.name);
-
+        //  states
+        public void SetLayerIndex(int v) => layerIndex = v;
+        public void SkipActualState() => myAnimator.Play(myAnimator.GetCurrentAnimatorStateInfo(layerIndex).fullPathHash, layerIndex, 0.99f);
+        public void PlayDenumState(DenumVariable _denum) => myAnimator.Play(_denum.Value.name, layerIndex, 0f);
         public void SetUpdateMode(int _mode) => myAnimator.updateMode = (AnimatorUpdateMode)_mode;
 
         //  parameters
@@ -39,6 +37,7 @@ namespace Arkham.Onigiri.AnimatorModule
         public void SetInt(int v) => myAnimator.SetInteger(parameterName, v);
         public void SetFloat(FloatVariable v) => myAnimator.SetFloat(v.name, v.Value);
         public void SetFloat(float v) => myAnimator.SetFloat(parameterName, v);
+        public void SetDenumTriger(DenumVariable _denum) => myAnimator.SetTrigger(_denum.Value.name);
 
         //  animation events
         public void TriggerAnimEventByIndex(int i)

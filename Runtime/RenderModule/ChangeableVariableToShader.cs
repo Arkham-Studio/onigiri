@@ -20,16 +20,13 @@ namespace Arkham.Onigiri.RenderModule
             if (myRenderer == null) myRenderer = GetComponent<Renderer>();
             mat = isGlobal ? myRenderer.sharedMaterial : myRenderer.material;
 
-            variable.onChange.AddListener(UpdateVector3Variable);
-            UpdateVector3Variable();
+            variable.onChange.AddListener(UpdatePropertie);
+            UpdatePropertie();
         }
 
-        private void OnDisable()
-        {
-            variable.onChange.RemoveListener(UpdateVector3Variable);
-        }
+        private void OnDisable() => variable.onChange.RemoveListener(UpdatePropertie);
 
-        public void UpdateVector3Variable()
+        public void UpdatePropertie()
         {
 
             switch (variable)
@@ -42,6 +39,12 @@ namespace Arkham.Onigiri.RenderModule
                     break;
                 case TextureVariable t:
                     mat.SetTexture(propertieName, t.Value);
+                    break;
+                case ColorVariable c:
+                    mat.SetColor(propertieName, c.Value);
+                    break;
+                case IntVariable i:
+                    mat.SetInt(propertieName, i.Value);
                     break;
             }
         }

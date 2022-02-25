@@ -10,6 +10,7 @@ namespace Arkham.Onigiri.UI
         [InfoBox("DEPRECATED - use ChangeableVariableToSlider", InfoMessageType.Warning)]
         [SerializeField] private Slider mySlider;
         [SerializeField] private FloatVariable value;
+        [SerializeField] private bool inverted = false;
         public FloatVariable Value
         {
             set { this.value = value; }
@@ -35,6 +36,6 @@ namespace Arkham.Onigiri.UI
             if (initOnStart) UpdateValue();
         }
 
-        public void UpdateValue() => mySlider.value = value.Value;
+        public void UpdateValue() => mySlider.value = inverted ? mySlider.maxValue - value.Value : value.Value;
     }
 }

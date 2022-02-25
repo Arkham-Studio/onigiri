@@ -12,8 +12,12 @@ namespace Arkham.Onigiri.Events
         [EnumToggleButtons, HideLabel, SerializeField]
         private MonosEvents events;
         [System.Flags]
-        public enum MonosEvents { All = Awake | Start | Update | FixedUpdate | LateUpdate, Awake = 1 << 1, Start = 1 << 2, Update = 1 << 3, FixedUpdate = 1 << 4, LateUpdate = 1 << 5 }
+        public enum MonosEvents { All = Awake | Start | Update | FixedUpdate | LateUpdate | OnEnable | OnDisable, Awake = 1 << 1, Start = 1 << 2, Update = 1 << 3, FixedUpdate = 1 << 4, LateUpdate = 1 << 5, OnEnable = 1 << 6, OnDisable = 1 << 7 }
 
+        [ShowIf("@((int)events & (int)MonosEvents.OnEnable) != 0")]
+        public UnityEvent onEnable;
+        [ShowIf("@((int)events & (int)MonosEvents.OnDisable) != 0")]
+        public UnityEvent onDisable;
         [ShowIf("@((int)events & (int)MonosEvents.Awake) != 0")]
         public UnityEvent onAwake;
         [ShowIf("@((int)events & (int)MonosEvents.Start) != 0")]
@@ -26,6 +30,10 @@ namespace Arkham.Onigiri.Events
         public UnityEvent onLateUpdate;
 
         //  MONOS
+        private void OnEnable() => onEnable.Invoke();
+
+        private void OnDisable() => onDisable.Invoke();
+
         private void Awake() => onAwake.Invoke();
 
         private void Start() => onStart.Invoke();

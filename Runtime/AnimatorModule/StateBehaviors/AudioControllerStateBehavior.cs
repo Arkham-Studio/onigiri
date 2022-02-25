@@ -9,11 +9,11 @@ namespace Arkham.Onigiri.AnimatorModule
         [EnumToggleButtons, HideLabel]
         public BehaviorType behaviorType;
 
-        public AudioClipVariable audioClipVariable;
-        [Tooltip("if true and no audioclipvariable, find first audiosource in hierarchie"), HideIf("audioClipVariable")]
+        public AudioClipVariable destination;
+        [Tooltip("if true and no audioclipvariable, find first audiosource in hierarchie"), HideIf("destination")]
         public bool autoGetAudioSource = false;
-        [ShowIf("behaviorType", BehaviorType.SetClip)]
-        public AudioClip clip;
+        [ShowIf("behaviorType", BehaviorType.SetClipFrom)]
+        public AudioClipReference source;
 
         public bool changeStateLength = true;
         [ShowIf("changeStateLength")]
@@ -23,30 +23,30 @@ namespace Arkham.Onigiri.AnimatorModule
         // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (changeStateLength && clip != null && behaviorType == BehaviorType.SetClip)
-                animator.SetFloat(stateSpeedMultiplierName, 1f / clip.length);
-            else if (changeStateLength && audioClipVariable != null && behaviorType == BehaviorType.PlayVariableClip)
-                animator.SetFloat(stateSpeedMultiplierName, 1f / audioClipVariable.Value.length);
+            if (changeStateLength && source != null && behaviorType == BehaviorType.SetClipFrom)
+                animator.SetFloat(stateSpeedMultiplierName, 1f / source.Value.length);
+            else if (changeStateLength && destination != null && behaviorType == BehaviorType.PlayVariableClip)
+                animator.SetFloat(stateSpeedMultiplierName, 1f / destination.Value.length);
 
             if (autoGetAudioSource/* && audioClipVariable == null*/)
             {
                 var source = animator.GetComponentInChildren<AudioSource>();
                 if (source == null) return;
                 source.loop = false;
-                source.clip = clip;
+                source.clip = this.source.Value;
                 source.Play();
             }
             else
             {
-                if (audioClipVariable == null) return;
-                if (behaviorType == BehaviorType.SetClip)
-                    audioClipVariable.SetValue(clip);
+                if (destination == null) return;
+                if (behaviorType == BehaviorType.SetClipFrom)
+                    destination.SetValue(source.Value);
                 else if (behaviorType == BehaviorType.PlayVariableClip)
-                    audioClipVariable.OnChange();
+                    destination.OnChange();
             }
         }
 
         // ODIN
-        public enum BehaviorType { SetClip, PlayVariableClip }
+        public enum BehaviorType { SetClipFrom, PlayVariableClip }
     }
 }

@@ -14,6 +14,7 @@ namespace Arkham.Onigiri.UI
         }
         [SerializeField] private bool initOnStart = true;
         [SerializeField] private bool listenToChange = true;
+        [SerializeField] private bool inverted = false;
 
         [SerializeField] private bool isAutoAnimated = false;
         [SerializeField] private float smooth = 1f;
@@ -58,7 +59,7 @@ namespace Arkham.Onigiri.UI
                     break;
             }
 
-            if (!isAutoAnimated) mySlider.value = targetValue;
+            if (!isAutoAnimated) mySlider.value = inverted ? mySlider.maxValue - targetValue : targetValue;
         }
     }
 }

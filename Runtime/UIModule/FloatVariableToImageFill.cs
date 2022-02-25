@@ -9,6 +9,7 @@ namespace Arkham.Onigiri.UI
         [SerializeField] private Image myImage;
         [SerializeField] private FloatVariable value;
         [SerializeField] private bool initOnStart = true;
+        [SerializeField] private bool inverted = false;
 
         private void OnEnable() => value.onChange.AddListener(UpdateValue);
 
@@ -20,6 +21,6 @@ namespace Arkham.Onigiri.UI
             if (initOnStart) UpdateValue();
         }
 
-        public void UpdateValue() => myImage.fillAmount = value.Value;
+        public void UpdateValue() => myImage.fillAmount = inverted ? 1 - value.Value : value.Value;
     }
 }

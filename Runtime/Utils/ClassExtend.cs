@@ -11,20 +11,19 @@ namespace Arkham.Onigiri.Utils
 {
     public static class ClassExtend
     {
-        public static Vector3Int RoundToInt(this Vector3 _vector) => new Vector3Int(Mathf.RoundToInt(_vector.x), Mathf.RoundToInt(_vector.y), Mathf.RoundToInt(_vector.z));
-
+        //  arrays
         public static T GetRandom<T>(this T[] array) => array[Random.Range(0, array.Length)];
-
         public static int GetRandomIndex(this Array array) => Random.Range(0, array.Length);
-
         public static T GetRandom<T>(this List<T> list) => list[Random.Range(0, list.Count)];
+        public static float GetRandomInRange(this Vector2 vector) => Random.Range(vector.x, vector.y);
 
+        //  vectors
+        public static Vector3Int RoundToInt(this Vector3 _vector) => new Vector3Int(Mathf.RoundToInt(_vector.x), Mathf.RoundToInt(_vector.y), Mathf.RoundToInt(_vector.z));
         public static bool ValueFrom1D(this bool[,] table, int index, int columns)
         {
             var _v = index.ConvertTo2D(columns);
             return table[_v.x, _v.y];
         }
-
         public static Vector2Int ConvertTo2D(this int index, int columns)
         {
             var _y = Mathf.FloorToInt(index / columns);
@@ -32,7 +31,18 @@ namespace Arkham.Onigiri.Utils
             return new Vector2Int(_x, _y);
         }
 
-        public static float GetRandomInRange(this Vector2 vector) => Random.Range(vector.x, vector.y);
+        //  transform
+        public static void DestroyChilds(this Transform _t)
+        {
+            foreach (Transform item in _t) UnityEngine.Object.Destroy(item.gameObject);
+            _t.DetachChildren();
+        }
+        public static void DestroyChildsEditor(this Transform _t)
+        {
+            for (int i = _t.childCount - 1; i >= 0; i--)
+                UnityEngine.Object.DestroyImmediate(_t.GetChild(i).gameObject);
+        }
+
 
 #if UNITY_EDITOR
         public static T LoadScripteableObject<T>(string _filter) where T : ScriptableObject
