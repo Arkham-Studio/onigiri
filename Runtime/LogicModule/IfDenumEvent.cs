@@ -6,9 +6,9 @@ using UnityEngine.Events;
 
 namespace Arkham.Onigiri.LogicModule
 {
-    public class IfStringEvent : MonoBehaviour
+    public class IfDenumEvent : MonoBehaviour
     {
-        [PropertyOrder(-2)] public StringVariable toCompare;
+        [PropertyOrder(-2)] public DenumVariable toCompare;
 
         [HideInInspector] public bool onStart = true;
         [HideInInspector] public bool listenChange = true;
@@ -35,7 +35,7 @@ namespace Arkham.Onigiri.LogicModule
             CompareWith(toCompare.Value);
         }
 
-        public void CompareWith(string _v)
+        public void CompareWith(Denum _v)
         {
             foreach (ComparePackFloat item in packs)
             {
@@ -52,14 +52,14 @@ namespace Arkham.Onigiri.LogicModule
         [Button("Listen Change"), GUIColor("@listenChange ? Color.white : Color.gray"), PropertyOrder(-1), ButtonGroup("Bool")]
         void ToggleListenChange() => listenChange = !listenChange;
 
-        public enum CompareOperation { equals, less, more, lessEqual, moreEqual, different }
+        public enum CompareOperation { equals, different }
         [System.Flags]
         public enum EventType { OnTrue = 1 << 1, OnFalse = 1 << 2, Dynamic = 1 << 3, All = OnTrue | OnFalse | Dynamic }
         [System.Serializable]
         public class ComparePackFloat
         {
             [HorizontalGroup("params"), HideLabel] public CompareOperation how = CompareOperation.equals;
-            [HorizontalGroup("params"), HideLabel] public string value;
+            [HorizontalGroup("params"), HideLabel] public Denum value;
 
             [EnumToggleButtons, HideLabel]
             public EventType eventType;
@@ -69,22 +69,14 @@ namespace Arkham.Onigiri.LogicModule
             [ShowIf("@((int)eventType & (int)EventType.Dynamic) != 0")] public bool isInversed;
             [ShowIf("@((int)eventType & (int)EventType.Dynamic) != 0")] public BoolUnityEvent dynamicResponse;
 
-            public bool Test(string _v)
+            public bool Test(Denum _v)
             {
                 switch (how)
                 {
                     case CompareOperation.equals:
-                        return value.Equals(_v);
+                        return value == _v;
                     case CompareOperation.different:
-                        return !value.Equals(_v);
-                    case CompareOperation.less:
-                        return value.Length < _v.Length;
-                    case CompareOperation.more:
-                        return value.Length > _v.Length;
-                    case CompareOperation.lessEqual:
-                        return value.Length <= _v.Length;
-                    case CompareOperation.moreEqual:
-                        return value.Length >= _v.Length;
+                        return value != _v;
                     default:
                         return false;
                 }

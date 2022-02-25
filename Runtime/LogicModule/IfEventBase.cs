@@ -35,7 +35,7 @@ namespace Arkham.Onigiri.LogicModule
             if (_result) onTrue.Invoke();
             else onFalse.Invoke();
 
-            onDynamic.Invoke(isInversed ? !(_result) : _result);
+            onDynamic.Invoke(_result);
         }
 
         public void CompareWith(T _v)

@@ -1,10 +1,10 @@
 ﻿#pragma warning disable CS0649
 using Arkham.Onigiri.Variables;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Arkham.Onigiri.RenderModule
 {
-    [ExecuteInEditMode]
     public class ChangeableVariableToShader : MonoBehaviour
     {
 
@@ -19,13 +19,13 @@ namespace Arkham.Onigiri.RenderModule
         {
             if (myRenderer == null) myRenderer = GetComponent<Renderer>();
             mat = isGlobal ? myRenderer.sharedMaterial : myRenderer.material;
-
             variable.onChange.AddListener(UpdatePropertie);
             UpdatePropertie();
         }
 
         private void OnDisable() => variable.onChange.RemoveListener(UpdatePropertie);
 
+        [Button]
         public void UpdatePropertie()
         {
 

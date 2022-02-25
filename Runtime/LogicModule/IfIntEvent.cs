@@ -8,80 +8,83 @@ namespace Arkham.Onigiri.LogicModule
 {
     public class IfIntEvent : MonoBehaviour
     {
-        public IntVariable toCompare;
+        [PropertyOrder(-2)] public IntVariable toCompare;
 
-        public bool onStart = true;
-        public bool isSilent = false;
+        [HideInInspector] public bool onStart = true;
+        [HideInInspector] public bool listenChange = true;
 
-        public ComparePack[] packs;
+        public ComparePackFloat[] packs;
 
         private void OnEnable()
         {
-            if (toCompare == null)
-            {
-                Debug.LogError("IntVariable Missing", this);
-                return;
-            }
-            if (!isSilent) toCompare.onChange.AddListener(Compare);
+            if (toCompare == null) return;
+            if (listenChange) toCompare.onChange.AddListener(Compare);
             if (!onStart) return;
             Compare();
         }
 
         private void OnDisable()
         {
-            if (!isSilent) toCompare.onChange.RemoveListener(Compare);
+            if (toCompare == null) return;
+            if (listenChange) toCompare.onChange.RemoveListener(Compare);
         }
 
         public void Compare()
         {
-            if (toCompare == null)
-            {
-                Debug.LogError("IntVariable Missing", this);
-                return;
-            }
+            if (toCompare == null) return;
             CompareWith(toCompare.Value);
         }
 
         public void CompareWith(int _v)
         {
-            foreach (ComparePack item in packs)
+            foreach (ComparePackFloat item in packs)
             {
-                bool _result = item.Test(_v);
-
-                if (_result) item.onTrue.Invoke();
-                else item.onFalse.Invoke();
-
-                item.dynamicResponse.Invoke(item.isInversed ? !(_result) : _result);
+                bool _result = item.Test(_v) ^ item.isInversed;
+                if (_result && (((int)item.eventType & (int)EventType.OnTrue) != 0)) item.onTrue.Invoke();
+                else if (((int)item.eventType & (int)EventType.OnFalse) != 0) item.onFalse.Invoke();
+                if (((int)item.eventType & (int)EventType.Dynamic) != 0) item.dynamicResponse.Invoke(_result);
             }
         }
 
+        [Button("On Start"), GUIColor("@onStart ? Color.white : Color.gray"), PropertyOrder(-1), ButtonGroup("Bool")]
+        void ToggleOnStar() => onStart = !onStart;
+
+        [Button("Listen Change"), GUIColor("@listenChange ? Color.white : Color.gray"), PropertyOrder(-1), ButtonGroup("Bool")]
+        void ToggleListenChange() => listenChange = !listenChange;
+
         public enum CompareOperation { equals, less, more, lessEqual, moreEqual, different }
+        [System.Flags]
+        public enum EventType { OnTrue = 1 << 1, OnFalse = 1 << 2, Dynamic = 1 << 3, All = OnTrue | OnFalse | Dynamic }
         [System.Serializable]
-        public class ComparePack
+        public class ComparePackFloat
         {
-            public int test;
-            [HideLabel]
-            public CompareOperation how = CompareOperation.equals;
-            public UnityEvent onTrue, onFalse;
-            public bool isInversed;
-            public BoolUnityEvent dynamicResponse;
+            [HorizontalGroup("params"), HideLabel] public CompareOperation how = CompareOperation.equals;
+            [HorizontalGroup("params"), HideLabel] public IntReference value;
+
+            [EnumToggleButtons, HideLabel]
+            public EventType eventType;
+
+            [ShowIf("@((int)eventType & (int)EventType.OnTrue) != 0")] public UnityEvent onTrue;
+            [ShowIf("@((int)eventType & (int)EventType.OnFalse) != 0")] public UnityEvent onFalse;
+            [ShowIf("@((int)eventType & (int)EventType.Dynamic) != 0")] public bool isInversed;
+            [ShowIf("@((int)eventType & (int)EventType.Dynamic) != 0")] public BoolUnityEvent dynamicResponse;
 
             public bool Test(int _v)
             {
                 switch (how)
                 {
                     case CompareOperation.equals:
-                        return test == _v;
+                        return value.Value == _v;
                     case CompareOperation.less:
-                        return test > _v;
+                        return value.Value > _v;
                     case CompareOperation.more:
-                        return test < _v;
+                        return value.Value < _v;
                     case CompareOperation.lessEqual:
-                        return test >= _v;
+                        return value.Value >= _v;
                     case CompareOperation.moreEqual:
-                        return test <= _v;
+                        return value.Value <= _v;
                     case CompareOperation.different:
-                        return test != _v;
+                        return value.Value != _v;
                     default:
                         return false;
                 }

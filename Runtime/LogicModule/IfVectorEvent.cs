@@ -1,4 +1,4 @@
-﻿using Arkham.Onigiri.Variables;
+using Arkham.Onigiri.Variables;
 using Arkham.Onigiri.Utils;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -6,9 +6,9 @@ using UnityEngine.Events;
 
 namespace Arkham.Onigiri.LogicModule
 {
-    public class IfStringEvent : MonoBehaviour
+    public class IfVectorEvent : MonoBehaviour
     {
-        [PropertyOrder(-2)] public StringVariable toCompare;
+        [PropertyOrder(-2)] public Vector3Variable toCompare;
 
         [HideInInspector] public bool onStart = true;
         [HideInInspector] public bool listenChange = true;
@@ -35,7 +35,7 @@ namespace Arkham.Onigiri.LogicModule
             CompareWith(toCompare.Value);
         }
 
-        public void CompareWith(string _v)
+        public void CompareWith(Vector3 _v)
         {
             foreach (ComparePackFloat item in packs)
             {
@@ -59,7 +59,7 @@ namespace Arkham.Onigiri.LogicModule
         public class ComparePackFloat
         {
             [HorizontalGroup("params"), HideLabel] public CompareOperation how = CompareOperation.equals;
-            [HorizontalGroup("params"), HideLabel] public string value;
+            [HorizontalGroup("params"), HideLabel] public Vector3Reference value;
 
             [EnumToggleButtons, HideLabel]
             public EventType eventType;
@@ -69,22 +69,22 @@ namespace Arkham.Onigiri.LogicModule
             [ShowIf("@((int)eventType & (int)EventType.Dynamic) != 0")] public bool isInversed;
             [ShowIf("@((int)eventType & (int)EventType.Dynamic) != 0")] public BoolUnityEvent dynamicResponse;
 
-            public bool Test(string _v)
+            public bool Test(Vector3 _v)
             {
                 switch (how)
                 {
                     case CompareOperation.equals:
-                        return value.Equals(_v);
-                    case CompareOperation.different:
-                        return !value.Equals(_v);
+                        return value.Value == _v;
                     case CompareOperation.less:
-                        return value.Length < _v.Length;
+                        return value.Value.sqrMagnitude > _v.sqrMagnitude;
                     case CompareOperation.more:
-                        return value.Length > _v.Length;
+                        return value.Value.sqrMagnitude < _v.sqrMagnitude;
                     case CompareOperation.lessEqual:
-                        return value.Length <= _v.Length;
+                        return value.Value.sqrMagnitude >= _v.sqrMagnitude;
                     case CompareOperation.moreEqual:
-                        return value.Length >= _v.Length;
+                        return value.Value.sqrMagnitude <= _v.sqrMagnitude;
+                    case CompareOperation.different:
+                        return value.Value != _v;
                     default:
                         return false;
                 }
