@@ -25,5 +25,11 @@ namespace Arkham.Onigiri.Variables
             if (amount != 1)
                 OnChange();
         }
+
+        public void SetRandom(float max)
+        {
+            Value = Random.Range(0, max);
+            OnChange();
+        }
     }
 }

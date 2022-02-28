@@ -19,5 +19,17 @@ namespace Arkham.Onigiri.Variables
             if (amount.Value != 0)
                 OnChange();
         }
+
+        public void MultiplyBy(float mult)
+        {
+            Value = Mathf.RoundToInt(Value * mult);
+            if (mult != 1) OnChange();
+        }
+
+        public void SetRandom(int max)
+        {
+            Value = Random.Range(0, max);
+            OnChange();
+        }
     }
 }

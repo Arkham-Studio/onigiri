@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor;
+using Arkham.Onigiri.Variables;
 using UnityEngine;
 using Random = UnityEngine.Random;
 #if UNITY_EDITOR
-
+using UnityEditor;
 #endif
 
 namespace Arkham.Onigiri.Utils
@@ -42,6 +42,9 @@ namespace Arkham.Onigiri.Utils
             for (int i = _t.childCount - 1; i >= 0; i--)
                 UnityEngine.Object.DestroyImmediate(_t.GetChild(i).gameObject);
         }
+
+        //  sprites
+        public static Sprite CreateSprite(TextureVariable _t) => Sprite.Create((Texture2D)_t.Value, new Rect(0, 0, _t.Value.width, _t.Value.height), Vector2.one * .5f);
 
 
 #if UNITY_EDITOR
