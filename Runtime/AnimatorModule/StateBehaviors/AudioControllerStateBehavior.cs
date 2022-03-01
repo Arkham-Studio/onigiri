@@ -23,18 +23,18 @@ namespace Arkham.Onigiri.AnimatorModule
         // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (changeStateLength && source != null && behaviorType == BehaviorType.SetClipFrom)
+            if (changeStateLength && source.Value != null && behaviorType == BehaviorType.SetClipFrom)
                 animator.SetFloat(stateSpeedMultiplierName, 1f / source.Value.length);
             else if (changeStateLength && destination != null && behaviorType == BehaviorType.PlayVariableClip)
                 animator.SetFloat(stateSpeedMultiplierName, 1f / destination.Value.length);
 
-            if (autoGetAudioSource/* && audioClipVariable == null*/)
+            if (autoGetAudioSource && source.Value != null)
             {
-                var source = animator.GetComponentInChildren<AudioSource>();
-                if (source == null) return;
-                source.loop = false;
-                source.clip = this.source.Value;
-                source.Play();
+                var _source = animator.GetComponentInChildren<AudioSource>();
+                if (_source == null) return;
+                _source.loop = false;
+                _source.clip = source.Value;
+                _source.Play();
             }
             else
             {

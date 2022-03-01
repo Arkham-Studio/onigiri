@@ -7,7 +7,7 @@ namespace Arkham.Onigiri.AnimatorModule
 {
     public class VariablesToParametersStateBehavior : StateMachineBehaviour
     {
-        [SerializeField, EnumToggleButtons, HideLabel] private ParametersType showEvents = ParametersType.All;
+        [SerializeField, EnumToggleButtons, HideLabel] private ParametersType showEvents = 0;
 
         [ShowIf("IsBoolParams")]
         public BoolVariable[] boolVariables;
@@ -16,7 +16,7 @@ namespace Arkham.Onigiri.AnimatorModule
         [ShowIf("IsFloatParams")]
         public FloatVariable[] floatVariables;
         [ShowIf("IsTriggerParams")]
-        public StringVariable[] triggerVariables;
+        public ChangeableVariable[] triggerVariables;
 
         private UnityAction[] boolEvents;
         private UnityAction[] intEvents;
@@ -28,6 +28,7 @@ namespace Arkham.Onigiri.AnimatorModule
             boolEvents = new UnityAction[boolVariables.Length];
             for (int i = 0; i < boolVariables.Length; i++)
             {
+                if (boolVariables[i] == null) continue;
                 boolEvents[i] = () => { SetParameter(animator, boolVariables[i]); };
                 boolVariables[i].onChange.AddListener(boolEvents[i]);
             }
@@ -35,6 +36,7 @@ namespace Arkham.Onigiri.AnimatorModule
             intEvents = new UnityAction[intVariables.Length];
             for (int i = 0; i < intVariables.Length; i++)
             {
+                if (intVariables[i] == null) continue;
                 intEvents[i] = () => { SetParameter(animator, intVariables[i]); };
                 intVariables[i].onChange.AddListener(intEvents[i]);
             }
@@ -42,16 +44,15 @@ namespace Arkham.Onigiri.AnimatorModule
             floatEvents = new UnityAction[floatVariables.Length];
             for (int i = 0; i < floatVariables.Length; i++)
             {
+                if (floatVariables[i] == null) continue;
                 floatEvents[i] = () => { SetParameter(animator, floatVariables[i]); };
                 floatVariables[i].onChange.AddListener(floatEvents[i]);
             }
 
             triggerEvents = new UnityAction[triggerVariables.Length];
-            //Debug.Log(triggerVariables.Length);
-            //Debug.Log(triggerEvents.Length);
             for (int i = 0; i < triggerVariables.Length; i++)
             {
-                //Debug.Log(i); 
+                if (triggerVariables[i] == null) continue;
                 triggerEvents[i] = () => { SetParameter(animator, triggerVariables[i]); };
                 triggerVariables[i].onChange.AddListener(triggerEvents[i]);
             }
@@ -60,16 +61,28 @@ namespace Arkham.Onigiri.AnimatorModule
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             for (int i = 0; i < boolVariables.Length; i++)
+            {
+                if (boolVariables[i] == null) continue;
                 boolVariables[i].onChange.RemoveListener(boolEvents[i]);
+            }
 
             for (int i = 0; i < intVariables.Length; i++)
+            {
+                if (intVariables[i] == null) continue;
                 intVariables[i].onChange.RemoveListener(intEvents[i]);
+            }
 
             for (int i = 0; i < floatVariables.Length; i++)
+            {
+                if (floatVariables[i] == null) continue;
                 floatVariables[i].onChange.RemoveListener(floatEvents[i]);
+            }
 
             for (int i = 0; i < triggerVariables.Length; i++)
+            {
+                if (triggerVariables[i] == null) continue;
                 triggerVariables[i].onChange.RemoveListener(triggerEvents[i]);
+            }
         }
 
         public void SetParameter<T>(Animator _animator, T _param)
@@ -86,7 +99,10 @@ namespace Arkham.Onigiri.AnimatorModule
                     _animator.SetFloat(_float.name, _float.Value);
                     break;
                 case StringVariable _string:
-                    _animator.SetTrigger(_string.name);
+                    _animator.SetTrigger(_string.Value);
+                    break;
+                case ChangeableVariable _variable:
+                    _animator.SetTrigger(_variable.name);
                     break;
             }
         }

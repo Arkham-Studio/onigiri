@@ -26,11 +26,12 @@ namespace Arkham.Onigiri.Events
         [System.Serializable]
         public class ChangeableVariablePack
         {
-            [Title("##############")]
+            [Title("@variable?.name")]
             public ChangeableVariable variable;
+            [ShowIf("variable")]
             public UnityEvent response;
 
-            [Button(ButtonSizes.Large)]
+            [Button("Invode OnChange",ButtonSizes.Large),ShowIf("variable")]
             public void OnChange() => response.Invoke();
         }
     }

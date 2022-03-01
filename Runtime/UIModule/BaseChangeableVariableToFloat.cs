@@ -19,13 +19,13 @@ namespace Arkham.Onigiri.UI
 
         private void OnEnable()
         {
-            if (listenToChange)
+            if (listenToChange && variable != null)
                 variable.onChange.AddListener(UpdateValue);
         }
 
         private void OnDisable()
         {
-            if (listenToChange)
+            if (listenToChange && variable != null)
                 variable.onChange.RemoveListener(UpdateValue);
         }
 

@@ -8,16 +8,13 @@ namespace Arkham.Onigiri.AudioModule
 {
     public class AudioSourceExtend : MonoBehaviour
     {
-        [Title("REFERENCES")]
         [SerializeField] private AudioSource myAudioSource;
         [SerializeField] private AudioClipVariable audioClipToPlay;
-        [SerializeField] private FloatVariable timeDelay;
+        [SerializeField] private FloatReference timeDelay;
 
-        [Title("SETTINGS")]
         [SerializeField] private bool checkEndedEvent = true;
         private bool isEnded = true;
 
-        [Title("EVENTS")]
         [ShowIf("checkEndedEvent")]
         public UnityEvent onAudioSourceEnd;
 

@@ -11,12 +11,11 @@ namespace Arkham.Onigiri.AudioModule
     public class AudioMixerManager : ScriptableObject
     {
         [Title("REFERENCES")]
-        //[SerializeField] private string instanceName;
         [SerializeField] private AudioMixer myMixer;
 
         [Title("SNAPSHOTS")]
         [SerializeField] private AudioSnapshotVariable actualSnapshot;
-        [SerializeField] private DenumVariable snapShotState;
+        [SerializeField] private DenumVariable snapshotState;
         [SerializeField] private float snapshotTransitionTime;
 
         [Title("PARAMETERS")]
@@ -31,19 +30,19 @@ namespace Arkham.Onigiri.AudioModule
             fadeClipPackIndex = -1;
 
             actualSnapshot?.onChange.AddListener(OnSnapshotChange);
-            snapShotState?.onChange.AddListener(OnSnapshotStateChange);
+            snapshotState?.onChange.AddListener(OnSnapshotStateChange);
 
             if (mixerParametersDB != null)
                 foreach (ParameterDBPack item in mixerParametersDB) item?.Bind(myMixer);
 
-            if (actualSnapshot.Value != null)
+            if (actualSnapshot != null && actualSnapshot.Value != null)
                 OnSnapshotChange();
         }
 
         private void OnDisable()
         {
             actualSnapshot?.onChange.RemoveListener(OnSnapshotChange);
-            snapShotState?.onChange.RemoveListener(OnSnapshotStateChange);
+            snapshotState?.onChange.RemoveListener(OnSnapshotStateChange);
 
             foreach (ParameterDBPack item in mixerParametersDB) item?.UnBind();
         }
@@ -87,7 +86,7 @@ namespace Arkham.Onigiri.AudioModule
 
         public void OnSnapshotStateChange()
         {
-            var _snapshot = myMixer.FindSnapshot(snapShotState.Value.name);
+            var _snapshot = myMixer.FindSnapshot(snapshotState.Value.name);
             if (_snapshot != null) actualSnapshot.SetValue(_snapshot);
         }
 
@@ -128,11 +127,11 @@ namespace Arkham.Onigiri.AudioModule
             public void Bind(AudioMixer _mixer)
             {
                 myMixer = _mixer;
-                variable.onChange.AddListener(OnChange);
+                variable?.onChange.AddListener(OnChange);
                 OnChange();
             }
 
-            public void UnBind() => variable.onChange.RemoveListener(OnChange);
+            public void UnBind() => variable?.onChange.RemoveListener(OnChange);
         }
     }
 }

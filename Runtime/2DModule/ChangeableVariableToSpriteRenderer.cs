@@ -1,5 +1,4 @@
-﻿#pragma warning disable CS0649
-using Arkham.Onigiri.Variables;
+﻿using Arkham.Onigiri.Variables;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
@@ -10,11 +9,20 @@ namespace Arkham.Onigiri.Module2D
 
         [SerializeField] private SpriteRenderer mySpriteRenderer;
         [SerializeField] private ChangeableVariable value;
-        [SerializeField] private bool initOnStart = true;
+        private bool initOnStart = true;
+        private bool listenToChange = true;
 
-        private void OnEnable() => value.onChange.AddListener(UpdateValue);
+        private void OnEnable()
+        {
+            if (listenToChange)
+                value?.onChange.AddListener(UpdateValue);
+        }
 
-        private void OnDisable() => value.onChange.RemoveListener(UpdateValue);
+        private void OnDisable()
+        {
+            if (listenToChange)
+                value?.onChange.RemoveListener(UpdateValue);
+        }
 
         private void OnValidate()
         {
@@ -26,6 +34,7 @@ namespace Arkham.Onigiri.Module2D
             if (initOnStart) UpdateValue();
         }
 
+        [Button, PropertyOrder(2)]
         public void UpdateValue()
         {
             switch (value)
@@ -43,5 +52,9 @@ namespace Arkham.Onigiri.Module2D
                     break;
             }
         }
+
+        [HorizontalGroup("buttons"), Button("@initOnStart ? \"OnStart\" : \"OnStart\"", ButtonSizes.Small), GUIColor("@initOnStart ? Color.white : Color.grey"), PropertyOrder(1)] void ToggleInitOnStart() => initOnStart = !initOnStart;
+        [HorizontalGroup("buttons"), Button("@listenToChange ? \"OnChange\" : \"OnChange\"", ButtonSizes.Small), GUIColor("@listenToChange ? Color.white : Color.grey"), PropertyOrder(1)] void TogglelistenToChange() => listenToChange = !listenToChange;
+
     }
 }

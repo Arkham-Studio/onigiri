@@ -35,13 +35,14 @@ namespace Arkham.Onigiri.Inputs
         [System.Serializable]
         public class GenericInputsPack
         {
-#if UNITY_EDITOR
-            [TextArea(2, 4), HideLabel()]
-            public string infos;
-#endif
+            [HorizontalGroup(""), LabelWidth(50)]
             public KeyCode key;
+            [HorizontalGroup(""), LabelWidth(50)]
+            [ShowIf("@key != KeyCode.None")]
             public GenericInputMode mode;
+            [ShowIf("@key != KeyCode.None")]
             public UnityEvent response;
+
         }
 
         public enum GenericInputMode { keep, up, down }

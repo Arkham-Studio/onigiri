@@ -6,7 +6,7 @@ namespace Arkham.Onigiri.AnimatorModule
 {
     public class StateBehaviorEvent : StateMachineBehaviour
     {
-        [SerializeField, EnumToggleButtons, HideLabel] private EventsType showEvents = EventsType.All;
+        [SerializeField, EnumToggleButtons, HideLabel] private EventsType showEvents = 0;
 
         [ShowIf("IsEnterEvent")]
         public UnityEvent onStateEnter;
@@ -19,11 +19,14 @@ namespace Arkham.Onigiri.AnimatorModule
 
         private bool haveLooped = false;
 
-        override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) => onStateEnter.Invoke();
+        override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            if (IsEnterEvent) onStateEnter.Invoke();
+        }
 
         override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            onStateUpdate.Invoke();
+            if (IsUpdateEvent) onStateUpdate.Invoke();
 
             float _time = stateInfo.normalizedTime % 1;
 
@@ -32,11 +35,14 @@ namespace Arkham.Onigiri.AnimatorModule
             if (!haveLooped && _time > 0.98f)
             {
                 haveLooped = true;
-                onStateAnimLoop.Invoke();
+                if (IsLoopEvent) onStateAnimLoop.Invoke();
             }
         }
 
-        override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) => onStateExit.Invoke();
+        override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            if (IsExitEvent) onStateExit.Invoke();
+        }
 
         //  ODIN
         bool IsEnterEvent => ((int)showEvents & (int)EventsType.Enter) != 0;

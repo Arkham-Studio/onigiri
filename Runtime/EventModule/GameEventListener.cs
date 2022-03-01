@@ -1,4 +1,4 @@
-﻿#pragma warning disable CS0649
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -24,9 +24,12 @@ namespace Arkham.Onigiri.Events
         [System.Serializable]
         public class GameEventPack
         {
+            [Title("@Event?.name")]
             public GameEvent Event;
+            [ShowIf("Event")]
             public UnityEvent Response;
 
+            [Button("Invoke Event",ButtonSizes.Large),ShowIf("Event")]
             public void OnEventRaised() => Response.Invoke();
         }
     }

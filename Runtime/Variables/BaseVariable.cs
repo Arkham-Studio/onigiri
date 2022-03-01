@@ -13,11 +13,10 @@ namespace Arkham.Onigiri.Variables
     public class ChangeableVariable : ScriptableObject
     {
         [PropertyOrder(1)]
-        [FoldoutGroup("Unity Event")]
+        [FoldoutGroup("OnChange", false)]
         public UnityEvent onChange;
         public UnityEvent GetEvent() => onChange;
-        [Title("")]
-        [Button(Name ="Invoke OnChange")]
+        [Button("Invoke OnChange", ButtonSizes.Large)]
         [PropertyOrder(2)]
         public void OnChange() => onChange?.Invoke();
 
