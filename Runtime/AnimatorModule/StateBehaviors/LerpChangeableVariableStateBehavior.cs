@@ -9,16 +9,20 @@ namespace Arkham.Onigiri.AnimatorModule
     {
         [SerializeField, PropertyOrder(Order = -2)] private ChangeableVariable output;
 
-        [SerializeField, HorizontalGroup("value",Title = "Values",LabelWidth = 50), HideIf("@output != null && output.GetType() == typeof(ColorVariable)")] private FloatReference min;
-        [SerializeField, HorizontalGroup("value"), HideIf("@output != null && output.GetType() == typeof(ColorVariable)")] private FloatReference max = new FloatReference(1);
+        [SerializeField, HorizontalGroup("value", Title = "Values", LabelWidth = 50), ShowIf("isLerpVariable")] private FloatReference min;
+        [SerializeField, HorizontalGroup("value"), ShowIf("isLerpVariable")] private FloatReference max = new FloatReference(1);
 
-        [SerializeField, HorizontalGroup("value"), ShowIf("@output != null && output.GetType() == typeof(ColorVariable)")] private ColorReference minC = new ColorReference(Color.black);
-        [SerializeField, HorizontalGroup("value"), ShowIf("@output != null && output.GetType() == typeof(ColorVariable)")] private ColorReference maxC = new ColorReference(Color.white);
+        [SerializeField, HorizontalGroup("value"), ShowIf("isColorVariable")] private ColorReference minC = new ColorReference(Color.black);
+        [SerializeField, HorizontalGroup("value"), ShowIf("isColorVariable")] private ColorReference maxC = new ColorReference(Color.white);
 
-        [SerializeField, HorizontalGroup("time",Title = "Time (normalized)", LabelWidth = 50)] private FloatReference start;
+        [SerializeField, HorizontalGroup("time", Title = "Time (normalized)", LabelWidth = 50)] private FloatReference start;
         [SerializeField, HorizontalGroup("time")] private FloatReference end = new FloatReference(1);
 
-        private bool isRounded;
+
+        [SerializeField, ShowIf("useCurve"), PropertyOrder(Order = -1), HideLabel] private AnimationCurve curve = AnimationCurve.Linear(0, 0, 1, 1);
+
+        [HideInInspector] public bool isRounded;
+        [HideInInspector] public bool useCurve = false;
 
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
@@ -30,7 +34,7 @@ namespace Arkham.Onigiri.AnimatorModule
         {
             if (output == null) return;
             float _normalizedTime = Mathf.Clamp01(Mathf.InverseLerp(start.Value, end.Value, stateInfo.normalizedTime));
-            SetValue(_normalizedTime);
+            SetValue(useCurve ? curve.Evaluate(_normalizedTime) : _normalizedTime );
         }
 
         override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -59,8 +63,23 @@ namespace Arkham.Onigiri.AnimatorModule
             }
         }
 
-        [Button(ButtonSizes.Small, Name = "@isRounded ? \"Rounded\" : \"Not Rounded\""), PropertyOrder(Order = -1), HideIf("@output.GetType() == typeof(ColorVariable)")]
+        [HorizontalGroup("buttons"), Button(ButtonSizes.Small, Name = "@isRounded ? \"Rounded\" : \"Not Rounded\""), PropertyOrder(Order = -2), ShowIf("isLerpVariable")]
         void ToggleRounded() => isRounded = !isRounded;
 
+        [HorizontalGroup("buttons"), Button(ButtonSizes.Small, Name = "Use Curve"), PropertyOrder(Order = -2), GUIColor("@useCurve ? Color.white : Color.grey")]
+        void ToggleCurve() => useCurve = !useCurve;
+
+
+        bool isColorVariable()
+        {
+            if (output == null) return false;
+            return output.GetType() == typeof(ColorVariable);
+        }
+
+        bool isLerpVariable()
+        {
+            if (output == null) return false;
+            return output.GetType() == typeof(FloatVariable) || output.GetType() == typeof(IntVariable);
+        }
     }
 }

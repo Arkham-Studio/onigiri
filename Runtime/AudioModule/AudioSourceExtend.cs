@@ -36,6 +36,7 @@ namespace Arkham.Onigiri.AudioModule
         private void FixedUpdate()
         {
             if (!checkEndedEvent) return;
+            if (myAudioSource == null) return;
             if (myAudioSource.clip == null) return;
             if (isEnded) return;
 
