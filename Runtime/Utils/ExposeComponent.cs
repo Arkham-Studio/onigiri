@@ -5,15 +5,12 @@ namespace Arkham.Onigiri.Utils
 {
     public class ExposeComponent : MonoBehaviour
     {
-
         public Component component;
         public ComponentVariable componentVariable;
 
-        private void Start()
+        private void OnEnable()
         {
-
-            if (component == null) Destroy(this);
-            componentVariable.Value = component;
+            if (component != null) componentVariable.SetValue(component);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Arkham.Onigiri.UI
 
         public UnityEvent onTrue;
         public UnityEvent onFalse;
+        public UnityEvent<bool> onDynamic;
 
         private void Start()
         {
@@ -20,10 +21,12 @@ namespace Arkham.Onigiri.UI
         private void OnEnable() => myToggle.onValueChanged.AddListener(OnChange);
         private void OnDisable() => myToggle.onValueChanged.RemoveListener(OnChange);
 
-        private void OnChange(bool arg0)
+        private void OnChange(bool _v)
         {
-            if (arg0) onTrue.Invoke();
+            if (_v) onTrue.Invoke();
             else onFalse.Invoke();
+
+            onDynamic.Invoke(_v);
         }
 
 

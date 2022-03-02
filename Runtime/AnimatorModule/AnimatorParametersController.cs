@@ -28,6 +28,8 @@ namespace Arkham.Onigiri.AnimatorModule
                     item.variable.onChange.AddListener(item.OnChange);
                 else
                     item.gameEvent.RegisterDelegate(item.OnChange);
+
+                item.OnChange();
             }
 
         }

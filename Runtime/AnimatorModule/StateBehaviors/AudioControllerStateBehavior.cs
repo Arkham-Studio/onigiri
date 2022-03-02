@@ -18,15 +18,17 @@ namespace Arkham.Onigiri.AnimatorModule
         public bool changeStateLength = true;
         [ShowIf("changeStateLength")]
         public string stateSpeedMultiplierName;
+        [ShowIf("changeStateLength")]
+        public float addTimeToEnd = 0;
 
 
         // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             if (changeStateLength && source.Value != null && behaviorType == BehaviorType.SetClipFrom)
-                animator.SetFloat(stateSpeedMultiplierName, 1f / source.Value.length);
+                animator.SetFloat(stateSpeedMultiplierName, 1f / (source.Value.length + addTimeToEnd));
             else if (changeStateLength && destination != null && behaviorType == BehaviorType.PlayVariableClip)
-                animator.SetFloat(stateSpeedMultiplierName, 1f / destination.Value.length);
+                animator.SetFloat(stateSpeedMultiplierName, 1f / (destination.Value.length + addTimeToEnd));
 
             if (autoGetAudioSource && source.Value != null)
             {
