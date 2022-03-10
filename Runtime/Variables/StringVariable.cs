@@ -40,5 +40,9 @@ namespace Arkham.Onigiri.Variables
         public void IntVariableToText(IntVariable _i) => SetValue(_i.Value.ToString());
 
         public void FromStringVariable(StringVariable _s) => SetValue(_s.Value);
+
+
+        public override int ValueToInt() => int.TryParse(Value, out int _r) ? _r : 0;
+
     }
 }

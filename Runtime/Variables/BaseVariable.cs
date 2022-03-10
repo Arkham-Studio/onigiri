@@ -1,13 +1,23 @@
 ﻿using Sirenix.OdinInspector;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Arkham.Onigiri.Variables
 {
-    public interface ITrackGameEvent
+    //public interface ITrackGameEvent
+    //{
+    //    UnityEvent GetEvent();
+    //}
+
+    public interface IVariableValueTo
     {
-        UnityEvent GetEvent();
+        string ValueToString();
+        int ValueToInt();
+        float ValueToFloat();
+        bool ValueToBool();
     }
+
 
     [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false)]
     public class ChangeableVariable : ScriptableObject
@@ -15,14 +25,16 @@ namespace Arkham.Onigiri.Variables
         [PropertyOrder(1)]
         [FoldoutGroup("OnChange", false)]
         public UnityEvent onChange;
-        public UnityEvent GetEvent() => onChange;
+        //public UnityEvent GetEvent() => onChange;
         [Button("Invoke OnChange", ButtonSizes.Large)]
         [PropertyOrder(2)]
         public void OnChange() => onChange?.Invoke();
 
     }
 
-    public class BaseVariable<T> : ChangeableVariable, ITrackGameEvent
+    [System.Serializable]
+    public class BaseVariable<T> : ChangeableVariable, IVariableValueTo
+    //, ITrackGameEvent
     {
         [SerializeField]
         protected T DefaultValue;
@@ -33,6 +45,8 @@ namespace Arkham.Onigiri.Variables
             get { return currentValue; }
             set { currentValue = value; }
         }
+        public Type typeParameterType => typeof(T);
+
 
         private void OnEnable() => currentValue = DefaultValue;
 
@@ -42,11 +56,7 @@ namespace Arkham.Onigiri.Variables
             OnChange();
         }
 
-        public void SetValue(BaseVariable<T> value)
-        {
-            Value = value.Value;
-            OnChange();
-        }
+        public void SetValue(BaseVariable<T> value) => SetValue(value.Value);
 
         public void SetToNull()
         {
@@ -67,5 +77,13 @@ namespace Arkham.Onigiri.Variables
         public static implicit operator T(BaseVariable<T> reference) => reference.Value;
 
         public T GetDefaultValue() => DefaultValue;
+
+        public virtual string ValueToString() => name;
+
+        public virtual int ValueToInt() => 0;
+
+        public virtual float ValueToFloat() => 0;
+
+        public virtual bool ValueToBool() => false;
     }
 }

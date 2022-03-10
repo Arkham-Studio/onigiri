@@ -12,6 +12,12 @@ namespace Arkham.Onigiri.Variables
             Value = !Value;
             OnChange();
         }
+
+
+        public override string ValueToString() => Value.ToString();
+        public override bool ValueToBool() => Value;
+        public override float ValueToFloat() => Value ? 1 : 0;
+        public override int ValueToInt() => Value ? 1 : 0;
     }
 }
 

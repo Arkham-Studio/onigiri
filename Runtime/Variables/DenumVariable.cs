@@ -11,21 +11,18 @@ namespace Arkham.Onigiri.Variables
         [SerializeField] private int sequenceIndex;
 
 
-        public void NextDenum()
-        {
-            SetSequenceDenum(1);
-        }
+        public void NextDenum() => SetSequenceDenum(1);
 
-        public void PreviousDenum()
-        {
-            SetSequenceDenum(-1);
-        }
+        public void PreviousDenum() => SetSequenceDenum(-1);
 
         public void SetSequenceDenum(int _d)
         {
             sequenceIndex = (sequence.Length+(sequenceIndex+_d))% sequence.Length;
             SetValue(sequence[sequenceIndex]);
         }
+
+        public override string ValueToString() => Value.name.ToString();
+        public override int ValueToInt() => int.TryParse(Value.name, out int _r) ? _r : 0;
 
     }
 }

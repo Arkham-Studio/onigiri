@@ -43,9 +43,26 @@ namespace Arkham.Onigiri.Utils
                 UnityEngine.Object.DestroyImmediate(_t.GetChild(i).gameObject);
         }
 
+        //  colors
+        public static float Luminance(this Color _c) => _c.r * 0.3f + _c.g * 0.59f + _c.b * 0.11f;
+
         //  sprites
         public static Sprite CreateSprite(TextureVariable _t) => Sprite.Create((Texture2D)_t.Value, new Rect(0, 0, _t.Value.width, _t.Value.height), Vector2.one * .5f);
 
+        //  type
+        public static bool IsSubclassOfRawGeneric(Type generic, Type toCheck)
+        {
+            while (toCheck != null && toCheck != typeof(object))
+            {
+                var cur = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
+                if (generic == cur)
+                {
+                    return true;
+                }
+                toCheck = toCheck.BaseType;
+            }
+            return false;
+        }
 
 #if UNITY_EDITOR
         public static T LoadScripteableObject<T>(string _filter) where T : ScriptableObject

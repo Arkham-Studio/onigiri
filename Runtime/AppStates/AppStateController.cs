@@ -12,14 +12,14 @@ namespace Arkham.Onigiri.AppStates
         [SerializeField]
         private DenumVariable actualState;
         [SerializeField]
-        private Denum[] state;
-        [SerializeField]
-        private Denum nextState;
-        [SerializeField]
-        private bool forceInit = false;
+        private Denum[] states;
+
 
         [SerializeField]
-        [Tooltip("Trigger for all app state controller at start, active or not")]
+        [Tooltip("Force OnEnter when active and changing for state in list")]
+        private bool reTrigger = true;
+
+        [SerializeField]
         private UnityEvent onInitState;
 
         [SerializeField]
@@ -34,7 +34,7 @@ namespace Arkham.Onigiri.AppStates
         {
             actualState.onChange.AddListener(OnStateChange);
 
-            if (!IsState(actualState.Value) && !forceInit)
+            if (!HaveState(actualState.Value))
             {
                 isActive = false;
                 onInitState?.Invoke();
@@ -48,12 +48,17 @@ namespace Arkham.Onigiri.AppStates
 
         public void OnStateChange()
         {
-            if (IsState(actualState.Value))
+            if (HaveState(actualState.Value) && isActive && reTrigger)
             {
                 isActive = true;
                 onEnterState?.Invoke();
             }
-            else if (isActive)
+            else if (HaveState(actualState.Value) && !isActive)
+            {
+                isActive = true;
+                onEnterState?.Invoke();
+            }
+            else if (!HaveState(actualState.Value) && isActive)
             {
                 isActive = false;
                 onLeaveState?.Invoke();
@@ -61,13 +66,13 @@ namespace Arkham.Onigiri.AppStates
         }
 
         public void ChangeAppState(Denum n) => actualState.SetValue(n);
+        public void ChangeAppStateRandom() => actualState.SetValue(states.GetRandom());
 
-        public void GoNextState() => actualState.SetValue(nextState);
-
-        private bool IsState(Denum _state)
+        private bool HaveState(Denum _state)
         {
-            foreach (Denum item in state)
-                if (item == _state) return true;
+            foreach (Denum item in states)
+                if (item == _state)
+                    return true;
             return false;
         }
     }

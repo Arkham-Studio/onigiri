@@ -31,5 +31,12 @@ namespace Arkham.Onigiri.Variables
             Value = Random.Range(0, max);
             OnChange();
         }
+
+
+        public override int ValueToInt() => Value;
+
+        public override float ValueToFloat() => Value;
+
+        public override bool ValueToBool() => Value > 0;
     }
 }
