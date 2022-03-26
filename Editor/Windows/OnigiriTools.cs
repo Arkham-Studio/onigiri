@@ -37,7 +37,7 @@ namespace Arkham.Onigiri.Editor
             _tree.Add("Buttons Debug", new OnigiriPlayButtonDebug());
             _tree.AddAllAssetsAtPath("Game Events", "Assets/Scriptables/", typeof(GameEvent), true, true).SortMenuItemsByName();
             _tree.AddAllAssetsAtPath("Changeables Variables", "Assets/Scriptables/", typeof(ChangeableVariable), true, true).SortMenuItemsByName();
-            
+
             //if(Selection.activeObject.GetType() == typeof(GameEvent))
             //_tree.Add("Manage Event", new ManageGameEvent<GameEvent>(Selection.activeObject as GameEvent));
 
@@ -93,8 +93,10 @@ namespace Arkham.Onigiri.Editor
             [Button(ButtonSizes.Large)]
             public void Create()
             {
-                if (!Directory.Exists("Assets/Scripts")) Directory.CreateDirectory("Assets/Scripts");
-                if (!Directory.Exists("Assets/Scripts/" + packName)) Directory.CreateDirectory("Assets/Scripts/" + packName);
+                if (!Directory.Exists("Assets/Scripts"))
+                    Directory.CreateDirectory("Assets/Scripts");
+                if (!Directory.Exists("Assets/Scripts/" + packName))
+                    Directory.CreateDirectory("Assets/Scripts/" + packName);
 
 
                 if (controller)
@@ -164,8 +166,10 @@ namespace Arkham.Onigiri.Editor
                 _controller = _controller.Replace("#NAME#", packName);
                 _controller = _controller.Replace("#CONTROLLERTYPE#", _controllerType);
 
-                if (!Directory.Exists("Assets/Scripts")) Directory.CreateDirectory("Assets/Scripts");
-                if (!Directory.Exists("Assets/Scripts/PlugeableAI")) Directory.CreateDirectory("Assets/Scripts/PlugeableAI");
+                if (!Directory.Exists("Assets/Scripts"))
+                    Directory.CreateDirectory("Assets/Scripts");
+                if (!Directory.Exists("Assets/Scripts/PlugeableAI"))
+                    Directory.CreateDirectory("Assets/Scripts/PlugeableAI");
 
                 System.IO.File.WriteAllText("Assets/Scripts/PlugeableAI" + packName + "Action.cs", _action);
                 System.IO.File.WriteAllText("Assets/Scripts/PlugeableAI" + packName + "Decision.cs", _decision);
@@ -199,7 +203,8 @@ namespace Arkham.Onigiri.Editor
 
                 component = new List<Component>();
                 scriptables = new List<ScriptableObject>();
-                if (actions == null) actions = new List<Delegate>();
+                if (actions == null)
+                    actions = new List<Delegate>();
 
                 OnProjectChange();
                 OnSelectionChange();
@@ -239,10 +244,10 @@ namespace Arkham.Onigiri.Editor
 
                 //        while (_sp.Next(true))
                 //        {
-                        
+
                 //            if (_sp.propertyType == SerializedPropertyType.ObjectReference)
                 //            {
-                            
+
                 //                if (_sp.objectReferenceValue == o)
                 //                {
                 //                    scriptables.Add(item);
@@ -342,29 +347,18 @@ namespace Arkham.Onigiri.Editor
 
             public OnigiriPlayButtonDebug()
             {
-                //EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
+
             }
 
-            //private void EditorApplication_playModeStateChanged(PlayModeStateChange obj)
-            //{
-            //    if (obj == PlayModeStateChange.EnteredPlayMode)
-            //    {
-            //        PopulateObjects();
-            //    }
-            //}
-
-            private void PopulateObjects ()
+            private void PopulateObjects()
             {
-                allObjects = new List<GameObject>();
                 allButtons = new List<Button>();
-                SceneManager.GetActiveScene().GetRootGameObjects(allObjects);
+                allObjects = new List<GameObject>();
+                for (int i = 0; i < SceneManager.sceneCount; i++)
+                    allObjects.AddRange(SceneManager.GetSceneAt(i).GetRootGameObjects());
                 foreach (GameObject item in allObjects)
-                {
                     foreach (Button _item in item.GetComponentsInChildren<Button>(true))
-                    {
                         allButtons.Add(_item);
-                    }
-                }
             }
 
             [OnInspectorGUI]
@@ -379,21 +373,20 @@ namespace Arkham.Onigiri.Editor
                     return;
                 }
 
-                if(allObjects == null && allButtons == null)
+                if (allObjects == null && allButtons == null)
                 {
                     PopulateObjects();
                 }
-               
 
                 foreach (Button _item in allButtons)
                 {
-                    if (!_item.gameObject.activeSelf || !_item.IsActive()) continue;
+                    if (!_item.gameObject.activeSelf || !_item.IsActive())
+                        continue;
                     GUILayout.Label(_item.transform.root.name + " > " + _item.transform.parent.name);
-                    if (GUILayout.Button(_item.name)) _item.onClick.Invoke();
+                    if (GUILayout.Button(_item.name))
+                        _item.onClick.Invoke();
                     GUILayout.Space(8);
                 }
-
-
             }
         }
 
@@ -412,7 +405,8 @@ namespace Arkham.Onigiri.Editor
 
                 foreach (var _runtimeCallsField in _onChangeObject.GetType().GetRuntimeFields())
                 {
-                    if (_runtimeCallsField.Name != "m_RuntimeCalls") continue;
+                    if (_runtimeCallsField.Name != "m_RuntimeCalls")
+                        continue;
                     IEnumerable<object> _runtimeCallsObjects = (IEnumerable<object>)_runtimeCallsField.GetValue(_onChangeObject);
 
                     foreach (var _callObject in _runtimeCallsObjects)
@@ -431,7 +425,8 @@ namespace Arkham.Onigiri.Editor
 
                 foreach (var item in _var.GetType().GetRuntimeFields())
                 {
-                    if (!item.Name.Equals("actions")) continue;
+                    if (!item.Name.Equals("actions"))
+                        continue;
                     _actions.Add((Action)item.GetValue(_var));
 
 

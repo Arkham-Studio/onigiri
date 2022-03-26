@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using Arkham.Onigiri.Attributes;
 
 [CreateAssetMenu(menuName = "Managers/#MANAGERNAME#", fileName ="#MANAGERNAME#")]
 [InlineEditor(InlineEditorObjectFieldModes.Foldout,DrawHeader =false)]
 [HideMonoScript]
+[EditorIcon("onigiri-icon-m")]
 public class #MANAGERNAME# : ScriptableObject
 {
     

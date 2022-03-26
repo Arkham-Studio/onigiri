@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Arkham.Onigiri.Attributes;
+using UnityEngine;
 
 namespace Arkham.Onigiri.Variables
 {

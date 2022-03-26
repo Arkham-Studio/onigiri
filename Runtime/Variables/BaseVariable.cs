@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using Arkham.Onigiri.Attributes;
+using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
@@ -20,6 +21,7 @@ namespace Arkham.Onigiri.Variables
 
 
     [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false)]
+    [System.Serializable]
     public class ChangeableVariable : ScriptableObject
     {
         [PropertyOrder(1)]
@@ -33,6 +35,8 @@ namespace Arkham.Onigiri.Variables
     }
 
     [System.Serializable]
+    [EditorIcon("onigiri-icon-v")]
+    [InlineButton("@OnigiriEditorUtils.CreateSripteable($property.Info.TypeOfValue)", "+", ShowIf = "@$value == null")]
     public class BaseVariable<T> : ChangeableVariable, IVariableValueTo
     //, ITrackGameEvent
     {
@@ -49,6 +53,8 @@ namespace Arkham.Onigiri.Variables
 
 
         private void OnEnable() => currentValue = DefaultValue;
+
+
 
         public void SetValue(T value)
         {

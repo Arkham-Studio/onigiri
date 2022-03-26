@@ -19,10 +19,13 @@ namespace Arkham.Onigiri.Editor
 
         private new void OnGUI()
         {
-            if (!EditorApplication.isPlaying) return;
+            if (!EditorApplication.isPlaying)
+                return;
 
             allObjects = new List<GameObject>();
-            SceneManager.GetActiveScene().GetRootGameObjects(allObjects);
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+                allObjects.AddRange(SceneManager.GetSceneAt(i).GetRootGameObjects());
+
 
 
             GUILayout.Label("BUTTONS");
@@ -32,9 +35,11 @@ namespace Arkham.Onigiri.Editor
             {
                 foreach (Button _item in item.GetComponentsInChildren<Button>(true))
                 {
-                    if (!_item.gameObject.activeSelf || !_item.IsActive()) continue;
+                    if (!_item.gameObject.activeSelf || !_item.IsActive())
+                        continue;
                     GUILayout.Label(_item.transform.parent.parent.name + " > " + _item.transform.parent.name);
-                    if (GUILayout.Button(_item.name)) _item.onClick.Invoke();
+                    if (GUILayout.Button(_item.name))
+                        _item.onClick.Invoke();
                 }
             }
 

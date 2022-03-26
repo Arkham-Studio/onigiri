@@ -3,6 +3,7 @@
 namespace Arkham.Onigiri.Variables
 {
     [CreateAssetMenu(menuName = "Variables/Float")]
+    [System.Serializable]
     public class FloatVariable : BaseVariable<float>
     {
         public void ApplyChange(float amount)

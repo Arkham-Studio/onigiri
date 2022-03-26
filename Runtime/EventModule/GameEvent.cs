@@ -1,4 +1,5 @@
 ﻿using System;
+using Arkham.Onigiri.Attributes;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,6 +8,7 @@ namespace Arkham.Onigiri.Events
 {
     [CreateAssetMenu(fileName = "NewGameEvent", menuName = "Events/Game Event")]
     [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false)]
+    [EditorIcon("onigiri-icon-e")]
     [HideMonoScript]
     public class GameEvent : ScriptableObject
     {

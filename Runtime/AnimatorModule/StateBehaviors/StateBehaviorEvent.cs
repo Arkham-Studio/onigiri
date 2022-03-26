@@ -30,7 +30,7 @@ namespace Arkham.Onigiri.AnimatorModule
 
             float _time = stateInfo.normalizedTime % 1;
 
-            if (haveLooped && _time < 0.99f) haveLooped = false;
+            if (haveLooped && _time < 0.99f && stateInfo.loop) haveLooped = false;
 
             if (!haveLooped && _time > 0.98f)
             {
