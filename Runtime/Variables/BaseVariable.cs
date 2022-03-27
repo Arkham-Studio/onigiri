@@ -20,34 +20,34 @@ namespace Arkham.Onigiri.Variables
     }
 
 
-    [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false)]
+    [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false,DisableGUIForVCSLockedAssets =true)]
+
     [System.Serializable]
     public class ChangeableVariable : ScriptableObject
     {
-        [PropertyOrder(1)]
+        [PropertyOrder(2)]
         [FoldoutGroup("OnChange", false)]
         public UnityEvent onChange;
-        //public UnityEvent GetEvent() => onChange;
-        [Button("Invoke OnChange", ButtonSizes.Large)]
-        [PropertyOrder(2)]
+        [Button("Invoke OnChange", ButtonSizes.Large), HorizontalGroup("Buttons")]
+        [PropertyOrder(1)]
         public void OnChange() => onChange?.Invoke();
+        //public UnityEvent GetEvent() => onChange;
 
     }
 
     [System.Serializable]
     [EditorIcon("onigiri-icon-v")]
-    [InlineButton("@OnigiriEditorUtils.CreateSripteable($property.Info.TypeOfValue)", "+", ShowIf = "@$value == null")]
+    [InlineButton("@OnigiriEditorUtils.CreateSripteable($property)", "+", ShowIf = "@$value == null")]
     public class BaseVariable<T> : ChangeableVariable, IVariableValueTo
     //, ITrackGameEvent
     {
         [SerializeField]
         protected T DefaultValue;
 
-        public T currentValue;
+        protected T currentValue;
         public T Value
         {
             get { return currentValue; }
-            set { currentValue = value; }
         }
         public Type typeParameterType => typeof(T);
 
@@ -55,10 +55,9 @@ namespace Arkham.Onigiri.Variables
         private void OnEnable() => currentValue = DefaultValue;
 
 
-
         public void SetValue(T value)
         {
-            Value = value;
+            currentValue = value;
             OnChange();
         }
 
@@ -66,18 +65,19 @@ namespace Arkham.Onigiri.Variables
 
         public void SetToNull()
         {
-            Value = default;
+            currentValue = default;
             OnChange();
         }
 
-        public void Reset()
+        [Button("Reset Value",ButtonSizes.Large), HorizontalGroup("Buttons")]
+        public void ResetValue()
         {
             currentValue = DefaultValue;
             OnChange();
         }
 
-        public void SetValueQuiet(T value) => Value = value;
-        public void SetValueQuiet(BaseVariable<T> value) => Value = value.Value;
+        public void SetValueQuiet(T value) => currentValue = value;
+        public void SetValueQuiet(BaseVariable<T> value) => currentValue = value.Value;
         public void ResetQuiet() => currentValue = DefaultValue;
 
         public static implicit operator T(BaseVariable<T> reference) => reference.Value;

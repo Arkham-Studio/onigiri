@@ -16,16 +16,18 @@ namespace Arkham.Onigiri.Variables
 
         public void EvaluateOutput()
         {
-            output.Value = (Value.Evaluate(input.Value));
+            output.SetValue(Value.Evaluate(input.Value));
             response?.Invoke();
         }
+
+
 #if UNITY_EDITOR
 
-        [Button(ButtonSizes.Large)]
+        [Button(ButtonSizes.Large), HorizontalGroup("Buttons")]
         public void RandomizeCurve()
         {
             Keyframe[] _keyframes = new Keyframe[50];
-            Value.keys = _keyframes;
+            DefaultValue.keys = _keyframes;
             float _offset = 1f / (_keyframes.Length * 1f);
             for (int i = 0; i < _keyframes.Length; i++)
             {
@@ -34,7 +36,7 @@ namespace Arkham.Onigiri.Variables
                 AnimationUtility.SetKeyLeftTangentMode(Value, i, AnimationUtility.TangentMode.Free);
                 AnimationUtility.SetKeyRightTangentMode(Value, i, AnimationUtility.TangentMode.Free);
             }
-            Value.keys = _keyframes;
+            DefaultValue.keys = _keyframes;
         } 
 #endif
 

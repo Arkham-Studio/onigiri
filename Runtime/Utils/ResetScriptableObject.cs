@@ -16,10 +16,10 @@ namespace Arkham.Onigiri.Utils
 
         private void LevelWasLoaded(Scene s, LoadSceneMode lsm)
         {
-            foreach (FloatVariable i in floatList) i.Reset();
-            foreach (IntVariable i in intList) i.Reset();
-            foreach (BoolVariable i in boolList) i.Reset();
-            foreach (StringVariable i in stringList) i.Reset();
+            foreach (FloatVariable i in floatList) i.ResetValue();
+            foreach (IntVariable i in intList) i.ResetValue();
+            foreach (BoolVariable i in boolList) i.ResetValue();
+            foreach (StringVariable i in stringList) i.ResetValue();
         }
     }
 }

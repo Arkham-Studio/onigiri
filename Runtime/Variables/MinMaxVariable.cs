@@ -9,10 +9,7 @@ namespace Arkham.Onigiri.Variables
         public float minValue;
         public float maxValue;
 
-        public float Value(float t)
-        {
-            return Mathf.Lerp(minValue, maxValue, t);
-        }
+        public float Value(float t) => Mathf.Lerp(minValue, maxValue, t);
 
     }
 }

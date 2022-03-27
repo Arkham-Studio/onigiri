@@ -8,10 +8,10 @@ using Arkham.Onigiri.Attributes;
 [InlineEditor(InlineEditorObjectFieldModes.Foldout,DrawHeader =false)]
 [HideMonoScript]
 [EditorIcon("onigiri-icon-m")]
+[VariablesManager(folderName = "#NAME#")]
 public class #MANAGERNAME# : ScriptableObject
 {
     
-
     private void OnEnable()
     {
 

@@ -27,7 +27,7 @@ namespace Arkham.Onigiri.Variables
         {
             if (DefaultValue == null)
                 DefaultValue = new List<T>();
-            Value = new List<T>(DefaultValue);
+            currentValue = new List<T>(DefaultValue);
         }
 
         public void AddItem(ChangeableVariable _variable)

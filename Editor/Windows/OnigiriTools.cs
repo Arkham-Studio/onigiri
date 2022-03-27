@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using Arkham.Onigiri.Events;
+﻿using Arkham.Onigiri.Events;
 using Arkham.Onigiri.Variables;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -97,28 +97,31 @@ namespace Arkham.Onigiri.Editor
                     Directory.CreateDirectory("Assets/Scripts");
                 if (!Directory.Exists("Assets/Scripts/" + packName))
                     Directory.CreateDirectory("Assets/Scripts/" + packName);
+                if (!Directory.Exists("Assets/Scriptables/"))
+                    Directory.CreateDirectory("Assets/Scriptables/");
 
 
                 if (controller)
                 {
-                    string _controller = System.IO.File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriControllerTemplate.txt");
+                    string _controller = File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriControllerTemplate.txt");
                     _controller = _controller.Replace("#CONTROLLERNAME#", packName + "Controller");
                     _controller = _controller.Replace("#MANAGERNAME#", manager ? packName + "Manager" : "");
-                    System.IO.File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Controller.cs", _controller);
+                    File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Controller.cs", _controller);
                 }
 
                 if (manager)
                 {
-                    string _mananger = System.IO.File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriManagerTemplate.txt");
-                    _mananger = _mananger.Replace("#MANAGERNAME#", packName + "Manager");
-                    System.IO.File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Manager.cs", _mananger);
+                    string _manager = File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriManagerTemplate.txt");
+                    _manager = _manager.Replace("#NAME#", packName);
+                    _manager = _manager.Replace("#MANAGERNAME#", packName + "Manager");
+                    File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Manager.cs", _manager);
                 }
 
                 if (data)
                 {
-                    string _mananger = System.IO.File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriDataTemplate.txt");
-                    _mananger = _mananger.Replace("#DATANAME#", packName + "Data");
-                    System.IO.File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Data.cs", _mananger);
+                    string _data = File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriDataTemplate.txt");
+                    _data = _data.Replace("#DATANAME#", packName + "Data");
+                    File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Data.cs", _data);
                 }
 
                 AssetDatabase.Refresh();

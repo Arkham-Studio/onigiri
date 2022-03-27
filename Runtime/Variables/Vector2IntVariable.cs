@@ -5,9 +5,9 @@ namespace Arkham.Onigiri.Variables
     [CreateAssetMenu(menuName = "Variables/Vector2Int")]
     public class Vector2IntVariable : BaseVariable<Vector2Int>
     {
-        public static implicit operator Vector2Int(Vector2IntVariable reference)
-        {
-            return reference.Value;
-        }
+        public override int ValueToInt() => Mathf.RoundToInt(Value.magnitude);
+        public override float ValueToFloat() => Value.magnitude;
+        public override bool ValueToBool() => Value.magnitude > 0;
+        public override string ValueToString() => Value.ToString();
     }
 }

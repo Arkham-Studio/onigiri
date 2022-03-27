@@ -48,6 +48,8 @@ namespace Arkham.Onigiri.AppStates
                 case DenumVariable _d:
                     ActivateSnapshot(_d.Value.name);
                     break;
+                case null:
+                    return;
                 default:
                     ActivateSnapshot(changeableVariable.name);
                     break;
@@ -67,23 +69,7 @@ namespace Arkham.Onigiri.AppStates
             }
         }
 
-        public void SetIndex(SnapshotPack _snp)
-        {
-            lastSnapshotIndex = actualSnapshotIndex;
-            actualSnapshotIndex = _snp == null ? -1 : snapshots.IndexOf(_snp);
 
-            lastId = _snp == null ? "" : _snp.id;
-        }
-
-        public void SaveLast(SnapshotPack _snp)
-        {
-            SetIndex(_snp);
-            if (lastSnapshotIndex != -1)
-            {
-                lastGameObjectStates = snapshots[lastSnapshotIndex].gameObjectStates;
-                lastComponentsStates = snapshots[lastSnapshotIndex].componentsStates;
-            }
-        }
 
 #if UNITY_EDITOR
         private Dictionary<GameObject, bool> lastGameObjectStates;
@@ -151,6 +137,24 @@ namespace Arkham.Onigiri.AppStates
                 snapshots[lastSnapshotIndex]?.ActivateSnapshot();
 
         }
+
+        public void SetIndex(SnapshotPack _snp)
+        {
+            lastSnapshotIndex = actualSnapshotIndex;
+            actualSnapshotIndex = _snp == null ? -1 : snapshots.IndexOf(_snp);
+
+            lastId = _snp == null ? "" : _snp.id;
+        }
+
+        public void SaveLast(SnapshotPack _snp)
+        {
+            SetIndex(_snp);
+            if (lastSnapshotIndex != -1)
+            {
+                lastGameObjectStates = snapshots[lastSnapshotIndex].gameObjectStates;
+                lastComponentsStates = snapshots[lastSnapshotIndex].componentsStates;
+            }
+        }
 #endif
 
         [System.Serializable]
@@ -176,7 +180,9 @@ namespace Arkham.Onigiri.AppStates
             [Button("ACTIVATE", ButtonSizes.Medium)]
             public void ActivateSnapshot()
             {
-                controller.SaveLast(this);
+#if UNITY_EDITOR
+                controller.SaveLast(this); 
+#endif
 
                 if (gameObjectStates == null || componentsStates == null)
                 {
@@ -212,7 +218,9 @@ namespace Arkham.Onigiri.AppStates
             [Button("RECORD"), HorizontalGroup("buttons")]
             public void RecordSnapshot()
             {
-                controller.SetIndex(this);
+#if UNITY_EDITOR
+                controller.SetIndex(this); 
+#endif
 
                 gameObjectStates = new Dictionary<GameObject, bool>();
                 componentsStates = new Dictionary<Component, bool>();

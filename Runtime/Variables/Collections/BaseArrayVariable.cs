@@ -30,7 +30,7 @@ namespace Arkham.Onigiri.Variables
             if (DefaultValue == null)
                 DefaultValue = new T[0];
 
-            Value = (T[])DefaultValue.Clone();
+            currentValue = (T[])DefaultValue.Clone();
         }
 
 

@@ -11,7 +11,8 @@ namespace Arkham.Onigiri.LogicModule
 
         public void CalculateMath(int _i)
         {
-            if (_i >= packs.Length) return;
+            if (_i >= packs.Length)
+                return;
 
             packs[_i].DoMaths();
         }
@@ -30,25 +31,25 @@ namespace Arkham.Onigiri.LogicModule
                 switch (math)
                 {
                     case Operation.add:
-                        c.Value = a.Value + b.Value;
+                        c.SetValue(a.Value + b.Value);
                         break;
                     case Operation.multiply:
-                        c.Value = a.Value * b.Value;
+                        c.SetValue(a.Value * b.Value);
                         break;
                     case Operation.divide:
-                        c.Value = a.Value / b.Value;
+                        c.SetValue(a.Value / b.Value);
                         break;
                     case Operation.min:
-                        c.Value = Mathf.Min(a.Value, b.Value);
+                        c.SetValue(Mathf.Min(a.Value, b.Value));
                         break;
                     case Operation.max:
-                        c.Value = Mathf.Max(a.Value, b.Value);
+                        c.SetValue(Mathf.Max(a.Value, b.Value));
                         break;
                     case Operation.mean:
-                        c.Value = (a.Value + b.Value) / 2;
+                        c.SetValue((a.Value + b.Value) / 2);
                         break;
                     case Operation.abs:
-                        c.Value = Mathf.Abs(a.Value);
+                        c.SetValue(Mathf.Abs(a.Value));
                         break;
                     default:
                         break;

@@ -6,10 +6,10 @@ namespace Arkham.Onigiri.Variables
     [CreateAssetMenu(menuName = "Variables/Bool")]
     public class BoolVariable : BaseVariable<bool>
     {
-        [Button]
+        [Button(ButtonSizes.Large), HorizontalGroup("Buttons")]
         public void ToggleValue()
         {
-            Value = !Value;
+            currentValue = !Value;
             OnChange();
         }
 
