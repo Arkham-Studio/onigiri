@@ -14,5 +14,8 @@ namespace Arkham.Onigiri.Variables
         public override int ValueToInt() => Mathf.RoundToInt(Value.Luminance() * 100f);
         public override bool ValueToBool() => Value.Luminance() > 0;
 
+
+        public override void FloatToValue(float _f) => SetValue(new Color(_f, _f, _f, _f));
+
     }
 }

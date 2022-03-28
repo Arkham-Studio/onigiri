@@ -18,6 +18,12 @@ namespace Arkham.Onigiri.Variables
         public override bool ValueToBool() => Value;
         public override float ValueToFloat() => Value ? 1 : 0;
         public override int ValueToInt() => Value ? 1 : 0;
+
+
+        public override void StringToValue(string _v) => SetValue(_v.Length > 0);
+        public override void IntToValue(int _v) => SetValue(_v > 0);
+        public override void FloatToValue(float _v) => SetValue(_v > 0);
+        public override void BoolToValue(bool _v) => SetValue(_v);
     }
 }
 

@@ -26,5 +26,11 @@ namespace Arkham.Onigiri.Variables
         public void FloatVariableToText(FloatVariable _f) => SetValue(_f.Value.ToString(decimalFormat));
         public void IntVariableToText(IntVariable _i) => SetValue(_i.Value.ToString());
         public void FromStringVariable(StringVariable _s) => SetValue(_s.Value);
+
+
+        public override void StringToValue(string _v) => SetValue(_v);
+        public override void IntToValue(int _v) => SetValue(_v.ToString());
+        public override void FloatToValue(float _v) => SetValue(_v.ToString());
+        public override void BoolToValue(bool _v) => SetValue(_v.ToString());
     }
 }

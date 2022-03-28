@@ -7,9 +7,6 @@ namespace Arkham.Onigiri.Variables
     public class IntVariable : BaseVariable<int>
     {
 
-        public override int ValueToInt() => Value;
-        public override float ValueToFloat() => Value * 1f;
-        public override bool ValueToBool() => Value > 0;
 
         public void ApplyChange(int amount)
         {
@@ -38,6 +35,15 @@ namespace Arkham.Onigiri.Variables
         }
 
 
+        public override int ValueToInt() => Value;
+        public override float ValueToFloat() => Value * 1f;
+        public override bool ValueToBool() => Value > 0;
+
+
+        public override void StringToValue(string _v) => SetValue(_v.Length);
+        public override void IntToValue(int _v) => SetValue(_v);
+        public override void FloatToValue(float _v) => SetValue(Mathf.RoundToInt(_v));
+        public override void BoolToValue(bool _v) => SetValue(_v ? 1 : 0);
 
     }
 }

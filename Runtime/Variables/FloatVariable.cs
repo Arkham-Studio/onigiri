@@ -6,9 +6,7 @@ namespace Arkham.Onigiri.Variables
     [System.Serializable]
     public class FloatVariable : BaseVariable<float>
     {
-        public override float ValueToFloat() => Value;
-        public override int ValueToInt() => Mathf.RoundToInt(Value);
-        public override bool ValueToBool() => Value > 0;
+
 
         public void ApplyChange(float amount)
         {
@@ -36,5 +34,17 @@ namespace Arkham.Onigiri.Variables
             currentValue = Random.Range(0, max);
             OnChange();
         }
+
+
+        public override float ValueToFloat() => Value;
+        public override int ValueToInt() => Mathf.RoundToInt(Value);
+        public override bool ValueToBool() => Value > 0;
+
+
+        public override void StringToValue(string _v) => SetValue(_v.Length);
+        public override void IntToValue(int _v) => SetValue(_v);
+        public override void FloatToValue(float _v) => SetValue(_v);
+        public override void BoolToValue(bool _v) => SetValue(_v ? 1f : 0f);
+
     }
 }

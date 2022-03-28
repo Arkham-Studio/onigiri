@@ -19,41 +19,52 @@ namespace Arkham.Onigiri.Variables
         bool ValueToBool();
     }
 
+    public interface IVariableValueFrom
+    {
+        void StringToValue(string _s);
+        void IntToValue(int _i);
+        void FloatToValue(float _f);
+        void BoolToValue(bool _b);
+        void Vector2ToValue(Vector2 _v);
+    }
+
+    public interface IVariableResetable
+    {
+        void ResetValue();
+    }
+
 
     [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false,DisableGUIForVCSLockedAssets =true)]
 
     [System.Serializable]
     public class ChangeableVariable : ScriptableObject
     {
-        [PropertyOrder(2)]
-        [FoldoutGroup("OnChange", false)]
+        [FoldoutGroup("OnChange", false), PropertyOrder(2)]
         public UnityEvent onChange;
-        [Button("Invoke OnChange", ButtonSizes.Large), HorizontalGroup("Buttons")]
-        [PropertyOrder(1)]
+        [Button("Invoke OnChange", ButtonSizes.Large), HorizontalGroup("Buttons"), PropertyOrder(1)]
         public void OnChange() => onChange?.Invoke();
-        //public UnityEvent GetEvent() => onChange;
-
+        public UnityEvent GetEvent() => onChange;
     }
 
     [System.Serializable]
     [EditorIcon("onigiri-icon-v")]
     [InlineButton("@OnigiriEditorUtils.CreateSripteable($property)", "+", ShowIf = "@$value == null")]
-    public class BaseVariable<T> : ChangeableVariable, IVariableValueTo
+    public class BaseVariable<T> : ChangeableVariable, IVariableValueTo, IVariableValueFrom, IVariableResetable
     //, ITrackGameEvent
     {
         [SerializeField]
         protected T DefaultValue;
-
+        [SerializeField, ReadOnly, ShowIf("@UnityEngine.Application.isPlaying == true")]
         protected T currentValue;
         public T Value
         {
             get { return currentValue; }
         }
+
+
         public Type typeParameterType => typeof(T);
 
-
         private void OnEnable() => currentValue = DefaultValue;
-
 
         public void SetValue(T value)
         {
@@ -85,11 +96,15 @@ namespace Arkham.Onigiri.Variables
         public T GetDefaultValue() => DefaultValue;
 
         public virtual string ValueToString() => name;
-
         public virtual int ValueToInt() => 0;
-
         public virtual float ValueToFloat() => 0;
-
         public virtual bool ValueToBool() => false;
+
+        public virtual void StringToValue(string _v) => throw new NotImplementedException("Variable does not support this type : " + _v.GetType());
+        public virtual void IntToValue(int _v) => throw new NotImplementedException("Variable does not support this type : " + _v.GetType());
+        public virtual void FloatToValue(float _v) => throw new NotImplementedException("Variable does not support this type : " + _v.GetType());
+        public virtual void BoolToValue(bool _v) => throw new NotImplementedException("Variable does not support this type : " + _v.GetType());
+        public virtual void Vector2ToValue(Vector2 _v) => throw new NotSupportedException("Variable does not support this type : "+ _v.GetType());
+        
     }
 }
