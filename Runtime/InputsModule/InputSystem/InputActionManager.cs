@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 
 namespace Arkham.Onigiri.InputSystem
 {
-    [CreateAssetMenu(menuName = "Input/Todelete"), PreloadAsset, EditorIcon("onigiri-icon-m")]
+    [CreateAssetMenu(menuName = "Managers/Input Manager"), PreloadAsset, EditorIcon("onigiri-icon-m")]
     public class InputActionManager : ScriptableObject
     {
         [ValueDropdown("GetAllScriptableObjects", AppendNextDrawer = true), OnValueChanged("OnAssetChange")]
@@ -105,23 +105,39 @@ namespace Arkham.Onigiri.InputSystem
 
             private void OnPerformed(InputAction.CallbackContext ctx)
             {
-                switch (ctx.ReadValueAsObject())
+                switch (changeableVariable)
                 {
-                    case float _f:
-                        ((IVariableValueFrom)changeableVariable)?.FloatToValue(_f);
+                    case CallbackContextVariable _ctx:
+                        _ctx.SetValue(ctx);
                         break;
-                    case int _i:
-                        ((IVariableValueFrom)changeableVariable)?.IntToValue(_i);
-                        break;
-                    case Vector2 _v:
-                        ((IVariableValueFrom)changeableVariable)?.Vector2ToValue(_v);
+                    default:
+                        switch (ctx.ReadValueAsObject())
+                        {
+                            case float _f:
+                                ((IVariableValueFrom)changeableVariable)?.FloatToValue(_f);
+                                break;
+                            case int _i:
+                                ((IVariableValueFrom)changeableVariable)?.IntToValue(_i);
+                                break;
+                            case Vector2 _v:
+                                ((IVariableValueFrom)changeableVariable)?.Vector2ToValue(_v);
+                                break;
+                        }
                         break;
                 }
             }
 
             private void OnCanceled(InputAction.CallbackContext ctx)
             {
-                ((IVariableResetable)changeableVariable)?.ResetValue();
+                switch (changeableVariable)
+                {
+                    case CallbackContextVariable _ctx:
+                        _ctx.SetValue(ctx);
+                        break;
+                    default:
+                        ((IVariableResetable)changeableVariable)?.ResetValue();
+                        break;
+                }
             }
 
 
@@ -189,5 +205,5 @@ namespace Arkham.Onigiri.InputSystem
             return new InputActionPack(asset);
         }
 #endif
-    } 
+    }
 }

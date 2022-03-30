@@ -42,7 +42,7 @@ namespace Arkham.Onigiri.Variables
         [FoldoutGroup("OnChange", false), PropertyOrder(2)]
         public UnityEvent onChange;
         [Button("Invoke OnChange", ButtonSizes.Large), HorizontalGroup("Buttons"), PropertyOrder(1)]
-        public void OnChange() => onChange?.Invoke();
+        public virtual void OnChange() => onChange?.Invoke();
         public UnityEvent GetEvent() => onChange;
     }
 
