@@ -56,11 +56,7 @@ namespace Arkham.Onigiri.Variables
         protected T DefaultValue;
         [SerializeField, ReadOnly, ShowIf("@UnityEngine.Application.isPlaying == true")]
         protected T currentValue;
-        public T Value
-        {
-            get { return currentValue; }
-        }
-
+        public T Value => currentValue;
 
         public Type typeParameterType => typeof(T);
 
