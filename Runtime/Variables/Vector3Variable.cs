@@ -9,6 +9,8 @@ namespace Arkham.Onigiri.Variables
         public override float ValueToFloat() => Value.magnitude;
         public override bool ValueToBool() => Value.magnitude > 0;
         public override string ValueToString() => Value.ToString();
+
+        public static implicit operator Vector3(Vector3Variable reference) => reference.Value;
     }
 }
 

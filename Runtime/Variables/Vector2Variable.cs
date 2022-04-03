@@ -13,5 +13,11 @@ namespace Arkham.Onigiri.Variables
 
         public override void Vector2ToValue(Vector2 _v) => SetValue(_v);
         public override void FloatToValue(float _v) => SetValue(new Vector2(_v, _v));
+
+
+        public void ApplyChange(Vector2 _v)
+        {
+            SetValue(Value + _v);
+        }
     }
 }

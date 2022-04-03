@@ -10,6 +10,8 @@ namespace Arkham.Onigiri.LogicModule
     {
         public override bool Test(Denum _value, ComparePack _pack)
         {
+            if (_value == null || _pack == null)
+                return false;
             switch (_pack.how)
             {
                 case CompareOperation.equals:

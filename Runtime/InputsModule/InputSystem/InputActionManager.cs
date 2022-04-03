@@ -15,6 +15,8 @@ namespace Arkham.Onigiri.InputSystem
         [ValueDropdown("GetAllScriptableObjects", AppendNextDrawer = true), OnValueChanged("OnAssetChange")]
         public InputActionAsset asset;
 
+        public IntVariable playerCountValue;
+
         [SerializeField, ListDrawerSettings(CustomAddFunction = "OnNewInputPack", CustomRemoveElementFunction = "OnRemoveInputPack")]
         private List<InputActionPack> inputActionPacks = new List<InputActionPack>();
 
@@ -24,12 +26,11 @@ namespace Arkham.Onigiri.InputSystem
                 item.BindInputAsset();
 
             asset?.Enable();
+
         }
 
         private void OnDisable()
         {
-
-
             foreach (InputActionPack item in inputActionPacks)
                 item.UnBindInputAsset();
         }
@@ -62,6 +63,7 @@ namespace Arkham.Onigiri.InputSystem
             string action;
 
             [SerializeField] private ChangeableVariable changeableVariable;
+            [SerializeField] private IntVariable deviceID;
 
             public InputActionPack(InputActionAsset asset)
             {
@@ -82,6 +84,18 @@ namespace Arkham.Onigiri.InputSystem
                 }
             }
 
+            public void Enable()
+            {
+
+                BindInputAsset();
+            }
+
+            public void Disable()
+            {
+
+                UnBindInputAsset();
+            }
+
             public void BindInputAsset()
             {
                 if (asset == null || string.IsNullOrEmpty(map) || string.IsNullOrEmpty(map))
@@ -91,6 +105,8 @@ namespace Arkham.Onigiri.InputSystem
 
                 asset[$"{map}/{action}"].performed += OnPerformed;
                 asset[$"{map}/{action}"].canceled += OnCanceled;
+
+
             }
 
             public void UnBindInputAsset()
@@ -99,12 +115,17 @@ namespace Arkham.Onigiri.InputSystem
                     return;
                 if (asset?.FindAction($"{map}/{action}") == null)
                     return;
+
                 asset[$"{map}/{action}"].performed -= OnPerformed;
                 asset[$"{map}/{action}"].canceled -= OnCanceled;
+
             }
 
             private void OnPerformed(InputAction.CallbackContext ctx)
             {
+                if (!IsCorrectDevice(ctx))
+                    return;
+
                 switch (changeableVariable)
                 {
                     case CallbackContextVariable _ctx:
@@ -129,6 +150,9 @@ namespace Arkham.Onigiri.InputSystem
 
             private void OnCanceled(InputAction.CallbackContext ctx)
             {
+                if (!IsCorrectDevice(ctx))
+                    return;
+
                 switch (changeableVariable)
                 {
                     case CallbackContextVariable _ctx:
@@ -138,6 +162,20 @@ namespace Arkham.Onigiri.InputSystem
                         ((IVariableResetable)changeableVariable)?.ResetValue();
                         break;
                 }
+            }
+
+            bool IsCorrectDevice(InputAction.CallbackContext ctx)
+            {
+                if (deviceID == null)
+                    return true;
+
+                if (deviceID.Value <= 0)
+                    return false;
+
+                if (ctx.control.device.deviceId != deviceID.Value)
+                    return false;
+
+                return true;
             }
 
 

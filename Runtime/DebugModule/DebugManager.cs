@@ -1,3 +1,4 @@
+using Arkham.Onigiri.Attributes;
 using Arkham.Onigiri.Events;
 using Arkham.Onigiri.Variables;
 using Sirenix.OdinInspector;
@@ -7,7 +8,8 @@ using UnityEngine;
 namespace Arkham.Onigiri.DebugModule
 {
     [CreateAssetMenu(menuName = "Managers/DebugManager")]
-    [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false)]
+    [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false), HideMonoScript]
+    [EditorIcon("onigiri-icon-m"), VariablesManager(folderName = "Chunk")]
     public class DebugManager : ScriptableObject
     {
 
@@ -69,24 +71,30 @@ namespace Arkham.Onigiri.DebugModule
                 {
                     case IntVariable i:
                         GUI.Label(new Rect(0, y, w, iH), i.name);
-                        if (GUI.Button(new Rect(w - iH, y, iH, iH), "!")) variable.OnChange();
+                        if (GUI.Button(new Rect(w - iH, y, iH, iH), "!"))
+                            variable.OnChange();
                         i.SetValue(int.Parse(GUI.TextField(new Rect(0, y + iH, w * .5f, iH), i.Value.ToString())));
-                        if (GUI.Button(new Rect(w * .5f, y + iH, w * .25f, iH), "-")) i.ApplyChange(-increment);
-                        if (GUI.Button(new Rect(w * .75f, y + iH, w * .25f, iH), "+")) i.ApplyChange(increment);
+                        if (GUI.Button(new Rect(w * .5f, y + iH, w * .25f, iH), "-"))
+                            i.ApplyChange(-increment);
+                        if (GUI.Button(new Rect(w * .75f, y + iH, w * .25f, iH), "+"))
+                            i.ApplyChange(increment);
                         break;
                     case FloatVariable f:
                         GUI.Label(new Rect(0, y, w, iH), f.Value.ToString(floatPrecision) + " - " + f.name);
-                        if (GUI.Button(new Rect(w - iH, y, iH, iH), "!")) variable.OnChange();
+                        if (GUI.Button(new Rect(w - iH, y, iH, iH), "!"))
+                            variable.OnChange();
                         f.SetValue(GUI.HorizontalSlider(new Rect(0, y + iH, w, iH), f.Value, minMax.x, minMax.y));
                         break;
                     case StringVariable s:
                         GUI.Label(new Rect(0, y, w, iH), s.name);
-                        if (GUI.Button(new Rect(w - iH, y, iH, iH), "!")) variable.OnChange();
+                        if (GUI.Button(new Rect(w - iH, y, iH, iH), "!"))
+                            variable.OnChange();
                         s.SetValue(GUI.TextArea(new Rect(0, y + iH, w, iH * lines), s.Value));
                         break;
                     case BoolVariable b:
                         b.SetValue(GUI.Toggle(new Rect(0, y, w - iH, iH), b.Value, b.name));
-                        if (GUI.Button(new Rect(w - iH, y, iH, iH), "!")) variable.OnChange();
+                        if (GUI.Button(new Rect(w - iH, y, iH, iH), "!"))
+                            variable.OnChange();
                         break;
                     default:
                         break;
