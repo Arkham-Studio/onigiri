@@ -25,6 +25,8 @@ namespace Arkham.Onigiri.Editor
 
         OdinMenuTree _tree;
 
+        
+
         protected override OdinMenuTree BuildMenuTree()
         {
             _tree = new OdinMenuTree();
@@ -38,8 +40,9 @@ namespace Arkham.Onigiri.Editor
             _tree.AddAllAssetsAtPath("Game Events", "Assets/Scriptables/", typeof(GameEvent), true, true).SortMenuItemsByName();
             _tree.AddAllAssetsAtPath("Changeables Variables", "Assets/Scriptables/", typeof(ChangeableVariable), true, true).SortMenuItemsByName();
 
-            //if(Selection.activeObject.GetType() == typeof(GameEvent))
-            //_tree.Add("Manage Event", new ManageGameEvent<GameEvent>(Selection.activeObject as GameEvent));
+
+            _tree.Add("Manage Event", new ManageGameEvent());
+
 
             return _tree;
         }
@@ -85,10 +88,7 @@ namespace Arkham.Onigiri.Editor
             public bool manager = true;
             public bool data = false;
 
-            private void MyInspectorGUI()
-            {
-                SirenixEditorGUI.Title("Onigiri Scripts Pack", "------------", TextAlignment.Center, true);
-            }
+            private void MyInspectorGUI() => SirenixEditorGUI.Title("Onigiri Scripts Pack", "------------", TextAlignment.Center, true);
 
             [Button(ButtonSizes.Large)]
             public void Create()
@@ -184,59 +184,82 @@ namespace Arkham.Onigiri.Editor
             }
         }
 
-        public class ManageGameEvent<T> where T : UnityEngine.Object
+        public class ManageGameEvent
         {
 
-            T o;
+            GameEvent o;
 
             List<GameObject> allObjects;
             List<ScriptableObject> allScriptables;
-
             List<ScriptableObject> scriptables;
-
             List<Component> component;
             List<Delegate> actions;
 
 
 
-            public ManageGameEvent(T _o)
+            public ManageGameEvent()
             {
-                o = _o;
+
+                allObjects = new List<GameObject>();
+                allScriptables = new List<ScriptableObject>();
+                scriptables = new List<ScriptableObject>();
+                component = new List<Component>();
+                actions = new List<Delegate>();
+
+
+                Selection.selectionChanged += OnSelectionChange;
                 EditorApplication.projectChanged += OnProjectChange;
 
-                component = new List<Component>();
-                scriptables = new List<ScriptableObject>();
-                if (actions == null)
-                    actions = new List<Delegate>();
+                //component = new List<Component>();
+                //scriptables = new List<ScriptableObject>();
+                //if (actions == null)
+                //    actions = new List<Delegate>();
 
                 OnProjectChange();
-                OnSelectionChange();
+                //OnSelectionChange();
 
             }
 
+
             private void OnSelectionChange()
             {
-                if (allObjects != null)
+                o = Selection.activeObject as GameEvent;
+                if (o?.GetType() != typeof(GameEvent))
+                    return;
+
+                foreach (var item in allObjects)
                 {
-                    foreach (var item in allObjects)
+                    foreach (var _item in item.GetComponentsInChildren<Component>())
                     {
-                        foreach (var _item in item.GetComponentsInChildren<Component>())
+                        var _so = new SerializedObject(_item);
+                        var _sp = _so.GetIterator();
+                        while (_sp.NextVisible(true))
                         {
-                            var _so = new SerializedObject(_item);
-                            var _sp = _so.GetIterator();
-                            while (_sp.NextVisible(true))
+                            if (_sp.propertyType == SerializedPropertyType.ObjectReference)
                             {
-                                if (_sp.propertyType == SerializedPropertyType.ObjectReference)
+                                if (_sp.objectReferenceValue == o)
                                 {
-                                    if (_sp.objectReferenceValue == o)
-                                    {
-                                        component.Add(_item);
-                                    }
+                                    component.Add(_item);
                                 }
                             }
                         }
                     }
                 }
+
+                foreach (var item in allScriptables)
+                {
+                    if (item.GetType() == typeof(GameEvent))
+                        continue;
+                    foreach (var _item in item.GetType().GetFields())
+                    {
+                        if (_item.FieldType != typeof(GameEvent))
+                            continue;
+                        if (_item.GetValue(item).Equals(o))
+                            scriptables.Add(item);
+                        break;
+                    }
+                }
+
 
                 //if (allScriptables != null)
                 //{
@@ -262,31 +285,23 @@ namespace Arkham.Onigiri.Editor
                 //}
 
                 //  actions if changeable variable
-                if (Application.isPlaying)
-                {
-                    actions = GetActionFromVariable((object)o);
-                }
+                //if (Application.isPlaying)
+                //{
+                //    actions = GetActionFromVariable((object)o);
+                //}
             }
 
             public void OnProjectChange()
             {
-                allObjects = new List<GameObject>();
+                allObjects.Clear();
                 SceneManager.GetActiveScene().GetRootGameObjects(allObjects);
 
-                allScriptables = new List<ScriptableObject>();
+                allScriptables.Clear();
                 foreach (var item in AssetDatabase.FindAssets("t:ScriptableObject", new string[1] { "Assets/Scriptables" }))
                 {
                     var _p = AssetDatabase.GUIDToAssetPath(item);
                     var _o = AssetDatabase.LoadAssetAtPath(_p, typeof(ScriptableObject)) as ScriptableObject;
                     allScriptables.Add(_o);
-                    //foreach (var _item in _o.GetType().GetFields())
-                    //{
-                    //    if (_item.FieldType != typeof(T)) continue;
-                    //    if (_item.GetValue(item).Equals(o))
-                    //        scriptables.Add(_o);
-                    //    break;
-                    //}
-
                 }
             }
 
@@ -295,6 +310,9 @@ namespace Arkham.Onigiri.Editor
             {
                 SirenixEditorGUI.Title("Onigiri References Finder", "------------", TextAlignment.Center, true);
 
+
+                if (Selection.activeObject.GetType() != typeof(GameEvent))
+                    return;
 
                 if (component.Count > 0)
                 {

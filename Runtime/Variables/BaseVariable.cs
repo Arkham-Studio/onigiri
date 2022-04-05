@@ -97,7 +97,7 @@ namespace Arkham.Onigiri.Variables
         }
 
         public void SetValueQuiet(T value) => currentValue = value;
-        public void SetValueQuiet(BaseVariable<T> value) => currentValue = value.Value;
+        //public void SetValueQuiet(BaseVariable<T> value) => currentValue = value.Value;
         public void ResetQuiet() => currentValue = DefaultValue;
         public T GetDefaultValue() => DefaultValue;
 

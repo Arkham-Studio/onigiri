@@ -6,11 +6,10 @@ namespace Arkham.Onigiri.Variables
     [CreateAssetMenu(menuName = "Variables/String")]
     public class StringVariable : BaseVariable<string>
     {
-        public override int ValueToInt() => int.TryParse(Value, out int _r) ? _r : 0;
-        public override string ValueToString() => Value;
-
 
         [SerializeField] private string decimalFormat = "0.00";
+#if UNITY_EDITOR
+
         [SerializeField, TextArea(4, 8)] private string textZone;
 
 
@@ -19,6 +18,11 @@ namespace Arkham.Onigiri.Variables
             DefaultValue = textZone;
             SetValueQuiet(textZone);
         }
+#endif
+
+        public override int ValueToInt() => int.TryParse(Value, out int _r) ? _r : 0;
+        public override float ValueToFloat() => float.TryParse(Value, out float _r) ? _r : 0f;
+        public override string ValueToString() => Value;
 
 
         public void FloatToText(float _f) => SetValue(_f.ToString(decimalFormat));
