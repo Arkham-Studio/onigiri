@@ -18,6 +18,6 @@ namespace Arkham.Onigiri.UI
 
         public void SetAlpha(float _v) => myImage.color = new Color(myImage.color.r, myImage.color.g, myImage.color.b, _v);
 
-        public void SetColor(ColorVariable _c) => myImage.color = _c.Value;
+        public void SetColor(ColorVariable _c) => myImage.color = _c ? _c.Value : myImage.color;
     }
 }

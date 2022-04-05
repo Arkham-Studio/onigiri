@@ -31,6 +31,7 @@ namespace Arkham.Onigiri.Variables
     public interface IVariableResetable
     {
         void ResetValue();
+        void ResetValueQuiet();
     }
 
 
@@ -54,7 +55,7 @@ namespace Arkham.Onigiri.Variables
     {
         [SerializeField]
         protected T DefaultValue;
-        [SerializeField, ReadOnly, ShowIf("@UnityEngine.Application.isPlaying == true")]
+        [SerializeField]
         protected T currentValue;
         public T Value => currentValue;
 
@@ -81,6 +82,18 @@ namespace Arkham.Onigiri.Variables
         {
             currentValue = DefaultValue;
             OnChange();
+        }
+
+        public void ResetValueQuiet()
+        {
+            currentValue = DefaultValue;
+            OnChange();
+        }
+
+        [Button("Save To Default", ButtonSizes.Large), HorizontalGroup("Buttons"), ShowIf("@UnityEngine.Application.isPlaying == true")]
+        public void SaveDefault()
+        {
+            DefaultValue = currentValue;
         }
 
         public void SetValueQuiet(T value) => currentValue = value;

@@ -25,11 +25,14 @@ namespace Arkham.Onigiri.AnimatorModule
                 item.controller = this;
                 item.parametersNameHash = Animator.StringToHash(item.type == ChangeableVariableToParameterPack.AppStateAnimatorParametersType.ChangeableVariable ? item.variable.name : item.gameEvent.name);
                 if (item.type == ChangeableVariableToParameterPack.AppStateAnimatorParametersType.ChangeableVariable)
+                {
                     item.variable.onChange.AddListener(item.OnChange);
+                    item.OnChange();
+                }
                 else
                     item.gameEvent.RegisterDelegate(item.OnChange);
 
-                item.OnChange();
+               
             }
 
         }
