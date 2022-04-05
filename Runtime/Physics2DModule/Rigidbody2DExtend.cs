@@ -9,7 +9,6 @@ namespace Arkham.Onigiri.Physics2DModule
     public class Rigidbody2DExtend : BaseComponentExtend<Rigidbody2D>
     {
 
-
         public void SetVelocity(Vector2Variable _v) => myExtendedComponent.velocity = _v;
         public void SetVelocityX(ChangeableVariable _x) => myExtendedComponent.velocity = new Vector2(((IVariableValueTo)_x).ValueToFloat(), myExtendedComponent.velocity.y);
         public void SetVelocityY(ChangeableVariable _y) => myExtendedComponent.velocity = new Vector2(myExtendedComponent.velocity.x, ((IVariableValueTo)_y).ValueToFloat());

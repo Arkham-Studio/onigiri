@@ -35,7 +35,7 @@ namespace Arkham.Onigiri.Variables
     }
 
 
-    [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false,DisableGUIForVCSLockedAssets =true)]
+    [InlineEditor(InlineEditorObjectFieldModes.Foldout, DrawHeader = false, DisableGUIForVCSLockedAssets = true)]
 
     [System.Serializable]
     public class ChangeableVariable : ScriptableObject
@@ -69,7 +69,7 @@ namespace Arkham.Onigiri.Variables
             OnChange();
         }
 
-        public void SetValue(BaseVariable<T> value) => SetValue(value.Value);
+        //public void SetValue(BaseVariable<T> value) => SetValue(value.Value);
 
         public void SetToNull()
         {
@@ -77,7 +77,7 @@ namespace Arkham.Onigiri.Variables
             OnChange();
         }
 
-        [Button("Reset Value",ButtonSizes.Large), HorizontalGroup("Buttons")]
+        [Button("Reset Value", ButtonSizes.Large), HorizontalGroup("Buttons")]
         public void ResetValue()
         {
             currentValue = DefaultValue;
@@ -99,10 +99,8 @@ namespace Arkham.Onigiri.Variables
         public void SetValueQuiet(T value) => currentValue = value;
         public void SetValueQuiet(BaseVariable<T> value) => currentValue = value.Value;
         public void ResetQuiet() => currentValue = DefaultValue;
-
-        public static implicit operator T(BaseVariable<T> reference) => reference.Value;
-
         public T GetDefaultValue() => DefaultValue;
+
 
         public virtual string ValueToString() => name;
         public virtual int ValueToInt() => 0;
@@ -113,7 +111,9 @@ namespace Arkham.Onigiri.Variables
         public virtual void IntToValue(int _v) => throw new NotImplementedException("Variable does not support this type : " + _v.GetType());
         public virtual void FloatToValue(float _v) => throw new NotImplementedException("Variable does not support this type : " + _v.GetType());
         public virtual void BoolToValue(bool _v) => throw new NotImplementedException("Variable does not support this type : " + _v.GetType());
-        public virtual void Vector2ToValue(Vector2 _v) => throw new NotSupportedException("Variable does not support this type : "+ _v.GetType());
-        
+        public virtual void Vector2ToValue(Vector2 _v) => throw new NotSupportedException("Variable does not support this type : " + _v.GetType());
+
+
+        public static implicit operator T(BaseVariable<T> reference) => reference.Value;
     }
 }

@@ -11,7 +11,16 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
+    "defineConstraints": [
+        "ENABLE_INPUT_SYSTEM",
+        "INPUT_SYSTEM_VERSION"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "1.0.0",
+            "define": "INPUT_SYSTEM_VERSION"
+        }
+    ],
     "noEngineReferences": false
 }

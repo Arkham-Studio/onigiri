@@ -19,5 +19,12 @@ namespace Arkham.Onigiri.Variables
         {
             SetValue(Value + _v);
         }
+        public static implicit operator float(Vector2Variable _v) => _v.Value.magnitude;
+
+
+        public float magnitude { get => Value.magnitude; }
+        public float sqrMagnitude { get => Value.sqrMagnitude; }
+        public Vector2 normalized { get => Value.normalized; }
+
     }
 }

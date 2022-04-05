@@ -9,5 +9,13 @@ namespace Arkham.Onigiri.Variables
         public override int ValueToInt() => Value.GetInstanceID();
         public override float ValueToFloat() => Value.GetInstanceID();
         public override bool ValueToBool() => Value.gameObject.activeSelf;
+
+
+        public static implicit operator string(TransformVariable reference) => reference.Value.gameObject.name;
+        public static implicit operator int(TransformVariable reference) => reference.Value.GetInstanceID();
+        public static implicit operator float(TransformVariable reference) => reference.Value.GetInstanceID();
+        public static implicit operator bool(TransformVariable reference) => reference.Value.gameObject.activeSelf;
+
+
     }
 }

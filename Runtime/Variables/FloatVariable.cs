@@ -7,27 +7,25 @@ namespace Arkham.Onigiri.Variables
     public class FloatVariable : BaseVariable<float>
     {
 
-
         public void ApplyChange(float amount)
         {
             currentValue += amount;
             if (amount != 0)
                 OnChange();
         }
+        public void ApplyChange(FloatVariable amount) => ApplyChange(amount.Value);
+        public void ApplyChange(ChangeableVariable amount) => ApplyChange(amount switch { IntVariable _i => _i.Value, _ => 0f });
 
-        public void ApplyChange(FloatVariable amount)
-        {
-            currentValue += amount.Value;
-            if (amount.Value != 0)
-                OnChange();
-        }
 
         public void MultiplyBy(float amount)
         {
             currentValue *= amount;
-            if (amount != 1)
-                OnChange();
+            if (amount == 0)
+                return;
+            OnChange();
         }
+        public void MultiplyBy(FloatVariable amount) => MultiplyBy(amount.Value);
+        public void MultiplyBy(ChangeableVariable amount) => MultiplyBy(amount switch { IVariableValueTo _i => _i.ValueToFloat(), _ => 0f });
 
         public void SetRandom(float max)
         {

@@ -32,5 +32,10 @@ namespace Arkham.Onigiri.Variables
         public override void IntToValue(int _v) => SetValue(_v.ToString());
         public override void FloatToValue(float _v) => SetValue(_v.ToString());
         public override void BoolToValue(bool _v) => SetValue(_v.ToString());
+
+
+        public static implicit operator int(StringVariable reference) => int.TryParse(reference.Value, out int _r) ? _r : 0;
+        public static implicit operator float(StringVariable reference) => float.TryParse(reference.Value, out float _r) ? _r : 0f;
+        public static implicit operator bool(StringVariable reference) => reference.Value.Length > 0;
     }
 }
