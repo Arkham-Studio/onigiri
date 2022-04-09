@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -17,67 +18,104 @@ namespace Arkham.Onigiri.Editor
 {
     public class OnigiriTools : OdinMenuEditorWindow
     {
-        [MenuItem("Onigiri/Tools")]
-        private static void OpenWindow()
-        {
-            GetWindow<OnigiriTools>().Show();
-        }
-
         OdinMenuTree _tree;
+        List<ScriptableObject> allScriptables;
+        List<GameObject> allObjectsInScene;
+        List<GameObject> allPrefabs;
 
-        
+        [MenuItem("Onigiri/Tools")]
+        private static void OpenWindow() => GetWindow<OnigiriTools>().Show();
+
+        private void OnProjectChange() => UpdateAllRefs();
 
         protected override OdinMenuTree BuildMenuTree()
         {
+            UpdateAllRefs();
+
             _tree = new OdinMenuTree();
             _tree.Selection.SupportsMultiSelect = false;
 
-            //_tree.Selection.SelectionChanged += (e) => { _targets = null; };
+            _tree.Selection.SelectionChanged += (e) =>
+            {
+                if (e == SelectionChangedType.ItemAdded)
+                    UpdateAllScriptablesRefs();
+            };
 
             _tree.Add("Scripts Pack", new OnigiriScriptsPack());
             _tree.Add("PlugeableAI Pack", new OnigiriPlugeableAIPack());
             _tree.Add("Buttons Debug", new OnigiriPlayButtonDebug());
-            _tree.AddAllAssetsAtPath("Game Events", "Assets/Scriptables/", typeof(GameEvent), true, true).SortMenuItemsByName();
-            _tree.AddAllAssetsAtPath("Changeables Variables", "Assets/Scriptables/", typeof(ChangeableVariable), true, true).SortMenuItemsByName();
 
 
-            _tree.Add("Manage Event", new ManageGameEvent());
+            foreach (ScriptableObject item in allScriptables)
+            {
+                if (item == null)
+                    continue;
 
+                switch (item)
+                {
+                    case ChangeableVariable _c:
+                        _tree.Add($"Scriptables/Variables/{item.name}", new ManageGameEvent<ChangeableVariable>((ChangeableVariable)item, allScriptables, allObjectsInScene, allPrefabs));
+                        break;
+                    case GameEvent _e:
+                        _tree.Add($"Scriptables/Events/{item.name}", new ManageGameEvent<GameEvent>((GameEvent)item, allScriptables, allObjectsInScene, allPrefabs));
+                        break;
+                    default:
+                        string _managerFolderName = (item.GetType().Name.Split("Manager").Length >= 2 ? "Managers" : "Other");
+                        _tree.Add($"Scriptables/{_managerFolderName}/{item.name}", new ManageGameEvent<ScriptableObject>(item, allScriptables, allObjectsInScene, allPrefabs));
+                        break;
+                }
+            }
 
             return _tree;
         }
 
-        //protected override void DrawMenu()
-        //{
-        //    base.DrawMenu();
-        //}
+        private void Update()
+        {
+            if (MenuTree?.Selection == null)
+                return;
 
+            if (MenuTree.Selection?.FirstOrDefault()?.Name == "Buttons Debug" && Application.isPlaying)
+            {
+                ((OnigiriPlayButtonDebug)MenuTree.Selection.SelectedValue).PopulateObjects();
+            }
+        }
 
+        private void UpdateAllScriptablesRefs()
+        {
+            switch (MenuTree.Selection.SelectedValue)
+            {
+                case ManageGameEvent<ChangeableVariable> _v:
+                    _v.OnSelectionChange();
+                    break;
+                case ManageGameEvent<GameEvent> _v:
+                    _v.OnSelectionChange();
+                    break;
+                case ManageGameEvent<ScriptableObject> _v:
+                    _v.OnSelectionChange();
+                    break;
+            }
+        }
+        private void UpdateAllRefs()
+        {
+            if (allObjectsInScene == null)
+                allObjectsInScene = new List<GameObject>();
+            allObjectsInScene.Clear();
+            SceneManager.GetActiveScene().GetRootGameObjects(allObjectsInScene);
 
-        //List<object> _targets;
-        //protected override IEnumerable<object> GetTargets()
-        //{
-        //    if (_targets != null) return _targets;
+            if (allScriptables == null)
+                allScriptables = new List<ScriptableObject>();
+            allScriptables.Clear();
+            foreach (string _guid in AssetDatabase.FindAssets("t:ScriptableObject", new string[1] { "Assets/Scriptables/" }))
+                allScriptables.Add(AssetDatabase.LoadAssetAtPath<ScriptableObject>(AssetDatabase.GUIDToAssetPath(_guid)));
+            allScriptables.OrderBy(x => x.name);
 
-        //    if (_tree.Selection != null)
-        //    {
-        //        if (_targets == null) _targets = new List<object>();
-        //        if (_tree.Selection.SelectedValue?.GetType() == typeof(GameEvent))
-        //        {
-        //            _targets.Add(new ManageGameEvent<GameEvent>((GameEvent)_tree.Selection.SelectedValue));
-
-        //            return _targets;
-        //        }
-        //        else if (_tree.Selection.SelectedValue.GetType().IsSubclassOf(typeof(ChangeableVariable)))
-        //        {
-        //            _targets.Add(new ManageGameEvent<ChangeableVariable>((ChangeableVariable)_tree.Selection.SelectedValue));
-        //            return _targets;
-        //        }
-        //    }
-
-        //    return base.GetTargets();
-        //}
-
+            if (allPrefabs == null)
+                allPrefabs = new List<GameObject>();
+            allPrefabs.Clear();
+            foreach (string _guid in AssetDatabase.FindAssets("t:Prefab", new string[1] { "Assets/Prefabs/" }))
+                allPrefabs.Add(AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(_guid)));
+            allPrefabs.OrderBy(x => x.name);
+        }
 
         //  MENU TREE
         public class OnigiriScriptsPack
@@ -184,178 +222,109 @@ namespace Arkham.Onigiri.Editor
             }
         }
 
-        public class ManageGameEvent
-        {
 
-            GameEvent o;
+        public class ManageGameEvent<T> where T : UnityEngine.Object
+        {
+            [SerializeField, HideLabel]
+            T o;
 
             List<GameObject> allObjects;
+            List<GameObject> allPrefabs;
             List<ScriptableObject> allScriptables;
             List<ScriptableObject> scriptables;
             List<Component> component;
             List<Delegate> actions;
 
-
-
-            public ManageGameEvent()
+            public ManageGameEvent(T _event, List<ScriptableObject> _allScriptables, List<GameObject> _allObjects, List<GameObject> _allPrefabs)
             {
+                o = _event;
 
-                allObjects = new List<GameObject>();
-                allScriptables = new List<ScriptableObject>();
+                allObjects = new List<GameObject>(_allObjects);
+                allPrefabs = new List<GameObject>(_allPrefabs);
+                allScriptables = new List<ScriptableObject>(_allScriptables);
+
                 scriptables = new List<ScriptableObject>();
                 component = new List<Component>();
                 actions = new List<Delegate>();
 
-
-                Selection.selectionChanged += OnSelectionChange;
-                EditorApplication.projectChanged += OnProjectChange;
-
-                //component = new List<Component>();
-                //scriptables = new List<ScriptableObject>();
-                //if (actions == null)
-                //    actions = new List<Delegate>();
-
-                OnProjectChange();
-                //OnSelectionChange();
-
+                OnSelectionChange();
             }
 
 
-            private void OnSelectionChange()
+            public void OnSelectionChange()
             {
-                o = Selection.activeObject as GameEvent;
-                if (o?.GetType() != typeof(GameEvent))
-                    return;
-
+                //  filter component
+                component.Clear();
                 foreach (var item in allObjects)
                 {
-                    foreach (var _item in item.GetComponentsInChildren<Component>())
+                    foreach (var _item in item.GetComponentsInChildren<Component>(true))
                     {
                         var _so = new SerializedObject(_item);
                         var _sp = _so.GetIterator();
                         while (_sp.NextVisible(true))
                         {
-                            if (_sp.propertyType == SerializedPropertyType.ObjectReference)
-                            {
-                                if (_sp.objectReferenceValue == o)
-                                {
-                                    component.Add(_item);
-                                }
-                            }
+                            if (_sp.propertyType == SerializedPropertyType.ObjectReference && _sp.objectReferenceValue == o)
+                                component.Add(_item);
                         }
                     }
                 }
 
-                foreach (var item in allScriptables)
+
+                //  filter prefabs components
+                foreach (var item in allPrefabs)
                 {
-                    if (item.GetType() == typeof(GameEvent))
-                        continue;
-                    foreach (var _item in item.GetType().GetFields())
+                    foreach (var _item in item.GetComponentsInChildren<Component>(true))
                     {
-                        if (_item.FieldType != typeof(GameEvent))
-                            continue;
-                        if (_item.GetValue(item).Equals(o))
-                            scriptables.Add(item);
-                        break;
+                        var _so = new SerializedObject(_item);
+                        var _sp = _so.GetIterator();
+                        while (_sp.NextVisible(true))
+                        {
+                            if (_sp.propertyType == SerializedPropertyType.ObjectReference && _sp.objectReferenceValue == o)
+                                component.Add(_item);
+                        }
                     }
                 }
 
-
-                //if (allScriptables != null)
-                //{
-                //    foreach (var item in allScriptables)
-                //    {
-                //        var _so = new SerializedObject(item);
-                //        var _sp = _so.GetIterator();
-
-                //        while (_sp.Next(true))
-                //        {
-
-                //            if (_sp.propertyType == SerializedPropertyType.ObjectReference)
-                //            {
-
-                //                if (_sp.objectReferenceValue == o)
-                //                {
-                //                    scriptables.Add(item);
-                //                }
-                //            }
-                //        }
-
-                //    }
-                //}
-
-                //  actions if changeable variable
-                //if (Application.isPlaying)
-                //{
-                //    actions = GetActionFromVariable((object)o);
-                //}
-            }
-
-            public void OnProjectChange()
-            {
-                allObjects.Clear();
-                SceneManager.GetActiveScene().GetRootGameObjects(allObjects);
-
-                allScriptables.Clear();
-                foreach (var item in AssetDatabase.FindAssets("t:ScriptableObject", new string[1] { "Assets/Scriptables" }))
+                //  filter scripteable
+                scriptables.Clear();
+                foreach (var item in allScriptables)
                 {
-                    var _p = AssetDatabase.GUIDToAssetPath(item);
-                    var _o = AssetDatabase.LoadAssetAtPath(_p, typeof(ScriptableObject)) as ScriptableObject;
-                    allScriptables.Add(_o);
+                    var _so = new SerializedObject(item);
+                    var _sp = _so.GetIterator();
+
+                    while (_sp.Next(true))
+                    {
+                        if (_sp.propertyType == SerializedPropertyType.ObjectReference && _sp.objectReferenceValue == o)
+                            scriptables.Add(item);
+                    }
                 }
+
+                //  filter event actions
+                //if (!Application.isPlaying)
+                //    return;
+                //actions = GetActionFromVariable(o);
             }
+
 
             [OnInspectorGUI]
             private void MyInspectorGUI()
             {
-                SirenixEditorGUI.Title("Onigiri References Finder", "------------", TextAlignment.Center, true);
 
+                SirenixEditorGUI.Title($"{component.Count} Refs in Components", "", TextAlignment.Left, true);
+                GUI.color = Color.white;
 
-                if (Selection.activeObject.GetType() != typeof(GameEvent))
-                    return;
-
-                if (component.Count > 0)
-                {
-                    GUILayout.Space(24);
-                    SirenixEditorGUI.Title("Refs in Components", "", TextAlignment.Left, true);
-                }
                 foreach (var item in component)
                 {
-                    SirenixEditorFields.UnityObjectField(item.transform.root.name, item, typeof(MonoBehaviour), true);
+                    GUI.color = ((Behaviour)item).enabled ? Color.white : Color.grey;
+                    SirenixEditorFields.UnityObjectField(item, typeof(Behaviour), true);
                 }
 
-                if (actions.Count > 0)
-                {
-                    GUILayout.Space(24);
-                    SirenixEditorGUI.Title("Event Listeners (onRaise or onChange)", "", TextAlignment.Left, true);
-                }
-                foreach (var item in actions)
-                {
-                    var _style = new GUILayout();
+                SirenixEditorGUI.Title($"{scriptables.Count} Refs in Scriptables", "", TextAlignment.Left, true);
+                GUI.color = Color.white;
 
-                    SirenixEditorGUI.BeginInlineBox(GUILayout.ExpandWidth(true));
-                    //SirenixEditorFields.UnityObjectField(item.Target.ToString(), (UnityEngine.Object)item.Target, item.Target.GetType(), true);
-                    SirenixEditorFields.PolymorphicObjectField(item.Target.ToString(), item.Target, item.Target.GetType(), true);
-                    SirenixEditorFields.TextField("", item.Method.Name);
-                    SirenixEditorGUI.EndInlineBox();
-                }
-
-                //if (o == null) return;
-
-                if (allScriptables.Count > 0)
+                foreach (var item in scriptables)
                 {
-                    GUILayout.Space(24);
-                    SirenixEditorGUI.Title("Refs in Scriptables", "", TextAlignment.Left, true);
-                }
-                foreach (var item in allScriptables)
-                {
-                    //foreach (var _item in item.GetType().GetFields())
-                    //{
-                    //    if (_item.FieldType != typeof(T)) continue;
-                    //    if (_item.GetValue(item).Equals(o))
                     SirenixEditorFields.UnityObjectField(item, typeof(ScriptableObject), true);
-                    //}
-
                 }
             }
 
@@ -368,10 +337,11 @@ namespace Arkham.Onigiri.Editor
 
             public OnigiriPlayButtonDebug()
             {
-
+                PopulateObjects();
             }
 
-            private void PopulateObjects()
+
+            public void PopulateObjects()
             {
                 allButtons = new List<Button>();
                 allObjects = new List<GameObject>();
@@ -390,7 +360,7 @@ namespace Arkham.Onigiri.Editor
                 {
                     allObjects = null;
                     allButtons = null;
-                    GUILayout.Label("Need to be in play mode.");
+                    SirenixEditorGUI.Title("Need to be in play mode.", "", TextAlignment.Left, true);
                     return;
                 }
 
@@ -411,55 +381,5 @@ namespace Arkham.Onigiri.Editor
             }
         }
 
-
-        //  UTILS
-        public static List<Delegate> GetActionFromVariable(object _obj)
-        {
-            List<Delegate> _actions = new List<Delegate>();
-
-            if (_obj.GetType().IsSubclassOf(typeof(ChangeableVariable)))
-            {
-                ChangeableVariable _var = (ChangeableVariable)_obj;
-
-                var _callsField = typeof(UnityEventBase).GetField("m_Calls", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-                var _onChangeObject = _callsField.GetValue(_var.onChange);
-
-                foreach (var _runtimeCallsField in _onChangeObject.GetType().GetRuntimeFields())
-                {
-                    if (_runtimeCallsField.Name != "m_RuntimeCalls")
-                        continue;
-                    IEnumerable<object> _runtimeCallsObjects = (IEnumerable<object>)_runtimeCallsField.GetValue(_onChangeObject);
-
-                    foreach (var _callObject in _runtimeCallsObjects)
-                    {
-                        foreach (var _delegateField in _callObject.GetType().GetRuntimeFields())
-                        {
-                            _actions.Add((UnityAction)_delegateField.GetValue(_callObject));
-                        }
-                    }
-                    break;
-                }
-            }
-            else if (_obj.GetType().Equals(typeof(GameEvent)))
-            {
-                GameEvent _var = (GameEvent)_obj;
-
-                foreach (var item in _var.GetType().GetRuntimeFields())
-                {
-                    if (!item.Name.Equals("actions"))
-                        continue;
-                    _actions.Add((Action)item.GetValue(_var));
-
-
-                    //foreach (var _item in _actionsVarValue.GetType().GetRuntimeProperties())
-                    //{
-                    //    Debug.Log(_item.GetType());
-                    //}
-                    break;
-                }
-
-            }
-            return _actions;
-        }
     }
 }

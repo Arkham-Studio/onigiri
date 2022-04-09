@@ -15,7 +15,7 @@ namespace Arkham.Onigiri.Events
         //private readonly List<IEventListener> eventListeners = new List<IEventListener>();
         private Action actions = null;
 
-        [PropertyOrder(10)]
+        [PropertyOrder(10), FoldoutGroup("Response", false)]
         public UnityEvent response;
 
         [EnableIf("@UnityEngine.Application.isPlaying"), Button(ButtonSizes.Large)]
