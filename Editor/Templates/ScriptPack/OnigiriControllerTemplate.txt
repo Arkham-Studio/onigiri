@@ -6,7 +6,7 @@ public class #CONTROLLERNAME# : MonoBehaviour
 {
 
     [Header("REFERENCES")]
-    [SerializeField] private #MANAGERNAME# m_#MANAGERNAME#;
+    #MANAGERNAMEREF#
     [SerializeField] private Transform myTransform;
     [SerializeField] private Animator myAnimator;
     [SerializeField] private Rigidbody myRigidbody;
@@ -20,6 +20,11 @@ public class #CONTROLLERNAME# : MonoBehaviour
     void Update()
     {
 
+    }
+
+    void FixedUpdate()
+    {
+        
     }
 
     void OnEnable()

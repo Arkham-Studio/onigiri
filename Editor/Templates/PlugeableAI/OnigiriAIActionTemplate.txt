@@ -1,0 +1,14 @@
+using UnityEngine;
+using Arkham.Onigiri.AI;
+using Arkham.Onigiri.Variables;
+
+[CreateAssetMenu(menuName = "AI/#NAME#/Action/#ACTION#", fileName ="#NAME#AIAction_#ACTION#")]
+public class #NAME#AIAction_#ACTION# : AIAction
+{
+    #CONTROLLERTYPE# myController;
+
+    public override void Act(AIStateController _controller)
+    {
+        myController = _controller as #CONTROLLERTYPE#;
+    }
+}

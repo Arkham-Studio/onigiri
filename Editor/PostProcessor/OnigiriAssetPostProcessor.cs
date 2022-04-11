@@ -1,4 +1,5 @@
 using Arkham.Onigiri.Attributes;
+using Arkham.Onigiri.Editor;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,13 +12,14 @@ namespace Arkham.Onigiri.Editor
     {
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
         {
+
             //  CLEAR PRELOADED ASSETS
             var preloadedAssets = PlayerSettings.GetPreloadedAssets().ToList();
             foreach (string item in deletedAssets)
             {
                 if (!item.Contains("Assets/Scriptables/"))
                     continue;
-                
+
                 for (int i = preloadedAssets.Count - 1; i >= 0; i--)
                 {
                     if (preloadedAssets[i] != null)
@@ -35,7 +37,7 @@ namespace Arkham.Onigiri.Editor
             {
                 var obj = AssetDatabase.LoadAssetAtPath<ScriptableObject>(assetPath);
                 var attr = obj?.GetType().GetCustomAttributes(true).ToList().Find(x => x.GetType() == typeof(PreloadAssetAttribute));
-                
+
                 if (attr == null)
                     continue;
 
@@ -52,7 +54,7 @@ namespace Arkham.Onigiri.Editor
             foreach (string assetPath in importedAssets)
             {
                 var attr = AssetDatabase.LoadAssetAtPath<MonoScript>(assetPath)?.GetClass()?.GetCustomAttributes(true).ToList().Find(x => x.GetType() == typeof(EditorIconAttribute));
-                
+
                 if (attr == null)
                     continue;
 

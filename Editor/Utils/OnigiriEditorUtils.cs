@@ -25,7 +25,7 @@ namespace Arkham.Onigiri.Editor
                     _path = $"Assets/Scriptables/{_attr.folderName}/{_p.Info.PropertyName}.asset";
                 }
 
-                UnityEngine.Object _obj = (UnityEngine.Object)Activator.CreateInstance(_p.Info.TypeOfValue);
+                UnityEngine.ScriptableObject _obj = UnityEngine.ScriptableObject.CreateInstance(_p.Info.TypeOfValue);
                 AssetDatabase.CreateAsset(_obj, _path);
 
                 _p.BaseValueEntry.WeakSmartValue = _obj;
@@ -39,6 +39,24 @@ namespace Arkham.Onigiri.Editor
                 _p.BaseValueEntry.WeakSmartValue = _asset;
                 _p.BaseValueEntry.ApplyChanges();
             }
+
+            AssetDatabase.Refresh();
+        }
+
+        public static void CreateScriptableManager(string _managerType)
+        {
+            if (!AssetDatabase.IsValidFolder("Assets/Scriptables"))
+                AssetDatabase.CreateFolder("Assets", "Scriptables");
+
+            var _path = $"Assets/Scriptables/{_managerType}.asset";
+
+            var _guid = AssetDatabase.FindAssets($"t:{_managerType} {_managerType}", new string[] { "Assets/Scriptables" });
+            if (_guid.Length != 0)
+                return;
+
+            UnityEngine.ScriptableObject _obj = UnityEngine.ScriptableObject.CreateInstance(_managerType);
+            AssetDatabase.CreateAsset(_obj, _path);
+            AssetDatabase.Refresh();
         }
     }
 

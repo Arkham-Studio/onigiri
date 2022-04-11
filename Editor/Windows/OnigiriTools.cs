@@ -54,19 +54,30 @@ namespace Arkham.Onigiri.Editor
                 switch (item)
                 {
                     case ChangeableVariable _c:
-                        _tree.Add($"Scriptables/Variables/{item.name}", new ManageGameEvent<ChangeableVariable>((ChangeableVariable)item, allScriptables, allObjectsInScene, allPrefabs));
+                        _tree.Add($"Scriptables/Variables/{item.name}", new ReferenceSeeker<ChangeableVariable>((ChangeableVariable)item, allScriptables, allObjectsInScene, allPrefabs));
                         break;
                     case GameEvent _e:
-                        _tree.Add($"Scriptables/Events/{item.name}", new ManageGameEvent<GameEvent>((GameEvent)item, allScriptables, allObjectsInScene, allPrefabs));
+                        _tree.Add($"Scriptables/Events/{item.name}", new ReferenceSeeker<GameEvent>((GameEvent)item, allScriptables, allObjectsInScene, allPrefabs));
                         break;
                     default:
                         string _managerFolderName = (item.GetType().Name.Split("Manager").Length >= 2 ? "Managers" : "Other");
-                        _tree.Add($"Scriptables/{_managerFolderName}/{item.name}", new ManageGameEvent<ScriptableObject>(item, allScriptables, allObjectsInScene, allPrefabs));
+                        _tree.Add($"Scriptables/{_managerFolderName}/{item.name}", new ReferenceSeeker<ScriptableObject>(item, allScriptables, allObjectsInScene, allPrefabs));
                         break;
                 }
             }
 
             return _tree;
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            AssemblyReloadEvents.afterAssemblyReload += AfterAssemblyReload;
+        }
+
+        private void OnDisable()
+        {
+            AssemblyReloadEvents.afterAssemblyReload -= AfterAssemblyReload;
         }
 
         private void Update()
@@ -80,21 +91,43 @@ namespace Arkham.Onigiri.Editor
             }
         }
 
+
+        public void AfterAssemblyReload()
+        {
+            if (EditorPrefs.HasKey("managerToCreate"))
+            {
+                OnigiriEditorUtils.CreateScriptableManager(EditorPrefs.GetString("managerToCreate"));
+                EditorPrefs.DeleteKey("managerToCreate");
+                AssetDatabase.Refresh();
+            }
+
+            if (EditorPrefs.HasKey("aiToCreate"))
+            {
+                foreach (string _name in EditorPrefs.GetString("aiToCreate").Split(","))
+                {
+                    OnigiriEditorUtils.CreateScriptableManager(_name);
+                }
+                EditorPrefs.DeleteKey("aiToCreate");
+                AssetDatabase.Refresh();
+            }
+        }
+
         private void UpdateAllScriptablesRefs()
         {
             switch (MenuTree.Selection.SelectedValue)
             {
-                case ManageGameEvent<ChangeableVariable> _v:
+                case ReferenceSeeker<ChangeableVariable> _v:
                     _v.OnSelectionChange();
                     break;
-                case ManageGameEvent<GameEvent> _v:
+                case ReferenceSeeker<GameEvent> _v:
                     _v.OnSelectionChange();
                     break;
-                case ManageGameEvent<ScriptableObject> _v:
+                case ReferenceSeeker<ScriptableObject> _v:
                     _v.OnSelectionChange();
                     break;
             }
         }
+
         private void UpdateAllRefs()
         {
             if (allObjectsInScene == null)
@@ -128,6 +161,7 @@ namespace Arkham.Onigiri.Editor
 
             private void MyInspectorGUI() => SirenixEditorGUI.Title("Onigiri Scripts Pack", "------------", TextAlignment.Center, true);
 
+
             [Button(ButtonSizes.Large)]
             public void Create()
             {
@@ -143,7 +177,7 @@ namespace Arkham.Onigiri.Editor
                 {
                     string _controller = File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriControllerTemplate.txt");
                     _controller = _controller.Replace("#CONTROLLERNAME#", packName + "Controller");
-                    _controller = _controller.Replace("#MANAGERNAME#", manager ? packName + "Manager" : "");
+                    _controller = _controller.Replace("#MANAGERNAMEREF#", manager ? $"[SerializeField] private {packName}Manager m_{packName};" : "");
                     File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Controller.cs", _controller);
                 }
 
@@ -153,6 +187,8 @@ namespace Arkham.Onigiri.Editor
                     _manager = _manager.Replace("#NAME#", packName);
                     _manager = _manager.Replace("#MANAGERNAME#", packName + "Manager");
                     File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Manager.cs", _manager);
+
+                    EditorPrefs.SetString("managerToCreate", $"{packName}Manager");
                 }
 
                 if (data)
@@ -163,13 +199,18 @@ namespace Arkham.Onigiri.Editor
                 }
 
                 AssetDatabase.Refresh();
+
             }
         }
 
         public class OnigiriPlugeableAIPack
         {
             [OnInspectorGUI("MyInspectorGUI", false)]
-            public string packName;
+            [SerializeField] private string packName;
+
+            [SerializeField] private string[] actions = new string[2] { "idle", "follow" };
+
+            [SerializeField] private string[] decisions = new string[2] { "scan", "wait" };
 
             private void MyInspectorGUI()
             {
@@ -179,51 +220,67 @@ namespace Arkham.Onigiri.Editor
             [Button(ButtonSizes.Large)]
             public void Create()
             {
-                string _action = System.IO.File.ReadAllText(
-                    "Packages/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_Action_template.txt");
-                string _decision = System.IO.File.ReadAllText(
-                    "Packages/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_Decision_template.txt");
-                string _transition = System.IO.File.ReadAllText(
-                    "Packages/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_Transition_template.txt");
-                string _state = System.IO.File.ReadAllText(
-                    "Packages/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_State_template.txt");
-                string _controller = System.IO.File.ReadAllText(
-                    "Packages/Onigiri/Editor/Templates/PlugeableAI/PlugeableAI_StateController_template.txt");
+                if (packName == "")
+                    return;
 
-                string _controllerType = packName + "StateControllerAI";
+                if (!AssetDatabase.IsValidFolder("Assets/Scripts"))
+                    AssetDatabase.CreateFolder("Assets", "Scripts");
+                if (!AssetDatabase.IsValidFolder("Assets/Scripts/AI"))
+                    AssetDatabase.CreateFolder("Assets/Scripts", "AI");
+                if (!AssetDatabase.IsValidFolder($"Assets/Scripts/AI/{packName}"))
+                    AssetDatabase.CreateFolder("Assets/Scripts/AI", packName);
 
-                _action = _action.Replace("#NAME#", packName);
-                _action = _action.Replace("#CONTROLLERTYPE#", _controllerType);
+                string _action = File.ReadAllText(
+                    "Packages/Onigiri/Editor/Templates/PlugeableAI/OnigiriAIActionTemplate.txt");
+                string _decision = File.ReadAllText(
+                    "Packages/Onigiri/Editor/Templates/PlugeableAI/OnigiriAIDecisionTemplate.txt");
+                string _manager = File.ReadAllText(
+                    "Packages/Onigiri/Editor/Templates/PlugeableAI/OnigiriAIManagerTemplate.txt");
+                string _controller = File.ReadAllText(
+                    "Packages/Onigiri/Editor/Templates/PlugeableAI/OnigirAIStateControllerTemplate.txt");
 
-                _decision = _decision.Replace("#NAME#", packName);
-                _decision = _decision.Replace("#CONTROLLERTYPE#", _controllerType);
+                string _controllerType = packName + "AIStateController";
+                string _managerName = packName + "AIStateManager";
 
-                _transition = _transition.Replace("#NAME#", packName);
-                _transition = _transition.Replace("#CONTROLLERTYPE#", _controllerType);
+                string _toCreate = _managerName;
 
-                _state = _state.Replace("#NAME#", packName);
-                _state = _state.Replace("#CONTROLLERTYPE#", _controllerType);
+                foreach (string actionName in actions)
+                {
+                    string _text = _action.Replace("#NAME#", packName);
+                    _text = _text.Replace("#ACTION#", actionName);
+                    _text = _text.Replace("#CONTROLLERTYPE#", _controllerType);
+                    File.WriteAllText($"Assets/Scripts/AI/{packName}/{packName}AIAction_{actionName}.cs", _text);
+
+                    _toCreate += $",{packName}AIAction_{actionName}";
+                }
+
+                foreach (string decisionName in decisions)
+                {
+                    string _text = _decision.Replace("#NAME#", packName);
+                    _text = _text.Replace("#DECISION#", decisionName);
+                    _text = _text.Replace("#CONTROLLERTYPE#", _controllerType);
+                    File.WriteAllText($"Assets/Scripts/AI/{packName}/{packName}AIDecision_{decisionName}.cs", _text);
+
+                    _toCreate += $",{packName}AIDecision_{decisionName}";
+                }
+
+                _manager = _manager.Replace("#MANAGERNAME#", _managerName);
+                _manager = _manager.Replace("#NAME#", packName);
+                File.WriteAllText($"Assets/Scripts/AI/{packName}/{_managerName}.cs", _manager);
 
                 _controller = _controller.Replace("#NAME#", packName);
                 _controller = _controller.Replace("#CONTROLLERTYPE#", _controllerType);
+                _controller = _controller.Replace("#MANAGERNAME#", _managerName);
+                File.WriteAllText($"Assets/Scripts/AI/{packName}/{_controllerType}.cs", _controller);
 
-                if (!Directory.Exists("Assets/Scripts"))
-                    Directory.CreateDirectory("Assets/Scripts");
-                if (!Directory.Exists("Assets/Scripts/PlugeableAI"))
-                    Directory.CreateDirectory("Assets/Scripts/PlugeableAI");
-
-                System.IO.File.WriteAllText("Assets/Scripts/PlugeableAI" + packName + "Action.cs", _action);
-                System.IO.File.WriteAllText("Assets/Scripts/PlugeableAI" + packName + "Decision.cs", _decision);
-                System.IO.File.WriteAllText("Assets/Scripts/PlugeableAI" + packName + "State.cs", _state);
-                System.IO.File.WriteAllText("Assets/Scripts/PlugeableAI" + packName + "Transition.cs", _transition);
-                System.IO.File.WriteAllText("Assets/Scripts/PlugeableAI" + _controllerType + ".cs", _controller);
+                EditorPrefs.SetString("aiToCreate", _toCreate);
 
                 AssetDatabase.Refresh();
             }
         }
 
 
-        public class ManageGameEvent<T> where T : UnityEngine.Object
+        public class ReferenceSeeker<T> where T : UnityEngine.Object
         {
             [SerializeField, HideLabel]
             T o;
@@ -233,9 +290,8 @@ namespace Arkham.Onigiri.Editor
             List<ScriptableObject> allScriptables;
             List<ScriptableObject> scriptables;
             List<Component> component;
-            List<Delegate> actions;
 
-            public ManageGameEvent(T _event, List<ScriptableObject> _allScriptables, List<GameObject> _allObjects, List<GameObject> _allPrefabs)
+            public ReferenceSeeker(T _event, List<ScriptableObject> _allScriptables, List<GameObject> _allObjects, List<GameObject> _allPrefabs)
             {
                 o = _event;
 
@@ -245,7 +301,6 @@ namespace Arkham.Onigiri.Editor
 
                 scriptables = new List<ScriptableObject>();
                 component = new List<Component>();
-                actions = new List<Delegate>();
 
                 OnSelectionChange();
             }
@@ -259,7 +314,14 @@ namespace Arkham.Onigiri.Editor
                 {
                     foreach (var _item in item.GetComponentsInChildren<Component>(true))
                     {
+                        if (_item == null)
+                            continue;
+
                         var _so = new SerializedObject(_item);
+
+                        if (_so == null)
+                            continue;
+
                         var _sp = _so.GetIterator();
                         while (_sp.NextVisible(true))
                         {
@@ -298,11 +360,6 @@ namespace Arkham.Onigiri.Editor
                             scriptables.Add(item);
                     }
                 }
-
-                //  filter event actions
-                //if (!Application.isPlaying)
-                //    return;
-                //actions = GetActionFromVariable(o);
             }
 
 

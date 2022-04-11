@@ -1,0 +1,16 @@
+using UnityEngine;
+using Arkham.Onigiri.AI;
+using Arkham.Onigiri.Variables;
+
+[CreateAssetMenu(menuName = "AI/#NAME#/Decision/#DECISION#", fileName ="#NAME#AIDecision_#DECISION#")]
+public class #NAME#AIDecision_#DECISION# : AIDecision
+{
+    #CONTROLLERTYPE# myController;
+
+    public override bool Decide(AIStateController _controller)
+    {
+        myController = _controller as #CONTROLLERTYPE#;
+
+        return false;
+    }
+}

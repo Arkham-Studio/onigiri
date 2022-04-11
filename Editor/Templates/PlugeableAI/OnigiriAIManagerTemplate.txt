@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Sirenix.OdinInspector;
 using Arkham.Onigiri.Attributes;
 using Arkham.Onigiri.Variables;
 
-[CreateAssetMenu(menuName = "Managers/#MANAGERNAME#", fileName ="#MANAGERNAME#"),HideMonoScript]
+[CreateAssetMenu(menuName = "AI/#NAME#/#MANAGERNAME#", fileName ="#MANAGERNAME#"),HideMonoScript]
 [InlineEditor(InlineEditorObjectFieldModes.Foldout,DrawHeader=false),EditorIcon("onigiri-icon-m"),VariablesManager(folderName = "#NAME#")]
 public class #MANAGERNAME# : ScriptableObject
 {

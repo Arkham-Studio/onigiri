@@ -1,0 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Arkham.Onigiri.AI;
+using Arkham.Onigiri.Variables;
+using Sirenix.OdinInspector;
+
+public class #CONTROLLERTYPE# : AIStateController
+{
+     [SerializeField, PropertyOrder(-1)] private #MANAGERNAME# m_#MANAGERNAME#;
+}

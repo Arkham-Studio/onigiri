@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Arkham.Onigiri.Attributes;
+using Arkham.Onigiri.Variables;
 
 [CreateAssetMenu(menuName = "Data/#DATANAME#")]
 [EditorIcon("onigiri-icon-d")]
