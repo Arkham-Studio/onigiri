@@ -12,9 +12,9 @@ namespace Arkham.Onigiri.LogicModule
                 case CompareOperation.equals:
                     return _value == _pack.toThat.Value;
                 case CompareOperation.less:
-                    return _value > _pack.toThat.Value;
-                case CompareOperation.more:
                     return _value < _pack.toThat.Value;
+                case CompareOperation.more:
+                    return _value > _pack.toThat.Value;
                 case CompareOperation.lessEqual:
                     return _value >= _pack.toThat.Value;
                 case CompareOperation.moreEqual:
