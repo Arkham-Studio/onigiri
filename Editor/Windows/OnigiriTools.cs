@@ -175,7 +175,7 @@ namespace Arkham.Onigiri.Editor
 
                 if (controller)
                 {
-                    string _controller = File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriControllerTemplate.txt");
+                    string _controller = File.ReadAllText("Packages/com.edwinmorizet.onigiri/Editor/Templates/ScriptPack/OnigiriControllerTemplate.txt");
                     _controller = _controller.Replace("#CONTROLLERNAME#", packName + "Controller");
                     _controller = _controller.Replace("#MANAGERNAMEREF#", manager ? $"[SerializeField] private {packName}Manager m_{packName};" : "");
                     File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Controller.cs", _controller);
@@ -183,7 +183,7 @@ namespace Arkham.Onigiri.Editor
 
                 if (manager)
                 {
-                    string _manager = File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriManagerTemplate.txt");
+                    string _manager = File.ReadAllText("Packages/com.edwinmorizet.onigiri/Editor/Templates/ScriptPack/OnigiriManagerTemplate.txt");
                     _manager = _manager.Replace("#NAME#", packName);
                     _manager = _manager.Replace("#MANAGERNAME#", packName + "Manager");
                     File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Manager.cs", _manager);
@@ -193,7 +193,7 @@ namespace Arkham.Onigiri.Editor
 
                 if (data)
                 {
-                    string _data = File.ReadAllText("Packages/Onigiri/Editor/Templates/ScriptPack/OnigiriDataTemplate.txt");
+                    string _data = File.ReadAllText("Packages/com.edwinmorizet.onigiri/Editor/Templates/ScriptPack/OnigiriDataTemplate.txt");
                     _data = _data.Replace("#DATANAME#", packName + "Data");
                     File.WriteAllText("Assets/Scripts/" + packName + "/" + packName + "Data.cs", _data);
                 }
@@ -231,13 +231,13 @@ namespace Arkham.Onigiri.Editor
                     AssetDatabase.CreateFolder("Assets/Scripts/AI", packName);
 
                 string _action = File.ReadAllText(
-                    "Packages/Onigiri/Editor/Templates/PlugeableAI/OnigiriAIActionTemplate.txt");
+                    "Packages/com.edwinmorizet.onigiri/Editor/Templates/PlugeableAI/OnigiriAIActionTemplate.txt");
                 string _decision = File.ReadAllText(
-                    "Packages/Onigiri/Editor/Templates/PlugeableAI/OnigiriAIDecisionTemplate.txt");
+                    "Packages/com.edwinmorizet.onigiri/Editor/Templates/PlugeableAI/OnigiriAIDecisionTemplate.txt");
                 string _manager = File.ReadAllText(
-                    "Packages/Onigiri/Editor/Templates/PlugeableAI/OnigiriAIManagerTemplate.txt");
+                    "Packages/com.edwinmorizet.onigiri/Editor/Templates/PlugeableAI/OnigiriAIManagerTemplate.txt");
                 string _controller = File.ReadAllText(
-                    "Packages/Onigiri/Editor/Templates/PlugeableAI/OnigirAIStateControllerTemplate.txt");
+                    "Packages/com.edwinmorizet.onigiri/Editor/Templates/PlugeableAI/OnigirAIStateControllerTemplate.txt");
 
                 string _controllerType = packName + "AIStateController";
                 string _managerName = packName + "AIStateManager";
