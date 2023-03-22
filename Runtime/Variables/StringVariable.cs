@@ -22,7 +22,7 @@ namespace Arkham.Onigiri.Variables
 
         public override int ValueToInt() => int.TryParse(Value, out int _r) ? _r : 0;
         public override float ValueToFloat() => float.TryParse(Value, out float _r) ? _r : 0f;
-        public override string ValueToString() => Value;
+        public override string ValueToString(string format = "") => Value;
 
 
         public void FloatToText(float _f) => SetValue(_f.ToString(decimalFormat));

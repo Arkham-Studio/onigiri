@@ -24,7 +24,7 @@ namespace Arkham.Onigiri.AppStates
 
         private void Start()
         {
-            if (onStart)
+            if (onStart && changeableVariable != null)
                 OnVariableChange();
         }
 

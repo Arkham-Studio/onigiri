@@ -8,6 +8,6 @@ namespace Arkham.Onigiri.Variables
         public override int ValueToInt() => Mathf.RoundToInt(SelectedValue.magnitude);
         public override float ValueToFloat() => SelectedValue.magnitude;
         public override bool ValueToBool() => SelectedValue.magnitude > 0;
-        public override string ValueToString() => SelectedValue.ToString();
+        public override string ValueToString(string format = "") => SelectedValue.ToString();
     }
 }

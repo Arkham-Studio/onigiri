@@ -13,7 +13,7 @@ namespace Arkham.Onigiri.Variables
 
     public interface IVariableValueTo
     {
-        string ValueToString();
+        string ValueToString(string format = "0");
         int ValueToInt();
         float ValueToFloat();
         bool ValueToBool();
@@ -102,7 +102,7 @@ namespace Arkham.Onigiri.Variables
         public T GetDefaultValue() => DefaultValue;
 
 
-        public virtual string ValueToString() => name;
+        public virtual string ValueToString(string format = "0") => name;
         public virtual int ValueToInt() => 0;
         public virtual float ValueToFloat() => 0;
         public virtual bool ValueToBool() => false;

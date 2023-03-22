@@ -21,7 +21,7 @@ namespace Arkham.Onigiri.Variables
             SetValue(sequence[sequenceIndex]);
         }
 
-        public override string ValueToString() => Value.name.ToString();
+        public override string ValueToString(string format = "") => Value.name.ToString();
         public override int ValueToInt() => int.TryParse(Value.name, out int _r) ? _r : 0;
 
     }

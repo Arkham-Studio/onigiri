@@ -50,7 +50,7 @@ namespace Arkham.Onigiri.UI
                 switch (variable)
                 {
                     case IVariableValueTo v:
-                        SetFromString(v.ValueToString());
+                        SetFromString(v.ValueToString(format));
                         break;
                     //case FloatVariable f:
                     //    SetFromFloat(f);

@@ -18,30 +18,42 @@ namespace Arkham.Onigiri.AnimatorModule
         public UnityEvent onStateExit;
 
         private bool haveLooped = false;
+        private bool firstLoop = true;
 
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (IsEnterEvent) onStateEnter.Invoke();
+            if (IsEnterEvent)
+                onStateEnter.Invoke();
+
+            haveLooped = false;
+            firstLoop = true;
         }
 
         override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (IsUpdateEvent) onStateUpdate.Invoke();
+            if (IsUpdateEvent)
+                onStateUpdate.Invoke();
 
-            float _time = stateInfo.normalizedTime % 1;
-
-            if (haveLooped && _time < 0.99f && stateInfo.loop) haveLooped = false;
-
-            if (!haveLooped && _time > 0.98f)
+            if (IsLoopEvent)
             {
-                haveLooped = true;
-                if (IsLoopEvent) onStateAnimLoop.Invoke();
+                float _time = stateInfo.normalizedTime % 1;
+                if (!haveLooped && _time < 0.3f && !firstLoop)
+                {
+                    haveLooped = true;
+                    onStateAnimLoop.Invoke();
+                }
+                else if ((haveLooped || firstLoop) && _time > 0.3f)
+                {
+                    haveLooped = false;
+                    firstLoop = false;
+                }
             }
         }
 
         override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            if (IsExitEvent) onStateExit.Invoke();
+            if (IsExitEvent)
+                onStateExit.Invoke();
         }
 
         //  ODIN

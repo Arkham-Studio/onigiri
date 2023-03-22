@@ -33,7 +33,7 @@ namespace Arkham.Onigiri.AnimatorModule
                 haveLooped = false;
             }
 
-            if (!haveLooped && _time > 0.98f)
+            if (!haveLooped && _time >= 0.98f)
             {
                 haveLooped = true;
                 float _v = Random.Range(0f, 1f);

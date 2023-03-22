@@ -34,7 +34,7 @@ namespace Arkham.Onigiri.Variables
             OnChange();
         }
 
-
+        public override string ValueToString(string format = "0") => Value.ToString(format);
         public override int ValueToInt() => Value;
         public override float ValueToFloat() => Value * 1f;
         public override bool ValueToBool() => Value > 0;

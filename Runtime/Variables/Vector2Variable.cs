@@ -13,7 +13,7 @@ namespace Arkham.Onigiri.Variables
         public override int ValueToInt() => Mathf.RoundToInt(Value.magnitude);
         public override float ValueToFloat() => Value.magnitude;
         public override bool ValueToBool() => Value.magnitude > 0;
-        public override string ValueToString() => Value.ToString();
+        public override string ValueToString(string format = "0") => Value.ToString();
 
 
         public override void Vector2ToValue(Vector2 _v) => SetValue(_v);

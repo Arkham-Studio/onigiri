@@ -1,9 +1,9 @@
 ﻿#pragma warning disable CS0649
-using Arkham.Onigiri.Variables;
 using Arkham.Onigiri.Utils;
+using Arkham.Onigiri.Variables;
 using Sirenix.OdinInspector;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Arkham.Onigiri.AppStates
 {
@@ -16,6 +16,7 @@ namespace Arkham.Onigiri.AppStates
         [Title("STATES", "DenumVariable onChange play Animator State with same Denum name")]
         [SerializeField] private DenumVariable actualState;
         [SerializeField] private DenumVariable setState;
+
 
         [SerializeField] private Denum[] allDenumStates = new Denum[0];
         private Dictionary<int, Denum> cachedDenumStatesList = new Dictionary<int, Denum>();
@@ -49,16 +50,18 @@ namespace Arkham.Onigiri.AppStates
 
         public void PlayDenumState()
         {
-            if (setState.Value == null) return;
+            if (setState.Value == null)
+                return;
             myAnimator.Play(setState.Value.name, 0, 0f);
         }
 
         public void NotifyStateChange(int _stateHash)
         {
-            if (actualState == null) return;
-            if (!cachedDenumStatesList.ContainsKey(_stateHash)) return;
+            if (actualState == null)
+                return;
+            if (!cachedDenumStatesList.ContainsKey(_stateHash))
+                return;
             actualState.SetValue(cachedDenumStatesList[_stateHash]);
         }
-
     }
 }

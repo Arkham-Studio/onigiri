@@ -1,9 +1,11 @@
 ﻿using Arkham.Onigiri.Variables;
 using Sirenix.OdinInspector;
+using System;
 using UnityEngine;
 
 namespace Arkham.Onigiri.AnimatorModule
 {
+    [ExecuteInEditMode]
     public class AudioControllerStateBehavior : StateMachineBehaviour
     {
         [EnumToggleButtons, HideLabel]
@@ -20,6 +22,12 @@ namespace Arkham.Onigiri.AnimatorModule
         public string stateSpeedMultiplierName;
         [ShowIf("changeStateLength")]
         public float addTimeToEnd = 0;
+
+ 
+        private void OnEnable()
+        {
+            Debug.Log("ok");
+        }
 
 
         // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
