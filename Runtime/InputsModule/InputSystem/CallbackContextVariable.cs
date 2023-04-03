@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,16 +6,18 @@ namespace Arkham.Onigiri.Variables
     [CreateAssetMenu(menuName = "Variables/CallbackContext")]
     public class CallbackContextVariable : BaseVariable<InputAction.CallbackContext>
     {
-        [SerializeField] private bool listenToPerformed = true;
-        [SerializeField] private bool listenToCancel = false;
+        [SerializeField] private bool listenStarted = false;
+        [SerializeField] private bool listenPerformed = true;
+        [SerializeField] private bool listenCancel = false;
 
         public override void OnChange()
         {
-            if (Value.performed && listenToPerformed)
+            if (Value.started && listenStarted)
                 base.OnChange();
-            else if (Value.canceled && listenToCancel)
+            else if (Value.performed && listenPerformed)
                 base.OnChange();
-
+            else if (Value.canceled && listenCancel)
+                base.OnChange();
         }
     }
 

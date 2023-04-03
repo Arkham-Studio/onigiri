@@ -45,5 +45,9 @@ namespace Arkham.Onigiri.Variables
         public float sqrMagnitude { get => Value.sqrMagnitude; }
         public Vector2 normalized { get => Value.normalized; }
 
+        public float X { get => Value.x; }
+        public float Y { get => Value.y; }
+
+
     }
 }

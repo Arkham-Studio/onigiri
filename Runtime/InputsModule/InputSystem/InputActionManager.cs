@@ -199,9 +199,12 @@ namespace Arkham.Onigiri.InputSystem
                 if (string.IsNullOrEmpty(map))
                     return _r;
 
-                foreach (var item in asset?.FindActionMap(map)?.actions)
+                if (asset != null)
                 {
-                    _r.Add(item.name);
+                    foreach (var item in asset?.FindActionMap(map)?.actions)
+                    {
+                        _r.Add(item.name);
+                    }
                 }
 
                 return _r;
