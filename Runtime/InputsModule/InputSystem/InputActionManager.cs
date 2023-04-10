@@ -62,8 +62,19 @@ namespace Arkham.Onigiri.InputSystem
             [ValueDropdown("GetAllActions"), HideIf("@asset == null"), HideIf("@string.IsNullOrEmpty(map)"), SerializeField, HorizontalGroup("map"), HideLabel, Space]
             string action;
 
-            [SerializeField] private ChangeableVariable changeableVariable;
+            [SerializeField, GUIColor("@changeableVariable ? Color.white : Color.red")] private ChangeableVariable changeableVariable;
             [SerializeField] private IntVariable deviceID;
+
+            private bool started = true;
+            private bool performed = true;
+            private bool canceled = true;
+
+            [HorizontalGroup("buttons"), Button(ButtonSizes.Small, Name = "Started"), GUIColor("@started ? Color.white : Color.grey")]
+            void ToggleStarted() => started = !started;
+            [HorizontalGroup("buttons"), Button(ButtonSizes.Small, Name = "Performed"), GUIColor("@performed ? Color.white : Color.grey")]
+            void TogglePerformed() => performed = !performed;
+            [HorizontalGroup("buttons"), Button(ButtonSizes.Small, Name = "Canceled"), GUIColor("@canceled ? Color.white : Color.grey")]
+            void ToggleCanceled() => canceled = !canceled;
 
             public InputActionPack(InputActionAsset asset)
             {
@@ -103,8 +114,12 @@ namespace Arkham.Onigiri.InputSystem
                 if (asset?.FindAction($"{map}/{action}") == null)
                     return;
 
-                asset[$"{map}/{action}"].performed += OnPerformed;
-                asset[$"{map}/{action}"].canceled += OnCanceled;
+                if (started)
+                    asset[$"{map}/{action}"].started += OnPerformed;
+                if (performed)
+                    asset[$"{map}/{action}"].performed += OnPerformed;
+                if (canceled)
+                    asset[$"{map}/{action}"].canceled += OnCanceled;
 
 
             }
@@ -116,8 +131,12 @@ namespace Arkham.Onigiri.InputSystem
                 if (asset?.FindAction($"{map}/{action}") == null)
                     return;
 
-                asset[$"{map}/{action}"].performed -= OnPerformed;
-                asset[$"{map}/{action}"].canceled -= OnCanceled;
+                if (started)
+                    asset[$"{map}/{action}"].performed -= OnPerformed;
+                if (performed)
+                    asset[$"{map}/{action}"].performed -= OnPerformed;
+                if (canceled)
+                    asset[$"{map}/{action}"].canceled -= OnCanceled;
 
             }
 

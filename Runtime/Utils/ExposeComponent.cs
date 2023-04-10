@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Arkham.Onigiri.Utils
 {
+    [DefaultExecutionOrder(-10000)]
     public class ExposeComponent : MonoBehaviour
     {
         public Component component;
