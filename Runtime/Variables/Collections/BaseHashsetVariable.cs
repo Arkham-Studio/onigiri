@@ -54,5 +54,13 @@ namespace Arkham.Onigiri.Variables
             return _result;
         }
         public bool RemoveItemQuiet(T _v) => Value.Remove(_v);
+
+        public void Clear()
+        {
+            Value.Clear();
+            OnChange();
+        }
+
+        public void ClearQuiet() => Value.Clear();
     }
 }

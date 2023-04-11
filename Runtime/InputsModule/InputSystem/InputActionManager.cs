@@ -22,8 +22,12 @@ namespace Arkham.Onigiri.InputSystem
 
         private void OnEnable()
         {
+
             foreach (InputActionPack item in inputActionPacks)
+            {
+                item.Asset = asset;
                 item.BindInputAsset();
+            }
 
             asset?.Enable();
 
@@ -32,10 +36,16 @@ namespace Arkham.Onigiri.InputSystem
         private void OnDisable()
         {
             foreach (InputActionPack item in inputActionPacks)
+            {
                 item.UnBindInputAsset();
+                item.Asset = null;
+            }
         }
 
+
+
 #if UNITY_EDITOR
+        [Button]
         private void OnAssetChange()
         {
             foreach (var item in inputActionPacks)
@@ -201,10 +211,17 @@ namespace Arkham.Onigiri.InputSystem
 #if UNITY_EDITOR
             private void OnAssetChange()
             {
-                action = "";
-                map = asset?.actionMaps[0].name ?? "";
-                OnMapChange();
+                if(asset != null && asset.FindActionMap(map) == null)
+                {
+                    map = asset?.actionMaps[0].name ?? "";
+                    action = asset?.FindActionMap(map)?.actions[0].name ?? "";
+                }
+                else if(asset != null && asset.FindActionMap(map).FindAction(action) == null)
+                {
+                    action = asset?.FindActionMap(map)?.actions[0].name ?? "";
+                }
             }
+
             private void OnMapChange()
             {
                 action = asset?.FindActionMap(map)?.actions[0].name ?? "";
