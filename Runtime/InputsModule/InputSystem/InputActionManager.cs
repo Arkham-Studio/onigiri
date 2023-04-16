@@ -15,37 +15,39 @@ namespace Arkham.Onigiri.InputSystem
         [ValueDropdown("GetAllScriptableObjects", AppendNextDrawer = true), OnValueChanged("OnAssetChange")]
         public InputActionAsset asset;
 
+        [FoldoutGroup("advanced")]
         public IntVariable playerCountValue;
 
-        [SerializeField, ListDrawerSettings(CustomAddFunction = "OnNewInputPack", CustomRemoveElementFunction = "OnRemoveInputPack")]
+        [SerializeField, ListDrawerSettings(CustomAddFunction = "OnNewInputPack", CustomRemoveElementFunction = "OnRemoveInputPack", NumberOfItemsPerPage = 5)]
         private List<InputActionPack> inputActionPacks = new List<InputActionPack>();
 
         private void OnEnable()
         {
-
-            foreach (InputActionPack item in inputActionPacks)
+            if (asset != null)
             {
-                item.Asset = asset;
-                item.BindInputAsset();
+                foreach (InputActionPack item in inputActionPacks)
+                {
+                    item.Asset = asset;
+                    item.BindInputAsset();
+                }
             }
-
             asset?.Enable();
-
         }
 
         private void OnDisable()
         {
-            foreach (InputActionPack item in inputActionPacks)
+            if (asset != null)
             {
-                item.UnBindInputAsset();
-                item.Asset = null;
+                foreach (InputActionPack item in inputActionPacks)
+                {
+                    item.UnBindInputAsset();
+                    item.Asset = null;
+                }
             }
+            asset?.Disable();
         }
 
-
-
 #if UNITY_EDITOR
-        [Button]
         private void OnAssetChange()
         {
             foreach (var item in inputActionPacks)
@@ -54,30 +56,48 @@ namespace Arkham.Onigiri.InputSystem
             }
         }
 
+        private InputActionPack OnNewInputPack()
+        {
+            if (asset != null)
+                return new InputActionPack(asset);
+            else return null;
+        }
+
         private void OnRemoveInputPack(InputActionPack _ia)
         {
             _ia.UnBindInputAsset();
             inputActionPacks.Remove(_ia);
         }
 
-#endif
+        private static IEnumerable GetAllScriptableObjects()
+        {
+            return UnityEditor.AssetDatabase.FindAssets("t:InputActionAsset")
+                .Select(x => UnityEditor.AssetDatabase.GUIDToAssetPath(x))
+                .Select(x =>
+                {
+                    var _o = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(x);
+                    return new ValueDropdownItem(_o.name, _o);
+                });
+        }
 
+#endif
 
         [System.Serializable]
         class InputActionPack
         {
+            [SerializeField, HideInInspector]
             private InputActionAsset asset;
-            [ValueDropdown("GetAllActionMaps"), HideIf("@asset == null"), SerializeField, HorizontalGroup("map"), HideLabel, OnValueChanged("OnMapChange"), Space]
+            [ValueDropdown("GetAllActionMaps"), SerializeField, HorizontalGroup("map", Title = "$GetTitle"), HideLabel, Space, GUIColor("GetActionMapGUI")]
             string map;
-            [ValueDropdown("GetAllActions"), HideIf("@asset == null"), HideIf("@string.IsNullOrEmpty(map)"), SerializeField, HorizontalGroup("map"), HideLabel, Space]
+            [ValueDropdown("GetAllActions"), SerializeField, HorizontalGroup("map"), HideLabel, Space, GUIColor("GetActionGUI")]
             string action;
 
             [SerializeField, GUIColor("@changeableVariable ? Color.white : Color.red")] private ChangeableVariable changeableVariable;
-            [SerializeField] private IntVariable deviceID;
+            [SerializeField, FoldoutGroup("advanced")] private IntVariable deviceID;
 
-            private bool started = true;
-            private bool performed = true;
-            private bool canceled = true;
+            [SerializeField, HideInInspector] private bool started = true;
+            [SerializeField, HideInInspector] private bool performed = true;
+            [SerializeField, HideInInspector] private bool canceled = true;
 
             [HorizontalGroup("buttons"), Button(ButtonSizes.Small, Name = "Started"), GUIColor("@started ? Color.white : Color.grey")]
             void ToggleStarted() => started = !started;
@@ -89,32 +109,11 @@ namespace Arkham.Onigiri.InputSystem
             public InputActionPack(InputActionAsset asset)
             {
                 this.asset = asset;
-#if UNITY_EDITOR
-                OnAssetChange();
-#endif
             }
 
             public InputActionAsset Asset
             {
-                set
-                {
-                    asset = value;
-#if UNITY_EDITOR
-                    OnAssetChange();
-#endif
-                }
-            }
-
-            public void Enable()
-            {
-
-                BindInputAsset();
-            }
-
-            public void Disable()
-            {
-
-                UnBindInputAsset();
+                set => asset = value;
             }
 
             public void BindInputAsset()
@@ -130,8 +129,6 @@ namespace Arkham.Onigiri.InputSystem
                     asset[$"{map}/{action}"].performed += OnPerformed;
                 if (canceled)
                     asset[$"{map}/{action}"].canceled += OnCanceled;
-
-
             }
 
             public void UnBindInputAsset()
@@ -172,6 +169,9 @@ namespace Arkham.Onigiri.InputSystem
                             case Vector2 _v:
                                 ((IVariableValueFrom)changeableVariable)?.Vector2ToValue(_v);
                                 break;
+                            case bool _b:
+                                ((IVariableValueFrom)changeableVariable)?.BoolToValue(_b);
+                                break;
                         }
                         break;
                 }
@@ -186,6 +186,9 @@ namespace Arkham.Onigiri.InputSystem
                 {
                     case CallbackContextVariable _ctx:
                         _ctx.SetValue(ctx);
+                        break;
+                    case BoolVariable _b:
+                        _b.SetValue(false);
                         break;
                     default:
                         ((IVariableResetable)changeableVariable)?.ResetValue();
@@ -209,78 +212,36 @@ namespace Arkham.Onigiri.InputSystem
 
 
 #if UNITY_EDITOR
-            private void OnAssetChange()
-            {
-                if(asset != null && asset.FindActionMap(map) == null)
-                {
-                    map = asset?.actionMaps[0].name ?? "";
-                    action = asset?.FindActionMap(map)?.actions[0].name ?? "";
-                }
-                else if(asset != null && asset.FindActionMap(map).FindAction(action) == null)
-                {
-                    action = asset?.FindActionMap(map)?.actions[0].name ?? "";
-                }
-            }
 
-            private void OnMapChange()
-            {
-                action = asset?.FindActionMap(map)?.actions[0].name ?? "";
-            }
-
+            private string GetTitle { get => string.IsNullOrEmpty(map) || string.IsNullOrEmpty(action) || changeableVariable == null ? "ERROR" : $"{map.ToUpper()}/{action.ToUpper()}"; }
 
             private IEnumerable<string> GetAllActions()
             {
                 var _r = new List<string>();
 
-                if (string.IsNullOrEmpty(map))
-                    return _r;
-
-                if (asset != null)
-                {
-                    foreach (var item in asset?.FindActionMap(map)?.actions)
-                    {
+                if (asset != null && !string.IsNullOrEmpty(map) && asset.FindActionMap(map) != null)
+                    foreach (var item in asset.FindActionMap(map).actions)
                         _r.Add(item.name);
-                    }
-                }
 
                 return _r;
             }
+
+            private Color GetActionGUI() => !string.IsNullOrEmpty(map) && !string.IsNullOrEmpty(action) && asset?.FindActionMap(map)?.FindAction(action) != null ? Color.white : Color.red;
+            private Color GetActionMapGUI() => !string.IsNullOrEmpty(map) && asset?.FindActionMap(map) != null ? Color.white : Color.red;
+
             private IEnumerable<string> GetAllActionMaps()
             {
                 var _r = new List<string>();
 
-                if (asset == null)
-                    return _r;
-
-                foreach (var item in asset?.actionMaps)
-                {
-                    _r.Add(item.name);
-                }
+                if (asset != null)
+                    foreach (var item in asset.actionMaps)
+                        _r.Add(item.name);
 
                 return _r;
             }
 #endif
         }
 
-
-#if UNITY_EDITOR
-
-
-        private static IEnumerable GetAllScriptableObjects()
-        {
-            return UnityEditor.AssetDatabase.FindAssets("t:InputActionAsset")
-                .Select(x => UnityEditor.AssetDatabase.GUIDToAssetPath(x))
-                .Select(x =>
-                {
-                    var _o = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>(x);
-                    return new ValueDropdownItem(_o.name, _o);
-                });
-        }
-
-        private InputActionPack OnNewInputPack()
-        {
-            return new InputActionPack(asset);
-        }
-#endif
     }
 }
+
